@@ -1,0 +1,30 @@
+:root {
+  --primary: #557571;
+  --secondary: #d49a89;
+  --tertiary: #f7d1ba;
+  --white: #f4f4f4;
+  --black: #1d1c1a;
+}
+
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0px;
+}
+
+#app {
+  height: 100vh;
+}
+
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
