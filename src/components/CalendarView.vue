@@ -11,7 +11,7 @@
       >
         <div class="day-title">
           {{ day.date.toLocaleString('default', { weekday: 'short' }) }}
-          {{ day.date.getDate() }}
+          <span style="font-weight: bold">{{ day.date.getDate() }}</span>
         </div>
         <div class="calendar-entry" v-for="(meal, index) in day.meals" :key="`meal-${index}`" :style="{ backgroundImage: 'url(' + meal.image + ')' }">
           <div class="entry-title">{{meal.title}}</div>
@@ -120,7 +120,7 @@ export default {
 
 <style>
 .calendar-title {
-  padding: 16px;
+  padding: 8px 0 0 8px;
   font-size: 24px;
   color: var(--black);
 }
@@ -162,7 +162,9 @@ export default {
 .day-title {
   width: 100%;
   text-align: left;
-  padding-bottom: 16px;
+  padding-bottom: 8px;
+  display: flex;
+    justify-content: space-between;
 }
 
 .calendar-entry {
@@ -170,8 +172,8 @@ export default {
   aspect-ratio: 1 / 1;
   border: 1px solid white;
   border-radius: 8px;
-  margin-bottom: 10px;
-  width: 90%;
+  margin-bottom: 8px;
+  width: 100%;
   background-size: cover;
 }
 .calendar-entry:after {
