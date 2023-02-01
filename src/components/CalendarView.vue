@@ -1,14 +1,15 @@
 <template>
   <div class="calendar">
-    <div class="calendar-title">Calendar</div>
-    <div class="day-container">
+    <div class="calendar-title">{{ currentMonth }}</div>
+    <div class="calendar-body">
       <div
-        class="day"
+        class="day-container"
         v-for="(day, index) in weekDates"
         :key="`day-${index}`"
         :id="`day-${index}`"
+        :class="dayContainerClass(day)"
       >
-        {{ getDayString(index) }} {{ day.getDate() }}
+        {{ day.toLocaleString('default', { weekday: 'short' }) }} {{ day.getDate() }}
       </div>
     </div>
   </div>
@@ -17,9 +18,13 @@
 <script>
 export default {
   methods: {
-    getDayString(index) {
-      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      return days[index];
+    dayContainerClass(day) {
+      const today = new Date();
+      if (day.getDay() === today.getDay()) {
+        return 'highlight-today';
+      }
+
+      return '';
     }
   },
   computed: {
@@ -36,12 +41,16 @@ export default {
       }
 
       return week;
+    },
+    currentMonth() {
+      const today = new Date();
+      return today.toLocaleString('default', { month: 'long' });
     }
   },
   mounted() {
     let now = new Date();
-    const todayElement = document.getElementById(`day-${now.getDate()}`);
-    todayElement.scrollIntoView({inline: "start"});
+    const todayElement = document.getElementById(`day-${now.getDate() + 1}`);
+    todayElement.scrollIntoView({ inline: 'start' });
   }
 };
 </script>
@@ -59,20 +68,25 @@ export default {
   flex-direction: column;
 }
 
-.day-container {
+.calendar-body {
   display: flex;
   flex: 1;
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
 }
 
-.day-container .day {
+.calendar-body .day-container {
   min-width: 33.3%;
-  border-right: 2px var(--secondary) solid;
+  border-right: 1px var(--secondary) solid;
   scroll-snap-align: start;
+  padding: 8px;
 }
 
-.day-container .day:last-child {
+.calendar-body .day-container:last-child {
   border: none;
+}
+
+.highlight-today {
+  background-color: var(--tertiary);
 }
 </style>
