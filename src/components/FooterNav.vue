@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <div class="footer-button centered">Calendar</div>
+    <div class="footer-button centered active">Calendar</div>
     <div class="footer-button centered">My recipes</div>
     <div class="footer-button centered">Shopping list</div>
   </div>
@@ -21,7 +21,10 @@ export default {};
 .footer .footer-button {
   flex: 1;
 }
-.footer .footer-button:not(:last-child) {
-  border-right: 2px solid var(--primary);
+
+.active {
+  font-weight: bold;
+  color: var(--primary);
 }
+
 </style>

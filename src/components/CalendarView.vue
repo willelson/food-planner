@@ -65,8 +65,8 @@ export default {
 
 <style>
 .calendar-title {
-  padding: 20px;
-  font-size: 28px;
+  padding: 16px;
+  font-size: 24px;
   color: var(--black);
 }
 
@@ -85,7 +85,7 @@ export default {
 
 .calendar-body .day-container {
   min-width: 33.3%;
-  border-right: 1px var(--secondary) solid;
+  border-right: 1px var(--border) solid;
   scroll-snap-align: start;
   padding: 8px;
 }
@@ -95,7 +95,7 @@ export default {
 }
 
 .highlight-today {
-  background-color: var(--tertiary);
+  background: linear-gradient(white, var(--tertiary));
 }
 
 .day-container {
