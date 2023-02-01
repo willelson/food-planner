@@ -12,7 +12,7 @@ export default {};
 
 <style>
 .footer {
-  height: 52px;
+  height: 48px;
   /* border-top: 2px solid var(--tertiary); */
   margin-top: auto;
   display: flex;
@@ -24,7 +24,7 @@ export default {};
 }
 
 .footer-button i {
-  font-size: 26px;
+  font-size: 24px;
   color: var(--black);
 }
 

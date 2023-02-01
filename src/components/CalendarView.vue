@@ -122,7 +122,8 @@ export default {
 .calendar-title {
   padding: 8px 0 0 8px;
   font-size: 24px;
-  color: var(--black);
+  color: var(--primary);
+  font-weight: bold;
 }
 
 .calendar {
