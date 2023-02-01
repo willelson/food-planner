@@ -4,19 +4,17 @@
     <div class="calendar-body">
       <div
         class="day-container"
-        v-for="(day, index) in weekDates"
+        v-for="(day, index) in calendarWeek"
         :key="`day-${index}`"
         :id="`day-${index}`"
         :class="dayContainerClass(day)"
       >
         <div class="day-title">
-          {{ day.toLocaleString('default', { weekday: 'short' }) }}
-          {{ day.getDate() }}
+          {{ day.date.toLocaleString('default', { weekday: 'short' }) }}
+          {{ day.date.getDate() }}
         </div>
-        <div class="calendar-entry">
-          <div class="entry-title">
-            Chickpea Curry
-          </div>
+        <div class="calendar-entry" v-for="(meal, index) in day.meals" :key="`meal-${index}`" :style="{ backgroundImage: 'url(' + meal.image + ')' }">
+          <div class="entry-title">{{meal.title}}</div>
         </div>
       </div>
     </div>
@@ -25,10 +23,67 @@
 
 <script>
 export default {
+  data() {
+    return {
+      calendarWeek: [
+        {
+          date: new Date('2023-01-30T17:00:34.908Z'),
+        },
+        { date: new Date('2023-01-31T17:00:34.908Z') },
+        {
+          date: new Date('2023-02-01T17:00:34.908Z'),
+          meals: [
+            {
+              title: 'Protein pancakes',
+              image:
+                'https://images.unsplash.com/flagged/photo-1557609786-fd36193db6e5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
+            },
+            {
+              title: 'Mash & Sprouts',
+              image:
+                'https://images.unsplash.com/photo-1628519842646-971123de6ffa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=638&q=80'
+            },
+            {
+              title: 'No bake Flapjack',
+              image:
+                'https://images.unsplash.com/photo-1550436566-df63e63a1585?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=388&q=80'
+            }
+          ]
+        },
+        {
+          date: new Date('2023-02-02T17:00:34.908Z'),
+          meals: [
+            {
+              title: 'Chickpea Curry',
+              image:
+                'https://images.unsplash.com/photo-1516714435131-44d6b64dc6a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80'
+            }
+          ]
+        },
+        {
+          date: new Date('2023-02-03T17:00:34.908Z'),
+          meals: [
+            {
+              title: 'Protein pancakes',
+              image:
+                'https://images.unsplash.com/flagged/photo-1557609786-fd36193db6e5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
+            },
+            {
+              title: 'Ramen',
+              image:
+                'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'
+            }
+          ]
+        },
+        { date: new Date('2023-02-04T17:00:34.908Z'), meals: [] },
+        { date: new Date('2023-02-05T17:00:34.908Z') }
+      ]
+    };
+  },
   methods: {
     dayContainerClass(day) {
       const today = new Date();
-      if (day.getDay() === today.getDay()) {
+      if (day.date.getDay() === today.getDay()) {
         return 'highlight-today';
       }
 
@@ -113,12 +168,10 @@ export default {
 .calendar-entry {
   position: relative;
   aspect-ratio: 1 / 1;
-    border: 1px solid white;
+  border: 1px solid white;
   border-radius: 8px;
-  padding: 0;
-  margin: 0;
+  margin-bottom: 10px;
   width: 90%;
-  background-image: url('https://images.unsplash.com/photo-1516714435131-44d6b64dc6a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80');
   background-size: cover;
 }
 .calendar-entry:after {
@@ -140,6 +193,7 @@ export default {
   position: absolute;
   width: 100%;
   color: white;
+  font-weight: bold;
   text-align: right;
   left: 0;
   bottom: 0;
