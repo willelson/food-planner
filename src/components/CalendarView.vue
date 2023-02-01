@@ -9,7 +9,15 @@
         :id="`day-${index}`"
         :class="dayContainerClass(day)"
       >
-        {{ day.toLocaleString('default', { weekday: 'short' }) }} {{ day.getDate() }}
+        <div class="day-title">
+          {{ day.toLocaleString('default', { weekday: 'short' }) }}
+          {{ day.getDate() }}
+        </div>
+        <div class="calendar-entry">
+          <div class="entry-title">
+            Chickpea Curry
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -88,5 +96,54 @@ export default {
 
 .highlight-today {
   background-color: var(--tertiary);
+}
+
+.day-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.day-title {
+  width: 100%;
+  text-align: left;
+  padding-bottom: 16px;
+}
+
+.calendar-entry {
+  position: relative;
+  aspect-ratio: 1 / 1;
+    border: 1px solid white;
+  border-radius: 8px;
+  padding: 0;
+  margin: 0;
+  width: 90%;
+  background-image: url('https://images.unsplash.com/photo-1516714435131-44d6b64dc6a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80');
+  background-size: cover;
+}
+.calendar-entry:after {
+  content: '';
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0)
+    linear-gradient(to bottom, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0.6) 100%)
+    repeat 0 0;
+  z-index: 1;
+  border-radius: 8px;
+}
+.entry-title {
+  display: block;
+  position: absolute;
+  width: 100%;
+  color: white;
+  text-align: right;
+  left: 0;
+  bottom: 0;
+  padding: 6px;
+  z-index: 2;
 }
 </style>
