@@ -39,15 +39,15 @@ export default {
   },
   methods: {
     addItem() {
-      const nextId = Math.max(...this.items.map(item => item.id)) + 1;
+      if (!this.input) return;
+
+      const nextId = Math.max(...this.items.map((item) => item.id)) + 1;
       this.items.push({ id: nextId, text: this.input, checked: false });
       this.input = '';
-      document.body.scrollTop = document.documentElement.scrollTop = 0;
     },
     inputBlur() {
-      if (this.input) {
-        this.addItem()
-      }
+      if (!this.input) return;
+      this.addItem();
     }
   }
 };

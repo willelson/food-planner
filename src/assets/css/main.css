@@ -24,8 +24,6 @@ body {
 
 #app {
   height: 100vh;
-  /* Temp fix to clear iphone bowser floating url bar */
-  padding-bottom: 80px;
   overflow-y: hidden;
 }
 
