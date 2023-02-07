@@ -1,8 +1,8 @@
 <template>
   <div class="app-wrapper">
-    <CalendarView v-show="selectedPage === 'calendar'" />
-    <RecipeCollection v-show="selectedPage === 'recipes'" />
-    <ShoppingList v-show="selectedPage === 'shopping'" />
+    <CalendarView v-if="selectedPage === 'calendar'" />
+    <RecipeCollection v-if="selectedPage === 'recipes'" />
+    <ShoppingList v-if="selectedPage === 'shopping'" />
     <FooterNav v-model:page="selectedPage"/>
   </div>
 </template>

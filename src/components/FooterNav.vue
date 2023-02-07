@@ -47,7 +47,7 @@ export default {
 
 <style>
 .footer {
-  height: 48px;
+  min-height: 48px;
   margin-top: auto;
   display: flex;
   background-color: var(--primary);
