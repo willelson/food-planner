@@ -4,17 +4,26 @@
     <div class="calendar-body">
       <div
         class="day-container"
-        v-for="(day, index) in calendarWeek"
+        v-for="(day, index) in weekDates"
         :key="`day-${index}`"
         :id="`day-${index}`"
         :class="dayContainerClass(day)"
       >
         <div class="day-title">
-          {{ day.date.toLocaleString('default', { weekday: 'short' }) }}
-          <span style="font-weight: bold">{{ day.date.getDate() }}</span>
+          {{
+            new Date(day.date).toLocaleString('default', { weekday: 'short' })
+          }}
+          <span style="font-weight: bold">{{
+            new Date(day.date).getDate()
+          }}</span>
         </div>
-        <div class="calendar-entry" v-for="(meal, index) in day.meals" :key="`meal-${index}`" :style="{ backgroundImage: 'url(' + meal.image + ')' }">
-          <div class="entry-title">{{meal.title}}</div>
+        <div
+          class="calendar-entry"
+          v-for="(meal, index) in day.meals"
+          :key="`meal-${index}`"
+          :style="{ backgroundImage: 'url(' + meal.image + ')' }"
+        >
+          <div class="entry-title">{{ meal.title }}</div>
         </div>
       </div>
     </div>
@@ -22,63 +31,11 @@
 </template>
 
 <script>
+import database from '../database';
+
 export default {
   data() {
-    return {
-      calendarWeek: [
-        {
-          date: new Date('2023-01-30T17:00:34.908Z'),
-        },
-        { date: new Date('2023-01-31T17:00:34.908Z') },
-        {
-          date: new Date('2023-02-01T17:00:34.908Z'),
-          meals: [
-            {
-              title: 'Protein pancakes',
-              image:
-                'https://images.unsplash.com/flagged/photo-1557609786-fd36193db6e5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
-            },
-            {
-              title: 'Mash & Sprouts',
-              image:
-                'https://images.unsplash.com/photo-1628519842646-971123de6ffa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=638&q=80'
-            },
-            {
-              title: 'No bake Flapjack',
-              image:
-                'https://images.unsplash.com/photo-1550436566-df63e63a1585?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=388&q=80'
-            }
-          ]
-        },
-        {
-          date: new Date('2023-02-02T17:00:34.908Z'),
-          meals: [
-            {
-              title: 'Chickpea Curry',
-              image:
-                'https://images.unsplash.com/photo-1516714435131-44d6b64dc6a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80'
-            }
-          ]
-        },
-        {
-          date: new Date('2023-02-03T17:00:34.908Z'),
-          meals: [
-            {
-              title: 'Protein pancakes',
-              image:
-                'https://images.unsplash.com/flagged/photo-1557609786-fd36193db6e5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
-            },
-            {
-              title: 'Ramen',
-              image:
-                'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'
-            }
-          ]
-        },
-        { date: new Date('2023-02-04T17:00:34.908Z'), meals: [] },
-        { date: new Date('2023-02-05T17:00:34.908Z') }
-      ]
-    };
+    return {};
   },
   methods: {
     dayContainerClass(day) {
@@ -88,7 +45,7 @@ export default {
       }
 
       return '';
-    }
+    },
   },
   computed: {
     weekDates() {
@@ -96,10 +53,32 @@ export default {
       const current = today;
       const week = new Array();
 
+      const sameDay = (d1, d2) => {
+        return (
+          d1.getFullYear() === d2.getFullYear() &&
+          d1.getMonth() === d2.getMonth() &&
+          d1.getDate() === d2.getDate()
+        );
+      };
+
       // Starting Monday not Sunday
       current.setDate(current.getDate() - current.getDay() + 1);
       for (var i = 0; i < 7; i++) {
-        week.push(new Date(current));
+        const entry = database.calendarEntries.find((entry) =>
+          sameDay(new Date(entry.date), current)
+        );
+        let meals = [];
+
+        if (entry) {
+          meals = entry.meals.map((id) =>
+            database.meals.find((meal) => meal.id === id)
+          );
+        }
+
+        week.push({
+          date: new Date(current),
+          meals,
+        });
         current.setDate(current.getDate() + 1);
       }
 
@@ -108,13 +87,13 @@ export default {
     currentMonth() {
       const today = new Date();
       return today.toLocaleString('default', { month: 'long' });
-    }
+    },
   },
   mounted() {
     let now = new Date();
-    const todayElement = document.getElementById(`day-${now.getDate() + 1}`);
-    todayElement.scrollIntoView({ inline: 'start' });
-  }
+    const todayElement = document.getElementById(`day-${now.getDay() - 1}`);
+    this.$nextTick(() => todayElement.scrollIntoView({ inline: 'start' }));
+  },
 };
 </script>
 
@@ -165,7 +144,7 @@ export default {
   text-align: left;
   padding-bottom: 8px;
   display: flex;
-    justify-content: space-between;
+  justify-content: space-between;
 }
 
 .calendar-entry {
