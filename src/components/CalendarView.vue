@@ -19,11 +19,11 @@
         </div>
         <div
           class="calendar-entry"
-          v-for="(meal, index) in day.meals"
-          :key="`meal-${index}`"
-          :style="{ backgroundImage: 'url(' + meal.image + ')' }"
+          v-for="(recipe, index) in day.recipes"
+          :key="`recipe-${index}`"
+          :style="{ backgroundImage: 'url(' + recipe.image + ')' }"
         >
-          <div class="entry-title">{{ meal.title }}</div>
+          <div class="entry-title">{{ recipe.title }}</div>
         </div>
       </div>
     </div>
@@ -67,17 +67,17 @@ export default {
         const entry = database.calendarEntries.find((entry) =>
           sameDay(new Date(entry.date), current)
         );
-        let meals = [];
+        let recipes = [];
 
         if (entry) {
-          meals = entry.meals.map((id) =>
-            database.meals.find((meal) => meal.id === id)
+          recipes = entry.recipes.map((id) =>
+            database.recipes.find((recipe) => recipe.id === id)
           );
         }
 
         week.push({
           date: new Date(current),
-          meals,
+          recipes,
         });
         current.setDate(current.getDate() + 1);
       }

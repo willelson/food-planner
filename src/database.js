@@ -1,4 +1,4 @@
-const meals = [
+const recipes = [
   {
     id: 'dssfka6f',
     title: 'Protein pancakes',
@@ -39,24 +39,24 @@ export const idGenerator = () =>
 const calendarEntries = [
   {
     date: 'Sat Feb 11 2023 07:36:27 GMT+0000',
-    meals: ['lsopej2g', 'pabd76zq'],
+    recipes: ['lsopej2g', 'pabd76zq'],
   },
   {
     date: 'Sun Feb 12 2023 07:36:27 GMT+0000',
-    meals: ['w2nxa9wj'],
+    recipes: ['w2nxa9wj'],
   },
   {
     date: 'Mon Feb 13 2023 07:36:27 GMT+0000',
-    meals: ['w2nxa9wj', 'pabd76zq'],
+    recipes: ['w2nxa9wj', 'pabd76zq'],
   },
   {
     date: 'Tue Feb 14 2023 07:36:27 GMT+0000',
-    meals: ['js8heb5s'],
+    recipes: ['js8heb5s'],
   },
 ];
 
 const database = {
-  meals,
+  recipes,
   calendarEntries,
 };
 
