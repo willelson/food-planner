@@ -1,13 +1,57 @@
 <template>
   <div class="calendar-title">Recipes</div>
+  <div class="recipe-grid">
+    <div class="add-button">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      <div>Add new</div>
+    </div>
+    <div
+      class="calendar-entry"
+      v-for="(recipe, index) in recipes"
+      :key="`recipe-${index}`"
+      :style="{ backgroundImage: 'url(' + recipe.image + ')' }"
+    >
+      <div class="entry-title">{{ recipe.title }}</div>
+    </div>
+  </div>
 </template>
 
 <script>
+import { recipes } from '../database';
 export default {
-
-}
+  data() {
+    return {
+      recipes,
+    };
+  },
+};
 </script>
 
-<style>
+<style scoped>
+.recipe-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 8px;
+  gap: 16px;
+}
 
+.calendar-entry {
+  margin-bottom: 0px;
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0px;
+  border: 1px solid white;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  width: 100%;
+  background-color: #e5e5e5;
+}
+
+.add-button i {
+  margin-left: 4px;
+}
 </style>

@@ -1,4 +1,4 @@
-const recipes = [
+export const recipes = [
   {
     id: 'dssfka6f',
     title: 'Protein pancakes',
@@ -36,7 +36,7 @@ export const idGenerator = () =>
     .toString(36)
     .substring(2, 10);
 
-const calendarEntries = [
+export const calendarEntries = [
   {
     date: 'Sat Feb 11 2023 07:36:27 GMT+0000',
     recipes: ['lsopej2g', 'pabd76zq'],
@@ -55,9 +55,9 @@ const calendarEntries = [
   },
 ];
 
-const database = {
-  recipes,
-  calendarEntries,
-};
+// const database = {
+//   recipes,
+//   calendarEntries,
+// };
 
-export default database;
+// export default database;

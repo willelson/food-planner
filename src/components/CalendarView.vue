@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import database from '../database';
+import { recipes, calendarEntries } from '../database';
 
 export default {
   data() {
@@ -64,20 +64,20 @@ export default {
       // Starting Monday not Sunday
       current.setDate(current.getDate() - current.getDay() + 1);
       for (var i = 0; i < 7; i++) {
-        const entry = database.calendarEntries.find((entry) =>
+        const entry = calendarEntries.find((entry) =>
           sameDay(new Date(entry.date), current)
         );
-        let recipes = [];
+        let dayRecipes = [];
 
         if (entry) {
-          recipes = entry.recipes.map((id) =>
-            database.recipes.find((recipe) => recipe.id === id)
+          dayRecipes = entry.recipes.map((id) =>
+            recipes.find((recipe) => recipe.id === id)
           );
         }
 
         week.push({
           date: new Date(current),
-          recipes,
+          recipes: dayRecipes,
         });
         current.setDate(current.getDate() + 1);
       }
