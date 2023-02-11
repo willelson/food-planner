@@ -2,8 +2,10 @@
   <div class="calendar-title">Recipes</div>
   <div class="recipe-grid">
     <div class="add-button">
-      <i class="fa fa-plus" aria-hidden="true"></i>
-      <div>Add new</div>
+      <div class="add-text">
+        <i class="fa fa-plus" style="font-size: 28px;" aria-hidden="true"></i>
+        <div>Add new</div>
+      </div>
     </div>
     <div
       class="calendar-entry"
@@ -53,5 +55,11 @@ export default {
 
 .add-button i {
   margin-left: 4px;
+}
+
+.add-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
