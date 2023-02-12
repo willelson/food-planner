@@ -62,7 +62,12 @@ export default {
       };
 
       // Starting Monday not Sunday
-      current.setDate(current.getDate() - current.getDay() + 1);
+      // Set the current date to the previous monday
+      if (current.getDay() === 0) {
+        current.setDate(current.getDate() - 6);
+      } else {
+        current.setDate(current.getDate() - current.getDay() + 1);
+      }
       for (var i = 0; i < 7; i++) {
         const entry = calendarEntries.find((entry) =>
           sameDay(new Date(entry.date), current)
@@ -91,7 +96,14 @@ export default {
   },
   mounted() {
     let now = new Date();
-    const todayElement = document.getElementById(`day-${now.getDay() - 1}`);
+    let todayIndex = now.getDay() - 1;
+
+    // Set the Sunday index to 6 as we always want to start from Monday
+    if (now.getDay() === 0) {
+      todayIndex = 6;
+    }
+
+    const todayElement = document.getElementById(`day-${todayIndex}`);
     this.$nextTick(() => todayElement.scrollIntoView({ inline: 'start' }));
   },
 };
