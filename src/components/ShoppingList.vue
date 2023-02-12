@@ -1,25 +1,27 @@
 <template>
-  <div class="calendar-title">Shopping List</div>
-  <div class="list-container">
-    <div class="list-item" v-for="item in items" :key="item.id">
-      <div class="checkbox" @click="item.checked = !item.checked">
-        <i
-          v-if="item.checked"
-          class="fa fa-check-circle"
-          aria-hidden="true"
-        ></i>
-        <i v-else class="fa fa-circle-o" aria-hidden="true"></i>
+  <div class="page-container">
+    <div class="calendar-title">Shopping List</div>
+    <div class="list-container">
+      <div class="list-item" v-for="item in items" :key="item.id">
+        <div class="checkbox" @click="item.checked = !item.checked">
+          <i
+            v-if="item.checked"
+            class="fa fa-check-circle"
+            aria-hidden="true"
+          ></i>
+          <i v-else class="fa fa-circle-o" aria-hidden="true"></i>
+        </div>
+        <div class="text">{{ item.text }}</div>
       </div>
-      <div class="text">{{ item.text }}</div>
-    </div>
-    <div class="new-item">
-      <i class="fa fa-circle-o" aria-hidden="true"></i>
-      <input
-        type="text"
-        @keyup.enter="addItem"
-        @blur="inputBlur"
-        v-model="input"
-      />
+      <div class="new-item">
+        <i class="fa fa-circle-o" aria-hidden="true"></i>
+        <input
+          type="text"
+          @keyup.enter="addItem"
+          @blur="inputBlur"
+          v-model="input"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -33,8 +35,8 @@ export default {
         { id: 1, text: 'Milk', checked: false },
         { id: 2, text: 'Butter', checked: false },
         { id: 3, text: 'Eggs', checked: false },
-        { id: 4, text: 'Peanut butter', checked: false }
-      ]
+        { id: 4, text: 'Peanut butter', checked: false },
+      ],
     };
   },
   methods: {
@@ -48,8 +50,8 @@ export default {
     inputBlur() {
       if (!this.input) return;
       this.addItem();
-    }
-  }
+    },
+  },
 };
 </script>
 

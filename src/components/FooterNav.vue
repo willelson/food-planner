@@ -2,7 +2,7 @@
   <div class="footer">
     <div
       class="footer-button centered"
-      :class="{ active: page === 'calendar'}"
+      :class="{ active: page === 'calendar' }"
     >
       <i
         class="fa fa-calendar-o"
@@ -12,7 +12,7 @@
     </div>
     <div
       class="footer-button centered"
-      :class="{ active: page === 'shopping'}"
+      :class="{ active: page === 'shopping' }"
     >
       <i
         class="fa fa-shopping-cart"
@@ -20,10 +20,7 @@
         @click="pageSelected('shopping')"
       ></i>
     </div>
-    <div
-      class="footer-button centered"
-      :class="{ active: page === 'recipes'}"
-    >
+    <div class="footer-button centered" :class="{ active: page === 'recipes' }">
       <i
         class="fa fa-bookmark"
         aria-hidden="true"
@@ -40,14 +37,14 @@ export default {
   methods: {
     pageSelected(page) {
       this.$emit('update:page', page);
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style>
 .footer {
-  min-height: 66px;
+  min-height: var(--footer-height);
   padding-bottom: 18px;
   margin-top: auto;
   display: flex;

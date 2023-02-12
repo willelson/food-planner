@@ -1,5 +1,5 @@
 <template>
-  <div class="calendar">
+  <div class="calendar page-container">
     <div class="calendar-title">{{ currentMonth }}</div>
     <div class="calendar-body">
       <div
@@ -106,7 +106,6 @@ export default {
 }
 
 .calendar {
-  flex: 1;
   display: flex;
   flex-direction: column;
 }
