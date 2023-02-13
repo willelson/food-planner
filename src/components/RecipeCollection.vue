@@ -60,7 +60,7 @@ export default {
   border-radius: 8px;
   margin-bottom: 8px;
   width: 100%;
-  background-color: #e5e5e5;
+  background-color: var(--border);
 }
 
 .add-button i {
