@@ -17,7 +17,7 @@
         <div class="entry-title">{{ recipe.title }}</div>
       </div>
     </div>
-    <AddRecipe v-if="showAddRecipeForm" @close="showAddRecipeForm = false" />
+    <AddRecipe :open="showAddRecipeForm" @close="showAddRecipeForm = false" />
   </div>
 </template>
 

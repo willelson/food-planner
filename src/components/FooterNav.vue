@@ -49,6 +49,7 @@ export default {
   margin-top: auto;
   display: flex;
   background-color: var(--primary);
+  z-index: 10;
 }
 
 .footer .footer-button {

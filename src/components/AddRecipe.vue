@@ -1,6 +1,6 @@
 <template>
   <div>
-    <modal @close="$emit('close')">
+    <modal @close="$emit('close')" :open="open">
       <template v-slot:header>
         <div class="calendar-title">New Recipe</div>
       </template>
@@ -28,6 +28,7 @@
 import Modal from './Modal.vue';
 
 export default {
+  props: ['open'],
   components: { Modal }
 };
 </script>
