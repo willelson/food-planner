@@ -10,36 +10,43 @@
       </div>
       <div
         class="calendar-entry"
-        v-for="(recipe, index) in recipes"
-        :key="`recipe-${index}`"
+        v-for="recipe in recipes"
+        :key="recipe.id"
         :style="{ backgroundImage: 'url(' + getImageUrl(recipe.image) + ')' }"
       >
         <div class="entry-title">{{ recipe.title }}</div>
       </div>
     </div>
-    <AddRecipe :open="showAddRecipeForm" @close="showAddRecipeForm = false" />
+    <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
   </div>
 </template>
 
 <script>
-import { recipes, getImage } from '../database';
+import { getImage, getRecipes } from '../database';
 import AddRecipe from './AddRecipe.vue';
 
 export default {
   data() {
     return {
-      recipes,
+      recipes: [],
       showAddRecipeForm: false,
     };
   },
   methods: {
     getImageUrl(id) {
       return getImage(id)
+    },
+    recipeFormClosed() {
+      this.showAddRecipeForm = false;
+      this.recipes = getRecipes();
     }
   },
   components: {
     AddRecipe,
   },
+  mounted() {
+    this.recipes = getRecipes();
+  }
 };
 </script>
 
@@ -65,6 +72,7 @@ export default {
   border-radius: var(--border-radius);
   width: 100%;
   background-color: var(--border);
+  aspect-ratio: 1/1;
 }
 
 .add-text {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <modal @close="cancel" :open="open">
+    <modal @close="close" :open="open">
       <template v-slot:header>
         <div class="page-title">New Recipe</div>
       </template>
@@ -21,8 +21,8 @@
         </div>
       </template>
       <template v-slot:footer>
-        <button class="btn btn-default" @click="cancel">Cancel</button>
-        <button class="btn btn-primary">Add</button>
+        <button class="btn btn-default" @click="close">Cancel</button>
+        <button class="btn btn-primary" @click="addRecipe">Add</button>
       </template>
     </modal>
   </div>
@@ -31,6 +31,8 @@
 <script>
 import Modal from './Modal.vue';
 import CarouselMenu from './CarouselMenu.vue';
+
+import { idGenerator, getRecipes } from '../database';
 
 export default {
   data() {
@@ -43,11 +45,22 @@ export default {
   props: ['open'],
   components: { Modal, CarouselMenu },
   methods: {
-    cancel() {
-      this.$emit('close');
+    clearFields() {
       this.title = null;
       this.url = null;
       this.image = null;
+    },
+    close() {
+      this.$emit('close');
+      this.clearFields();
+    },
+    addRecipe() {
+      const { title, url, image } = this;
+      let existingRecipes = getRecipes();
+      const newRecipe = { id: idGenerator(), title, url, image };
+      localStorage.setItem('recipes', JSON.stringify([...existingRecipes, newRecipe]));
+
+      this.close();
     }
   }
 };

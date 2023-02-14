@@ -104,5 +104,19 @@ export const images = [
 
 export const getImage = (id) => {
   const image = images.find((img) => img.id === id);
+
+  if (!image) return '';
   return image.url;
+};
+
+export const getRecipes = () => {
+  let existingRecipes = localStorage.getItem('recipes');
+
+  if (!existingRecipes) {
+    existingRecipes = [];
+  } else {
+    existingRecipes = JSON.parse(existingRecipes);
+  }
+
+  return existingRecipes;
 };
