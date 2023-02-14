@@ -1,6 +1,6 @@
 <template>
   <div>
-    <modal @close="$emit('close')" :open="open">
+    <modal @close="cancel" :open="open">
       <template v-slot:header>
         <div class="page-title">New Recipe</div>
       </template>
@@ -16,12 +16,12 @@
           </div>
           <div class="form-group full-width">
             <div class="label">Photo</div>
-            <carousel-menu v-model="image"> </carousel-menu>
+            <carousel-menu v-model:selection="image"> </carousel-menu>
           </div>
         </div>
       </template>
       <template v-slot:footer>
-        <button class="btn btn-default" @click="$emit('close')">Cancel</button>
+        <button class="btn btn-default" @click="cancel">Cancel</button>
         <button class="btn btn-primary">Add</button>
       </template>
     </modal>
@@ -30,21 +30,27 @@
 
 <script>
 import Modal from './Modal.vue';
-import CarouselMenu from './CarouselMenu.vue'
+import CarouselMenu from './CarouselMenu.vue';
 
 export default {
   data() {
     return {
       title: null,
       url: null,
-      image: null,
-    }
+      image: null
+    };
   },
   props: ['open'],
-  components: { Modal, CarouselMenu }
+  components: { Modal, CarouselMenu },
+  methods: {
+    cancel() {
+      this.$emit('close');
+      this.title = null;
+      this.url = null;
+      this.image = null;
+    }
+  }
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

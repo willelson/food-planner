@@ -8,9 +8,12 @@
       <div
         v-for="image in column"
         :key="image.id"
+        @click="imageSelected(image.id)"
         class="image-box"
+        :class="{ selected: image.id === selection }"
         :style="{
-          backgroundImage: `url('${image.url}')`
+          backgroundImage: `url('${image.url}')`,
+          opacity: imageOpacity(image.id)
         }"
       ></div>
     </li>
@@ -20,10 +23,22 @@
 <script>
 import { images } from '../database';
 export default {
+  props: ['selection'],
+  emits: ['update:selection'],
   data() {
     return {
       images: []
     };
+  },
+  methods: {
+    imageSelected(imageId) {
+      this.$emit('update:selection', imageId);
+    },
+    imageOpacity(imageId) {
+      if (this.selection && imageId !== this.selection) {
+        return 0.7;
+      } else return 1;
+    }
   },
   computed: {
     imageColumns() {
@@ -45,7 +60,8 @@ export default {
 .scroll-container {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding: 0 16px;
+  padding: var(--padding-sm) var(--padding);
+  margin-top: var(--padding-xs);
 }
 .scroll-item {
   scroll-snap-align: center;
@@ -81,5 +97,10 @@ export default {
   margin-bottom: var(--padding-sm);
   width: 100%;
   background-size: cover;
+}
+
+.selected {
+  border: 3px solid var(--primary);
+  box-shadow: 0 0 8px var(--primary);
 }
 </style>
