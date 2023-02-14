@@ -14,7 +14,7 @@
             <div class="label">URL</div>
             <input type="text" id="url" />
           </div>
-          <div class="form-group">
+          <div class="form-group full-width">
             <div class="label">Photo</div>
             <carousel-menu> </carousel-menu>
           </div>
