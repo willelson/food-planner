@@ -21,7 +21,7 @@
           class="calendar-entry"
           v-for="(recipe, index) in day.recipes"
           :key="`recipe-${index}`"
-          :style="{ backgroundImage: 'url(' + recipe.image + ')' }"
+          :style="{ backgroundImage: 'url(' + getImageUrl(recipe.image) + ')' }"
         >
           <div class="entry-title">{{ recipe.title }}</div>
         </div>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { recipes, calendarEntries } from '../database';
+import { recipes, calendarEntries, getImage } from '../database';
 
 export default {
   data() {
@@ -46,6 +46,9 @@ export default {
 
       return '';
     },
+    getImageUrl(id) {
+      return getImage(id)
+    }
   },
   computed: {
     weekDates() {

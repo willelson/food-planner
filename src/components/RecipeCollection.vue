@@ -12,7 +12,7 @@
         class="calendar-entry"
         v-for="(recipe, index) in recipes"
         :key="`recipe-${index}`"
-        :style="{ backgroundImage: 'url(' + recipe.image + ')' }"
+        :style="{ backgroundImage: 'url(' + getImageUrl(recipe.image) + ')' }"
       >
         <div class="entry-title">{{ recipe.title }}</div>
       </div>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { recipes } from '../database';
+import { recipes, getImage } from '../database';
 import AddRecipe from './AddRecipe.vue';
 
 export default {
@@ -31,6 +31,11 @@ export default {
       recipes,
       showAddRecipeForm: false,
     };
+  },
+  methods: {
+    getImageUrl(id) {
+      return getImage(id)
+    }
   },
   components: {
     AddRecipe,

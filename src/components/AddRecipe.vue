@@ -8,20 +8,20 @@
         <div class="form-body">
           <div class="form-group">
             <div class="label">Title</div>
-            <input type="text" id="title" />
+            <input v-model="title" type="text" id="title" />
           </div>
           <div class="form-group">
             <div class="label">URL</div>
-            <input type="text" id="url" />
+            <input v-model="url" type="text" id="url" />
           </div>
           <div class="form-group full-width">
             <div class="label">Photo</div>
-            <carousel-menu> </carousel-menu>
+            <carousel-menu v-model="image"> </carousel-menu>
           </div>
         </div>
       </template>
       <template v-slot:footer>
-        <button class="btn btn-default">Cancel</button>
+        <button class="btn btn-default" @click="$emit('close')">Cancel</button>
         <button class="btn btn-primary">Add</button>
       </template>
     </modal>
@@ -33,6 +33,13 @@ import Modal from './Modal.vue';
 import CarouselMenu from './CarouselMenu.vue'
 
 export default {
+  data() {
+    return {
+      title: null,
+      url: null,
+      image: null,
+    }
+  },
   props: ['open'],
   components: { Modal, CarouselMenu }
 };

@@ -39,7 +39,7 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 80%;
+  height: 90%;
   z-index: 4;
   background-color: white;
   border-top-right-radius: 22px;
@@ -55,7 +55,7 @@ export default {
 
 @keyframes slideup {
   0% {
-    bottom: -80%;
+    bottom: -90%;
   }
   100% {
     bottom: 0;
