@@ -14,6 +14,10 @@
             <div class="label">URL</div>
             <input type="text" id="url" />
           </div>
+          <div class="form-group">
+            <div class="label">Photo</div>
+            <carousel-menu> </carousel-menu>
+          </div>
         </div>
       </template>
       <template v-slot:footer>
@@ -26,10 +30,11 @@
 
 <script>
 import Modal from './Modal.vue';
+import CarouselMenu from './CarouselMenu.vue'
 
 export default {
   props: ['open'],
-  components: { Modal }
+  components: { Modal, CarouselMenu }
 };
 </script>
 
