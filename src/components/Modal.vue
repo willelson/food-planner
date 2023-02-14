@@ -9,7 +9,7 @@
         <div class="modal-header">
           <slot name="header"></slot>
           <i
-            class="fa fa-times calendar-title"
+            class="fa fa-times page-title"
             @click="$emit('close')"
             aria-hidden="true"
           ></i>
@@ -37,6 +37,7 @@ export default {
   flex-direction: column;
   position: absolute;
   bottom: 0;
+  left: 0;
   width: 100%;
   height: 80%;
   z-index: 4;
@@ -85,17 +86,14 @@ export default {
   opacity: 0.3;
   z-index: 3;
   top: 0;
+  left: 0;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px;
-}
-
-.modal-header i {
-  padding-right: 8px;
+  padding: var(--padding-sm) 0;
 }
 
 .modal-body {
@@ -104,7 +102,7 @@ export default {
 }
 
 .modal-footer {
-  padding: 16px;
+  padding: var(--padding);
   display: flex;
   justify-content: center;
 }

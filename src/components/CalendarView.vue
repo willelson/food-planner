@@ -1,6 +1,6 @@
 <template>
   <div class="calendar page-container">
-    <div class="calendar-title">{{ currentMonth }}</div>
+    <div class="page-title">{{ currentMonth }}</div>
     <div class="calendar-body">
       <div
         class="day-container"
@@ -110,8 +110,8 @@ export default {
 </script>
 
 <style>
-.calendar-title {
-  padding: 8px 0 0 8px;
+.page-title {
+  padding: var(--padding-sm) var(--padding);
   font-size: 24px;
   color: var(--primary);
   font-weight: bold;

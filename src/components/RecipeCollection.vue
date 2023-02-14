@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <div class="calendar-title">Recipes</div>
+    <div class="page-title">Recipes</div>
     <div class="recipe-grid">
       <div class="add-button">
         <div class="add-text" @click="showAddRecipeForm = true">
@@ -43,8 +43,8 @@ export default {
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  padding: 8px;
-  gap: 16px;
+  gap: var(--grid-gap);
+  padding: var(--padding)
 }
 
 .calendar-entry {
@@ -55,16 +55,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 0px;
+  padding: var(--padding-sm) 0px;
   border: 1px solid white;
-  border-radius: 8px;
-  margin-bottom: 8px;
+  border-radius: var(--border-radius);
   width: 100%;
   background-color: var(--border);
-}
-
-.add-button i {
-  margin-left: 4px;
 }
 
 .add-text {

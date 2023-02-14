@@ -6,6 +6,12 @@
   --black: #1d1c1a;
   --border: #e5e5e5;
   --footer-height: 65px;
+  --padding: 16px;
+  --padding-sm: 8px;
+  --padding-xs: 4px;
+  --default-padding: var(--padding-sm) var(--padding);
+  --grid-gap: 16px;
+  --border-radius: 8px;
 }
 
 html {
@@ -48,14 +54,14 @@ body {
 }
 
 input {
-  padding: 8px;
+  padding: var(--padding-sm);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--border-radius);
   width: 100%;
 }
 
 .form-body {
-  padding: 16px;
+  padding: var(--padding);
 }
 
 .form-group {
@@ -68,8 +74,8 @@ input {
 
 .btn {
   border: 2px solid var(--primary);
-  border-radius: 16px;
-  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  padding: var(--padding-sm) var(--padding);
   background: white;
   font-weight: bold;
   margin: 0 8px;

@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <div class="calendar-title">Shopping List</div>
+    <div class="page-title">Shopping List</div>
     <div class="list-container">
       <div class="list-item" v-for="item in items" :key="item.id">
         <div class="checkbox" @click="item.checked = !item.checked">
@@ -59,7 +59,7 @@ export default {
 .list-container {
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  padding: var(--padding-sm) var(--padding);
   overflow-y: scroll;
 }
 
@@ -72,7 +72,7 @@ export default {
 .new-item i,
 .checkbox {
   margin-right: 8px;
-  padding: 4px;
+  padding: var(--padding-xs);
 }
 
 .new-item,

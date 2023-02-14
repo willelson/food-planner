@@ -2,7 +2,7 @@
   <div>
     <modal @close="$emit('close')" :open="open">
       <template v-slot:header>
-        <div class="calendar-title">New Recipe</div>
+        <div class="page-title">New Recipe</div>
       </template>
       <template v-slot:body>
         <div class="form-body">
