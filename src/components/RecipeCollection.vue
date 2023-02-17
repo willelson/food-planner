@@ -8,22 +8,16 @@
           <div>Add new</div>
         </div>
       </div>
-      <div
-        class="calendar-entry"
-        v-for="recipe in recipes"
-        :key="recipe.id"
-        :style="{ backgroundImage: 'url(' + getImageUrl(recipe.image) + ')' }"
-      >
-        <div class="entry-title">{{ recipe.title }}</div>
-      </div>
+      <RecipeImageBox v-for="recipe in recipes" :recipe="recipe" :key="recipe.id" />
     </div>
     <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
   </div>
 </template>
 
 <script>
-import { getImage, getRecipes } from '../database';
+import { getRecipes } from '../database';
 import AddRecipe from './AddRecipe.vue';
+import RecipeImageBox from './RecipeImageBox.vue';
 
 export default {
   data() {
@@ -33,16 +27,13 @@ export default {
     };
   },
   methods: {
-    getImageUrl(id) {
-      return getImage(id)
-    },
     recipeFormClosed() {
       this.showAddRecipeForm = false;
       this.recipes = getRecipes();
     }
   },
   components: {
-    AddRecipe,
+    AddRecipe, RecipeImageBox
   },
   mounted() {
     this.recipes = getRecipes();
@@ -59,7 +50,7 @@ export default {
   padding: var(--padding)
 }
 
-.calendar-entry {
+.recipe-image-box {
   margin-bottom: 0px;
 }
 

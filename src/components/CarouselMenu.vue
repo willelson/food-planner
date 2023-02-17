@@ -69,7 +69,7 @@ export default {
   flex-direction: column;
 }
 
-.scroll-item .calendar-entry:last-child {
+.scroll-item .recipe-image-box:last-child {
   margin-bottom: 0px;
 }
 
@@ -77,7 +77,7 @@ export default {
 .scroll-container {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: start;
+  justify-content: flex-start;
 }
 .scroll-container .scroll-item {
   margin-right: var(--padding-sm); /* fake gap */

@@ -8,6 +8,7 @@
         :key="`day-${index}`"
         :id="`day-${index}`"
         :class="dayContainerClass(day)"
+        @click="onClick(day)"
       >
         <div class="day-title">
           {{
@@ -17,25 +18,32 @@
             new Date(day.date).getDate()
           }}</span>
         </div>
-        <div
-          class="calendar-entry"
-          v-for="(recipe, index) in day.recipes"
-          :key="`recipe-${index}`"
-          :style="{ backgroundImage: 'url(' + getImageUrl(recipe.image) + ')' }"
-        >
-          <div class="entry-title">{{ recipe.title }}</div>
-        </div>
+        <RecipeImageBox
+          v-for="recipe in day.recipes"
+          :recipe="recipe"
+          :key="recipe.id"
+        />
       </div>
     </div>
+    <AddToCalendar :selectedDay="selectedDay" @close="closeAddToCalendar" />
   </div>
 </template>
 
 <script>
-import { recipes, calendarEntries, getImage } from '../database';
+import { recipes, calendarEntries } from '../database';
+import AddToCalendar from './AddToCalendar.vue';
+import RecipeImageBox from './RecipeImageBox.vue';
 
 export default {
+  components: {
+    AddToCalendar,
+    RecipeImageBox
+  },
   data() {
-    return {};
+    return {
+      timeoutId: null,
+      selectedDay: null
+    };
   },
   methods: {
     dayContainerClass(day) {
@@ -46,9 +54,20 @@ export default {
 
       return '';
     },
-    getImageUrl(id) {
-      return getImage(id)
-    }
+    openAddToCalendar() {},
+    closeAddToCalendar() {
+      this.selectedDay = null;
+    },
+    onClick(day) {
+      // Open modal updon double click
+      if (!this.timeoutId) {
+        this.timeoutId = setTimeout(() => this.timeoutId = null, 500);
+      } else {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+        this.selectedDay = day;
+      }
+    },
   },
   computed: {
     weekDates() {
@@ -85,7 +104,7 @@ export default {
 
         week.push({
           date: new Date(current),
-          recipes: dayRecipes,
+          recipes: dayRecipes
         });
         current.setDate(current.getDate() + 1);
       }
@@ -95,7 +114,7 @@ export default {
     currentMonth() {
       const today = new Date();
       return today.toLocaleString('default', { month: 'long' });
-    },
+    }
   },
   mounted() {
     let now = new Date();
@@ -108,7 +127,7 @@ export default {
 
     const todayElement = document.getElementById(`day-${todayIndex}`);
     this.$nextTick(() => todayElement.scrollIntoView({ inline: 'start' }));
-  },
+  }
 };
 </script>
 
@@ -161,29 +180,6 @@ export default {
   justify-content: space-between;
 }
 
-.calendar-entry {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  border: 1px solid white;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  width: 100%;
-  background-size: cover;
-}
-.calendar-entry:after {
-  content: '';
-  position: absolute;
-  display: block;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0)
-    linear-gradient(to bottom, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0.6) 100%)
-    repeat 0 0;
-  z-index: 1;
-  border-radius: 8px;
-}
 .entry-title {
   display: block;
   position: absolute;
