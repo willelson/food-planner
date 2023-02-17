@@ -22,7 +22,13 @@
         <div class="form-group">
           <div class="label">Recipe</div>
           <div class="recipe-grid">
-          <RecipeImageBox v-for="recipe in recipes" :recipe="recipe" :key="recipe.id" />
+            <RecipeImageBox
+              v-for="{ title, image, id } in recipes"
+              :title="title"
+              :id="id"
+              :image-id="image"
+              :key="id"
+            />
           </div>
         </div>
       </template>
@@ -38,7 +44,7 @@
 import Modal from './Modal.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
 
-import {  getRecipes } from '../database';
+import { getRecipes } from '../database';
 
 export default {
   data() {
@@ -74,7 +80,7 @@ export default {
       return this.selectedDay !== null;
     }
   },
-   mounted() {
+  mounted() {
     this.recipes = getRecipes();
   }
 };

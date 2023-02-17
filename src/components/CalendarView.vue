@@ -19,9 +19,11 @@
           }}</span>
         </div>
         <RecipeImageBox
-          v-for="recipe in day.recipes"
-          :recipe="recipe"
-          :key="recipe.id"
+          v-for="{ title, image, id } in day.recipes"
+          :title="title"
+          :id="id"
+          :image-id="image"
+          :key="id"
         />
       </div>
     </div>
@@ -61,13 +63,13 @@ export default {
     onClick(day) {
       // Open modal updon double click
       if (!this.timeoutId) {
-        this.timeoutId = setTimeout(() => this.timeoutId = null, 500);
+        this.timeoutId = setTimeout(() => (this.timeoutId = null), 500);
       } else {
         clearTimeout(this.timeoutId);
         this.timeoutId = null;
         this.selectedDay = day;
       }
-    },
+    }
   },
   computed: {
     weekDates() {

@@ -5,40 +5,34 @@
       v-bind:key="`col-${column[0].id}`"
       class="scroll-item"
     >
-      <div
-        v-for="image in column"
-        :key="image.id"
-        @click="imageSelected(image.id)"
-        class="image-box"
-        :class="{ selected: image.id === selection }"
-        :style="{
-          backgroundImage: `url('${image.url}')`,
-          opacity: imageOpacity(image.id)
-        }"
-      ></div>
+      <RecipeImageBox
+        v-for="{ id } in column"
+        :id="id"
+        :image-id="id"
+        :key="id"
+        :showTitle="false"
+        :selected="id === selection"
+        :faded="selection && id !== selection"
+        @click="$emit('update:selection', id)"
+      />
     </li>
   </ul>
 </template>
 
 <script>
+import RecipeImageBox from './RecipeImageBox.vue';
 import { images } from '../database';
+
 export default {
   props: ['selection'],
   emits: ['update:selection'],
+  components: {
+    RecipeImageBox
+  },
   data() {
     return {
       images: []
     };
-  },
-  methods: {
-    imageSelected(imageId) {
-      this.$emit('update:selection', imageId);
-    },
-    imageOpacity(imageId) {
-      if (this.selection && imageId !== this.selection) {
-        return 0.7;
-      } else return 1;
-    }
   },
   computed: {
     imageColumns() {
@@ -88,19 +82,5 @@ export default {
   width: 31%;
   display: flex;
   align-items: center;
-}
-
-.image-box {
-  aspect-ratio: 1 / 1;
-  border: 1px solid white;
-  border-radius: var(--border-radius);
-  margin-bottom: var(--padding-sm);
-  width: 100%;
-  background-size: cover;
-}
-
-.selected {
-  border: 3px solid var(--primary);
-  box-shadow: 0 0 8px var(--primary);
 }
 </style>

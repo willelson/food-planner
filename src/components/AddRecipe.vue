@@ -16,7 +16,7 @@
           </div>
           <div class="form-group full-width">
             <div class="label">Photo</div>
-            <carousel-menu v-model:selection="image"> </carousel-menu>
+            <CarouselMenu v-model:selection="image" />
           </div>
         </div>
       </template>
@@ -58,7 +58,10 @@ export default {
       const { title, url, image } = this;
       let existingRecipes = getRecipes();
       const newRecipe = { id: idGenerator(), title, url, image };
-      localStorage.setItem('recipes', JSON.stringify([...existingRecipes, newRecipe]));
+      localStorage.setItem(
+        'recipes',
+        JSON.stringify([...existingRecipes, newRecipe])
+      );
 
       this.close();
     }

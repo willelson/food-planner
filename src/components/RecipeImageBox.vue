@@ -1,11 +1,12 @@
 <template>
   <div
     class="recipe-image-box"
-    :key="recipe.id"
-    :style="{ backgroundImage: 'url(' + getImageUrl(recipe.image) + ')' }"
+    :class="{ 'show-title': showTitle, selected, faded }"
+    :key="id"
+    :style="{ backgroundImage: 'url(' + getImageUrl(imageId) + ')' }"
     @click="$emit('click')"
   >
-    <div class="entry-title">{{ recipe.title }}</div>
+    <div v-if="showTitle" class="entry-title">{{ title }}</div>
   </div>
 </template>
 
@@ -14,11 +15,36 @@ import { getImage } from '../database';
 
 export default {
   emits: ['click'],
-  props: ['recipe'],
-    methods: {
-    getImageUrl(id) {
-      return getImage(id)
+  props: {
+    title: {
+      type: String,
+      default: ''
     },
+    id: {
+      type: String,
+      default: ''
+    },
+    imageId: {
+      type: String,
+      default: ''
+    },
+    selected: {
+      type: Boolean,
+      default: false
+    },
+    showTitle: {
+      type: Boolean,
+      default: true
+    },
+    faded: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    getImageUrl(id) {
+      return getImage(id);
+    }
   }
 };
 </script>
@@ -33,7 +59,7 @@ export default {
   width: 100%;
   background-size: cover;
 }
-.recipe-image-box:after {
+.show-title:after {
   content: '';
   position: absolute;
   display: block;
@@ -46,5 +72,14 @@ export default {
     repeat 0 0;
   z-index: 1;
   border-radius: 8px;
+}
+
+.selected {
+  border: 3px solid var(--primary);
+  box-shadow: 0 0 8px var(--primary);
+}
+
+.faded {
+  opacity: 0.7;
 }
 </style>

@@ -4,11 +4,17 @@
     <div class="recipe-grid">
       <div class="add-button">
         <div class="add-text" @click="showAddRecipeForm = true">
-          <i class="fa fa-plus" style="font-size: 28px;" aria-hidden="true"></i>
+          <i class="fa fa-plus" style="font-size: 28px" aria-hidden="true"></i>
           <div>Add new</div>
         </div>
       </div>
-      <RecipeImageBox v-for="recipe in recipes" :recipe="recipe" :key="recipe.id" />
+      <RecipeImageBox
+        v-for="{ title, image, id } in recipes"
+        :title="title"
+        :id="id"
+        :image-id="image"
+        :key="id"
+      />
     </div>
     <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
   </div>
@@ -23,7 +29,7 @@ export default {
   data() {
     return {
       recipes: [],
-      showAddRecipeForm: false,
+      showAddRecipeForm: false
     };
   },
   methods: {
@@ -33,7 +39,8 @@ export default {
     }
   },
   components: {
-    AddRecipe, RecipeImageBox
+    AddRecipe,
+    RecipeImageBox
   },
   mounted() {
     this.recipes = getRecipes();
@@ -47,7 +54,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: var(--grid-gap);
-  padding: var(--padding)
+  padding: var(--padding);
 }
 
 .recipe-image-box {
