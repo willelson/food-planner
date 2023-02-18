@@ -1,51 +1,6 @@
-export const recipes = [
-  {
-    id: 'dssfka6f',
-    title: 'Protein pancakes',
-    image: 'ujn7jzns'
-  },
-  {
-    id: 'pabd76zq',
-    title: 'Chickpea Curry',
-    image: 'zjju44d1'
-  },
-  {
-    id: 'w2nxa9wj',
-    title: 'No bake Flapjack',
-    image: 'fyrew3y2'
-  },
-  {
-    id: 'js8heb5s',
-    title: 'Mash & Sprouts',
-    image: '7ogzjid5'
-  },
-  {
-    id: 'lsopej2g',
-    title: 'Ramen',
-    image: 'wwgnhyz7'
-  }
-];
-
-export const idGenerator = () => Math.random().toString(36).substring(2, 10);
-
-export const calendarEntries = [
-  {
-    date: 'Sat Feb 11 2023 07:36:27 GMT+0000',
-    recipes: ['lsopej2g', 'pabd76zq']
-  },
-  {
-    date: 'Sun Feb 12 2023 07:36:27 GMT+0000',
-    recipes: ['w2nxa9wj']
-  },
-  {
-    date: 'Mon Feb 13 2023 07:36:27 GMT+0000',
-    recipes: ['w2nxa9wj', 'pabd76zq']
-  },
-  {
-    date: 'Tue Feb 14 2023 07:36:27 GMT+0000',
-    recipes: ['js8heb5s']
-  }
-];
+// localstorage key constants
+export const RECIPES = 'recipes';
+export const CALENDAR_ENTRIES = 'calendar-entries';
 
 export const images = [
   {
@@ -109,8 +64,11 @@ export const getImage = (id) => {
   return image.url;
 };
 
-export const getRecipes = () => {
-  let existingRecipes = localStorage.getItem('recipes');
+// Database util functions
+export const idGenerator = () => Math.random().toString(36).substring(2, 10);
+
+export const getAll = (key) => {
+  let existingRecipes = localStorage.getItem(key);
 
   if (!existingRecipes) {
     existingRecipes = [];
@@ -119,4 +77,42 @@ export const getRecipes = () => {
   }
 
   return existingRecipes;
+};
+
+// export const getOne = (key, id) => {};
+
+export const addItem = (key, newItem) => {
+  const existingItems = getAll(key);
+  localStorage.setItem(key, JSON.stringify([...existingItems, newItem]));
+};
+
+export const removeItem = (key, itemToRemove, identifier = 'id') => {
+  const existingItems = getAll(key);
+
+  const selectionIndex = existingItems.findIndex(
+    (item) => item[identifier] === itemToRemove[identifier]
+  );
+
+  const updatedItems = [
+    ...existingItems.splice(0, selectionIndex),
+    ...existingItems.splice(selectionIndex + 1)
+  ];
+
+  localStorage.setItem(key, JSON.stringify(updatedItems));
+};
+
+export const updateItem = (key, itemToUpdate, identifier = 'id') => {
+  const existingItems = getAll(key);
+
+  const selectionIndex = existingItems.findIndex(
+    (item) => item[identifier] === itemToUpdate[identifier]
+  );
+
+  const updatedItems = [
+    ...existingItems.splice(0, selectionIndex),
+    itemToUpdate,
+    ...existingItems.splice(selectionIndex + 1)
+  ];
+
+  localStorage.setItem(key, JSON.stringify(updatedItems));
 };

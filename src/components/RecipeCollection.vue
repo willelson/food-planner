@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { getRecipes } from '../database';
+import { getAll, RECIPES } from '../database';
 import AddRecipe from './AddRecipe.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
 
@@ -35,7 +35,7 @@ export default {
   methods: {
     recipeFormClosed() {
       this.showAddRecipeForm = false;
-      this.recipes = getRecipes();
+      this.recipes = getAll(RECIPES);
     }
   },
   components: {
@@ -43,7 +43,7 @@ export default {
     RecipeImageBox
   },
   mounted() {
-    this.recipes = getRecipes();
+    this.recipes = getAll(RECIPES);
   }
 };
 </script>

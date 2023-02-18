@@ -32,7 +32,7 @@
 import Modal from './Modal.vue';
 import CarouselMenu from './CarouselMenu.vue';
 
-import { idGenerator, getRecipes } from '../database';
+import { idGenerator, RECIPES, addItem } from '../database';
 
 export default {
   data() {
@@ -56,12 +56,8 @@ export default {
     },
     addRecipe() {
       const { title, url, image } = this;
-      let existingRecipes = getRecipes();
       const newRecipe = { id: idGenerator(), title, url, image };
-      localStorage.setItem(
-        'recipes',
-        JSON.stringify([...existingRecipes, newRecipe])
-      );
+      addItem(RECIPES, newRecipe);
 
       this.close();
     }

@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { recipes, calendarEntries } from '../database';
+import { getAll, CALENDAR_ENTRIES, RECIPES } from '../database';
 import AddToCalendar from './AddToCalendar.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
 
@@ -44,7 +44,9 @@ export default {
   data() {
     return {
       timeoutId: null,
-      selectedDay: null
+      selectedDay: null,
+      // Probably move to VUex store eventually
+      recipes: []
     };
   },
   methods: {
@@ -56,18 +58,18 @@ export default {
 
       return '';
     },
-    openAddToCalendar() {},
     closeAddToCalendar() {
       this.selectedDay = null;
+      this.recipes = getAll(RECIPES);
     },
     onClick(day) {
-      // Open modal updon double click
+      // Open modal upon double click
       if (!this.timeoutId) {
         this.timeoutId = setTimeout(() => (this.timeoutId = null), 500);
       } else {
         clearTimeout(this.timeoutId);
         this.timeoutId = null;
-        this.selectedDay = day;
+        this.selectedDay = new Date(day.date).getDay();
       }
     }
   },
@@ -76,6 +78,7 @@ export default {
       const today = new Date();
       const current = today;
       const week = new Array();
+      const calendarEntries = getAll(CALENDAR_ENTRIES);
 
       const sameDay = (d1, d2) => {
         return (
@@ -92,6 +95,7 @@ export default {
       } else {
         current.setDate(current.getDate() - current.getDay() + 1);
       }
+
       for (var i = 0; i < 7; i++) {
         const entry = calendarEntries.find((entry) =>
           sameDay(new Date(entry.date), current)
@@ -100,10 +104,9 @@ export default {
 
         if (entry) {
           dayRecipes = entry.recipes.map((id) =>
-            recipes.find((recipe) => recipe.id === id)
+            this.recipes.find((recipe) => recipe.id === id)
           );
         }
-
         week.push({
           date: new Date(current),
           recipes: dayRecipes
@@ -121,6 +124,8 @@ export default {
   mounted() {
     let now = new Date();
     let todayIndex = now.getDay() - 1;
+
+    this.recipes = getAll(RECIPES);
 
     // Set the Sunday index to 6 as we always want to start from Monday
     if (now.getDay() === 0) {

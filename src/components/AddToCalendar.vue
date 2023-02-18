@@ -11,11 +11,11 @@
             <div
               v-for="day in weekdays"
               class="week-day"
-              :class="{ selected: selectedDays.includes(day) }"
-              :key="day"
-              @click="handleDaySelection(day)"
+              :class="{ selected: selectedDays.includes(day.dayIndex) }"
+              :key="day.dayIndex"
+              @click="handleDaySelection(day.dayIndex)"
             >
-              {{ day }}
+              {{ day.label }}
             </div>
           </div>
         </div>
@@ -28,6 +28,11 @@
               :id="id"
               :image-id="image"
               :key="id"
+              :selected="selectedRecipes.includes(id)"
+              :faded="
+                selectedRecipes.length > 0 && !selectedRecipes.includes(id)
+              "
+              @click="toggleRecipeSelection(id)"
             />
           </div>
         </div>
@@ -44,20 +49,53 @@
 import Modal from './Modal.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
 
-import { getRecipes } from '../database';
+import { getAll, RECIPES } from '../database';
 
 export default {
   data() {
     return {
-      weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      weekdays: [
+        {
+          label: 'Mon',
+          dayIndex: 1
+        },
+        {
+          label: 'Tue',
+          dayIndex: 2
+        },
+        {
+          label: 'Wed',
+          dayIndex: 3
+        },
+        {
+          label: 'Thu',
+          dayIndex: 4
+        },
+        {
+          label: 'Fri',
+          dayIndex: 5
+        },
+        {
+          label: 'Sat',
+          dayIndex: 6
+        },
+        {
+          label: 'Sun',
+          dayIndex: 0
+        }
+      ],
       selectedDays: [],
-      recipes: []
+      recipes: [],
+      selectedRecipes: []
     };
   },
   props: ['selectedDay'],
+  emits: ['addRecipe'],
   components: { Modal, RecipeImageBox },
   methods: {
     close() {
+      this.selectedDays = [];
+      this.selectedRecipes = [];
       this.$emit('close');
     },
     addToCalendar() {
@@ -73,6 +111,21 @@ export default {
       } else {
         this.selectedDays.push(day);
       }
+    },
+    toggleRecipeSelection(id) {
+      const selectionIndex = this.selectedRecipes.indexOf(id);
+
+      if (selectionIndex >= 0) {
+        this.selectedRecipes = [
+          ...this.selectedRecipes.splice(0, selectionIndex),
+          ...this.selectedRecipes.splice(selectionIndex + 1)
+        ];
+      } else this.selectedRecipes.push(id);
+    },
+    addRecipe() {
+      console.log('add to calendar');
+      console.log(this.selectedDays);
+      console.log(this.selectedRecipes);
     }
   },
   computed: {
@@ -80,8 +133,13 @@ export default {
       return this.selectedDay !== null;
     }
   },
+  watch: {
+    selectedDay(newVal) {
+      this.selectedDays.push(newVal);
+    }
+  },
   mounted() {
-    this.recipes = getRecipes();
+    this.recipes = getAll(RECIPES);
   }
 };
 </script>
@@ -89,7 +147,6 @@ export default {
 <style scoped>
 .week-container {
   display: flex;
-  flex-wrap: wrap;
 }
 
 .week-container .week-day {
@@ -97,7 +154,7 @@ export default {
   justify-content: center;
   align-items: center;
   padding: var(--padding);
-  width: 22%;
+  width: 12%;
   color: var(--primary);
   margin: var(--padding-xs);
 }
