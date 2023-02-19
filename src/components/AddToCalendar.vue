@@ -90,7 +90,7 @@ export default {
     };
   },
   props: ['selectedDay'],
-  emits: ['addRecipe'],
+  emits: ['addRecipe', 'close'],
   components: { Modal, RecipeImageBox },
   methods: {
     close() {
@@ -123,9 +123,14 @@ export default {
       } else this.selectedRecipes.push(id);
     },
     addRecipe() {
-      console.log('add to calendar');
-      console.log(this.selectedDays);
-      console.log(this.selectedRecipes);
+      // Required otherwise days and recipes are Proxy objects...
+      const days = JSON.parse(JSON.stringify(this.selectedDays));
+      const recipes = JSON.parse(JSON.stringify(this.selectedRecipes));
+
+      this.selectedDays = [];
+      this.selectedRecipes = [];
+      this.$emit('entry-added', days, recipes);
+      this.$emit('close');
     }
   },
   computed: {
@@ -135,7 +140,7 @@ export default {
   },
   watch: {
     selectedDay(newVal) {
-      this.selectedDays.push(newVal);
+      this.selectedDays = [newVal];
     }
   },
   mounted() {

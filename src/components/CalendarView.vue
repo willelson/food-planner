@@ -19,22 +19,33 @@
           }}</span>
         </div>
         <RecipeImageBox
-          v-for="{ title, image, id } in day.recipes"
-          :title="title"
-          :id="id"
-          :image-id="image"
-          :key="id"
+          v-for="recipe in day.recipes"
+          :title="recipe?.title"
+          :id="recipe?.id"
+          :image-id="recipe?.image"
+          :key="recipe?.id"
         />
       </div>
     </div>
-    <AddToCalendar :selectedDay="selectedDay" @close="closeAddToCalendar" />
+    <AddToCalendar
+      :selectedDay="selectedDay"
+      @close="closeAddToCalendar"
+      @entry-added="addEntry"
+    />
   </div>
 </template>
 
 <script>
-import { getAll, CALENDAR_ENTRIES, RECIPES } from '../database';
+import {
+  getAll,
+  updateItem,
+  getEntryByDate,
+  CALENDAR_ENTRIES,
+  RECIPES
+} from '../database';
 import AddToCalendar from './AddToCalendar.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
+import { isProxy, toRaw } from 'vue';
 
 export default {
   components: {
@@ -71,6 +82,31 @@ export default {
         this.timeoutId = null;
         this.selectedDay = new Date(day.date).getDay();
       }
+    },
+    addEntry(selctedDays, selectedRecipes) {
+      let days, newRecipes;
+
+      if (isProxy(selctedDays)) {
+        days = toRaw(selctedDays);
+      } else days = selctedDays;
+
+      if (isProxy(selectedRecipes)) {
+        newRecipes = toRaw(selectedRecipes);
+      } else newRecipes = selectedRecipes;
+
+      days.forEach((dayIndex) => {
+        // Corrected to handle week starting on Monday
+        let correctedIndex = dayIndex - 1;
+        if (dayIndex === 0) correctedIndex = 6;
+
+        const date = this.weekDates[correctedIndex].date;
+        const day = getEntryByDate(date);
+
+        newRecipes.forEach((recipeId) => day.recipes.push(recipeId));
+
+        updateItem(CALENDAR_ENTRIES, day);
+        this.recipes = getAll(RECIPES);
+      });
     }
   },
   computed: {
@@ -78,15 +114,6 @@ export default {
       const today = new Date();
       const current = today;
       const week = new Array();
-      const calendarEntries = getAll(CALENDAR_ENTRIES);
-
-      const sameDay = (d1, d2) => {
-        return (
-          d1.getFullYear() === d2.getFullYear() &&
-          d1.getMonth() === d2.getMonth() &&
-          d1.getDate() === d2.getDate()
-        );
-      };
 
       // Starting Monday not Sunday
       // Set the current date to the previous monday
@@ -97,23 +124,18 @@ export default {
       }
 
       for (var i = 0; i < 7; i++) {
-        const entry = calendarEntries.find((entry) =>
-          sameDay(new Date(entry.date), current)
-        );
-        let dayRecipes = [];
+        const entry = getEntryByDate(current);
 
-        if (entry) {
-          dayRecipes = entry.recipes.map((id) =>
-            this.recipes.find((recipe) => recipe.id === id)
-          );
-        }
+        const dayRecipes = entry.recipes.map((id) =>
+          this.recipes.find((recipe) => recipe.id === id)
+        );
+
         week.push({
           date: new Date(current),
           recipes: dayRecipes
         });
         current.setDate(current.getDate() + 1);
       }
-
       return week;
     },
     currentMonth() {
@@ -124,7 +146,6 @@ export default {
   mounted() {
     let now = new Date();
     let todayIndex = now.getDay() - 1;
-
     this.recipes = getAll(RECIPES);
 
     // Set the Sunday index to 6 as we always want to start from Monday
