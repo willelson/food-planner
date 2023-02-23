@@ -1,6 +1,7 @@
 // localstorage key constants
 export const RECIPES = 'recipes';
 export const CALENDAR_ENTRIES = 'calendar-entries';
+export const SHOPPING_LIST = 'shopping-list';
 
 export const images = [
   {
@@ -128,11 +129,18 @@ export const updateItem = (key, itemToUpdate, identifier = 'id') => {
     (item) => item[identifier] === itemToUpdate[identifier]
   );
 
-  const updatedItems = [
-    ...existingItems.splice(0, selectionIndex),
-    itemToUpdate,
-    ...existingItems.splice(selectionIndex + 1)
-  ];
+  let updatedItems = [];
+
+  if (selectionIndex > -1) {
+    updatedItems = [
+      ...existingItems.slice(0, selectionIndex),
+      itemToUpdate,
+      ...existingItems.slice(selectionIndex + 1)
+    ];
+  } else {
+    updatedItems = [...existingItems, itemToUpdate];
+  }
+
 
   localStorage.setItem(key, JSON.stringify(updatedItems));
 };
