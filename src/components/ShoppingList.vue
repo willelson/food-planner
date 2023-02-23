@@ -11,7 +11,13 @@
           ></i>
           <i v-else class="fa fa-circle-o" aria-hidden="true"></i>
         </div>
-        <div class="text">{{ item.text }}</div>
+        <input
+          type="text"
+          @keyup.enter="(e) => updateItem(e, item.id)"
+          @blur="(e) => updateItem(e, item.id)"
+          :value="item.text"
+          placeholder="New item..."
+        />
       </div>
       <div class="new-item">
         <i class="fa fa-circle-o" aria-hidden="true"></i>
@@ -20,6 +26,7 @@
           @keyup.enter="addItem"
           @blur="inputBlur"
           v-model="input"
+          placeholder="New item..."
         />
       </div>
     </div>
@@ -27,31 +34,50 @@
 </template>
 
 <script>
+import {
+  getAll,
+  addItem,
+  removeItem,
+  updateItem,
+  SHOPPING_LIST
+} from '../database';
+
 export default {
   data() {
     return {
       input: '',
-      items: [
-        { id: 1, text: 'Milk', checked: false },
-        { id: 2, text: 'Butter', checked: false },
-        { id: 3, text: 'Eggs', checked: false },
-        { id: 4, text: 'Peanut butter', checked: false },
-      ],
+      items: []
     };
   },
   methods: {
     addItem() {
       if (!this.input) return;
+      const newItem = { text: this.input, checked: false };
 
-      const nextId = Math.max(...this.items.map((item) => item.id)) + 1;
-      this.items.push({ id: nextId, text: this.input, checked: false });
+      addItem(SHOPPING_LIST, newItem);
+      this.items = getAll(SHOPPING_LIST);
       this.input = '';
     },
     inputBlur() {
       if (!this.input) return;
       this.addItem();
     },
+    updateItem(event, id) {
+      const itemToUpdate = JSON.parse(
+        JSON.stringify(this.items.find((i) => i.id === id))
+      );
+      if (event.target.value) {
+        itemToUpdate.text = event.target.value;
+        updateItem(SHOPPING_LIST, itemToUpdate);
+      } else {
+        removeItem(SHOPPING_LIST, itemToUpdate);
+      }
+      this.items = getAll(SHOPPING_LIST);
+    }
   },
+  mounted() {
+    this.items = getAll(SHOPPING_LIST);
+  }
 };
 </script>
 
@@ -79,5 +105,17 @@ export default {
 .checkbox i {
   font-size: 24px;
   color: var(--primary);
+}
+
+.list-item input {
+  padding: var(--padding-sm) 0 var(--padding-xs) 0;
+  border: none;
+  margin: 1px 0;
+  outline: none;
+}
+.new-item input {
+  padding: var(--padding-sm) 0 var(--padding-xs) 0;
+  border: none;
+  outline: none;
 }
 </style>
