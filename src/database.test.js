@@ -15,7 +15,7 @@ describe('constants', () => {
 
 describe('getAll', () => {
   let itemsInStorage = {};
-  beforeAll(() => {
+  beforeEach(() => {
     const { RECIPES } = db;
     itemsInStorage[RECIPES] = [
       {
@@ -36,8 +36,8 @@ describe('getAll', () => {
     const getItemsMock = jest.fn((key) => JSON.stringify(itemsInStorage[key]));
     localStorage.getItem = getItemsMock;
   });
-  afterAll(() => {
-    localStorage.getItem = jest.fn();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
   test('All recipes are fetched', () => {
     const key = db.RECIPES;
@@ -58,7 +58,7 @@ describe('getAll', () => {
 
 describe('addItem', () => {
   let itemsInStorage;
-  beforeAll(() => {
+  beforeEach(() => {
     const { RECIPES } = db;
     itemsInStorage = {
       recipes: [
@@ -81,8 +81,8 @@ describe('addItem', () => {
     const getItemsMock = jest.fn((key) => JSON.stringify(itemsInStorage[key]));
     localStorage.getItem = getItemsMock;
   });
-  afterAll(() => {
-    localStorage.getItem = jest.fn();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
   test('all existing items are fetched', () => {
     db.addItem(db.RECIPES, {});
