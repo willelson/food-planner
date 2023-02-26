@@ -5,7 +5,7 @@ const localStorageMock = {
   setItem: jest.fn(),
   clear: jest.fn()
 };
-global.localStorage = localStorageMock; // as unknown as Storage;
+global.localStorage = localStorageMock;
 
 describe('constants', () => {
   test('recipes', () => {
@@ -14,48 +14,53 @@ describe('constants', () => {
 });
 
 describe('getAll', () => {
-  const itemsInStorage = JSON.stringify([
-    {
-      id: 'rfiv8cmr',
-      title: 'test',
-      url: 'werwer',
-      image: 'wwgnhyz7'
-    },
-    {
-      id: 'vxjsun0b',
-      title: 'Mash & sprouts',
-      url: null,
-      image: '7ogzjid5'
-    }
-  ]);
+  let itemsInStorage = {};
+  beforeAll(() => {
+    const { RECIPES } = db;
+    itemsInStorage[RECIPES] = [
+      {
+        id: 'XXXrfiv8cmr',
+        title: 'test',
+        url: 'werwer',
+        image: 'wwgnhyz7'
+      },
+      {
+        id: 'vxjsun0b',
+        title: 'Mash & sprouts',
+        url: null,
+        image: '7ogzjid5'
+      }
+    ];
 
-  // mocked items for the key argument
-  const getItemsMock = jest.fn((key) => itemsInStorage);
-
-  localStorage.getItem = getItemsMock;
-  const key = db.RECIPES;
-
-  const existingItems = db.getAll(key);
-  expect(localStorage.getItem).toHaveBeenCalled();
-  expect(localStorage.getItem).toHaveBeenCalledWith(key);
-
-  const storageItems = JSON.parse(itemsInStorage);
-
-  existingItems.forEach((item) => {
-    const localStorageContainsItem =
-      storageItems.findIndex((i) => i.id === item.id) > -1;
-    expect(localStorageContainsItem).toBe(true);
+    // mocked items for the key argument
+    const getItemsMock = jest.fn((key) => JSON.stringify(itemsInStorage[key]));
+    localStorage.getItem = getItemsMock;
   });
+  afterAll(() => {
+    localStorage.getItem = jest.fn();
+  });
+  test('All recipes are fetched', () => {
+    const key = db.RECIPES;
 
-  expect(typeof existingItems).toBe('object');
-  expect(existingItems.length).toEqual(2);
+    const existingItems = db.getAll(key);
+    expect(localStorage.getItem).toHaveBeenCalledWith(key);
+
+    existingItems.forEach((item) => {
+      const localStorageContainsItem =
+        itemsInStorage[key].findIndex((i) => i.id === item.id) > -1;
+      expect(localStorageContainsItem).toBe(true);
+    });
+
+    expect(typeof existingItems).toBe('object');
+    expect(existingItems.length).toEqual(2);
+  });
 });
 
 describe('addItem', () => {
   let itemsInStorage;
   beforeAll(() => {
     const { RECIPES } = db;
-    itemsInStorage = JSON.stringify({
+    itemsInStorage = {
       recipes: [
         {
           id: 'rfiv8cmr',
@@ -70,10 +75,14 @@ describe('addItem', () => {
           image: '7ogzjid5'
         }
       ]
-    });
+    };
 
-    const getItemsMock = jest.fn((key) => itemsInStorage[key]);
+    // localStorage returns array of objects stringified
+    const getItemsMock = jest.fn((key) => JSON.stringify(itemsInStorage[key]));
     localStorage.getItem = getItemsMock;
+  });
+  afterAll(() => {
+    localStorage.getItem = jest.fn();
   });
   test('all existing items are fetched', () => {
     db.addItem(db.RECIPES, {});
@@ -88,13 +97,9 @@ describe('addItem', () => {
     };
 
     const testCollection = db.RECIPES;
-    const parsedItems = JSON.parse(itemsInStorage);
 
-    const existingItems = parsedItems[testCollection];
+    const existingItems = itemsInStorage[testCollection];
     const itemsExpectedToBeAdded = [...existingItems, newItem];
-
-    // localStorage returns array of objects stringified
-    localStorage.getItem = jest.fn((key) => JSON.stringify(existingItems));
 
     db.addItem(testCollection, newItem);
 
@@ -106,7 +111,32 @@ describe('addItem', () => {
   test('generates ID for items without one', () => {});
 });
 
-describe('getOne', () => {});
+describe('getOne', () => {
+  let itemsInStorage = {};
+  beforeAll(() => {
+    const { CALENDAR_ENTRIES } = db;
+    const entries = [
+      {
+        date: '2023-02-22T20:23:15.962Z',
+        recipes: ['t2sflix0', 'rfiv8cmr', 'vxjsun0b'],
+        id: 'q0pm1mvv'
+      },
+      {
+        date: '2023-02-23T06:09:02.493Z',
+        recipes: ['vxjsun0b', 't2sflix0'],
+        id: 'e2opalnu'
+      }
+    ];
+
+    itemsInStorage[CALENDAR_ENTRIES] = entries;
+
+    const getItemsMock = jest.fn((key) => itemsInStorage[key]);
+    localStorage.getItem = getItemsMock;
+  });
+  test('generates ID for items without one', () => {});
+});
 describe('removeItem', () => {});
+
 describe('updateItem', () => {});
+
 describe('getEntryByDate', () => {});
