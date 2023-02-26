@@ -111,7 +111,7 @@ describe('addItem', () => {
   test('generates ID for items without one', () => {});
 });
 
-describe('getOne', () => {
+describe('updateItem', () => {
   let itemsInStorage = {};
   beforeAll(() => {
     const { CALENDAR_ENTRIES } = db;
@@ -130,10 +130,49 @@ describe('getOne', () => {
 
     itemsInStorage[CALENDAR_ENTRIES] = entries;
 
-    const getItemsMock = jest.fn((key) => itemsInStorage[key]);
+    const getItemsMock = jest.fn((key) => JSON.stringify(itemsInStorage[key]));
     localStorage.getItem = getItemsMock;
   });
-  test('generates ID for items without one', () => {});
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  test('Calls setItem with updated existing item', () => {
+    const itemToUpdate = {
+      date: '2023-02-22T20:23:15.962Z',
+      recipes: ['t2sflix0', 'rfiv8cmr', 'NEW_RECIPE_ID'],
+      id: 'q0pm1mvv'
+    };
+
+    db.updateItem(db.CALENDAR_ENTRIES, itemToUpdate);
+
+    const keyCalledWith = localStorage.setItem.mock.calls[0][0];
+    const itemsCalledWith = JSON.parse(localStorage.setItem.mock.calls[0][1]);
+
+    expect(keyCalledWith).toEqual(db.CALENDAR_ENTRIES);
+    expect(itemsCalledWith.length).toEqual(2);
+
+    const updatedItem = itemsCalledWith.find((i) => i.id === 'q0pm1mvv');
+    expect(updatedItem.recipes.length).toEqual(3);
+    expect(updatedItem.recipes.includes('NEW_RECIPE_ID')).toBe(true);
+  });
+  test("Adds Item if it doesn't already exist", () => {
+    const itemToUpdate = {
+      date: new Date(),
+      recipes: ['fsfdgfd', 'efwef3d'],
+      id: 'abcdefg'
+    };
+
+    db.updateItem(db.CALENDAR_ENTRIES, itemToUpdate);
+
+    const keyCalledWith = localStorage.setItem.mock.calls[0][0];
+    const itemsCalledWith = JSON.parse(localStorage.setItem.mock.calls[0][1]);
+
+    expect(keyCalledWith).toEqual(db.CALENDAR_ENTRIES);
+
+    const expectedNumberOfItems =
+      itemsInStorage[db.CALENDAR_ENTRIES].length + 1;
+    expect(itemsCalledWith.length).toEqual(expectedNumberOfItems);
+  });
 });
 describe('removeItem', () => {});
 
