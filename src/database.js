@@ -141,7 +141,6 @@ export const updateItem = (key, itemToUpdate, identifier = 'id') => {
     updatedItems = [...existingItems, itemToUpdate];
   }
 
-
   localStorage.setItem(key, JSON.stringify(updatedItems));
 };
 
