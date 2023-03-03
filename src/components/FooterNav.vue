@@ -27,6 +27,16 @@
         @click="pageSelected('recipes')"
       ></i>
     </div>
+    <div
+      class="footer-button centered"
+      :class="{ active: page === 'user-settings' }"
+    >
+      <i
+        class="fa fa-user-circle"
+        aria-hidden="true"
+        @click="pageSelected('user-settings')"
+      ></i>
+    </div>
   </div>
 </template>
 
@@ -37,8 +47,8 @@ export default {
   methods: {
     pageSelected(page) {
       this.$emit('update:page', page);
-    },
-  },
+    }
+  }
 };
 </script>
 

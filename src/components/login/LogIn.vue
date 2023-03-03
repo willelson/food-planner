@@ -46,6 +46,7 @@ export default {
       );
       if (response) {
         this.setUser(response.user);
+        localStorage.setItem('user', JSON.stringify(response.user));
       } else {
         console.error('login failed');
       }

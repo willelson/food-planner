@@ -4,6 +4,7 @@
       <CalendarView v-if="selectedPage === 'calendar'" />
       <RecipeCollection v-if="selectedPage === 'recipes'" />
       <ShoppingList v-if="selectedPage === 'shopping'" />
+      <UserSettings v-if="selectedPage === 'user-settings'" />
       <FooterNav v-model:page="selectedPage" />
     </div>
     <LoginPage v-else />
@@ -17,6 +18,7 @@ import RecipeCollection from './RecipeCollection.vue';
 import ShoppingList from './ShoppingList.vue';
 import FooterNav from './FooterNav.vue';
 import LoginPage from './LoginPage.vue';
+import UserSettings from './UserSettings.vue';
 
 export default {
   data() {
@@ -29,15 +31,23 @@ export default {
     RecipeCollection,
     ShoppingList,
     FooterNav,
-    LoginPage
+    LoginPage,
+    UserSettings
   },
   methods: {
+    ...Vuex.mapMutations(['setUser']),
     changePage(page) {
       this.selectedPage = page;
     }
   },
   computed: {
     ...Vuex.mapState(['user'])
+  },
+  mounted() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      this.setUser(user);
+    }
   }
 };
 </script>
