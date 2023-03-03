@@ -8,7 +8,7 @@
       <input type="password" placeholder="password" v-model="password" />
     </div>
     <div class="centered">
-      <button class="btn btn-primary" @click="addRecipe">Login</button>
+      <button class="btn btn-primary" @click="login">Login</button>
     </div>
     <div class="centered switch-auth-text" style="margin-top: 8px">
       <span
@@ -24,6 +24,10 @@
 </template>
 
 <script>
+import Vuex from 'vuex';
+import { auth } from '../../firebase/config';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
 export default {
   data() {
     return {
@@ -31,7 +35,22 @@ export default {
       password: ''
     };
   },
-  emits: ['authModeChange']
+  emits: ['authModeChange'],
+  methods: {
+    ...Vuex.mapMutations(['setUser']),
+    async login() {
+      const response = await signInWithEmailAndPassword(
+        auth,
+        this.email,
+        this.password
+      );
+      if (response) {
+        this.setUser(response.user);
+      } else {
+        console.error('login failed');
+      }
+    }
+  }
 };
 </script>
 
