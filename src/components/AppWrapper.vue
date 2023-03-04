@@ -36,6 +36,7 @@ export default {
   },
   methods: {
     ...Vuex.mapMutations(['setUser']),
+    ...Vuex.mapActions(['fetchPlanners']),
     changePage(page) {
       this.selectedPage = page;
     }
@@ -47,6 +48,7 @@ export default {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       this.setUser(user);
+      this.fetchPlanners();
     }
   }
 };

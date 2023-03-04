@@ -38,6 +38,7 @@ export default {
   emits: ['authModeChange'],
   methods: {
     ...Vuex.mapMutations(['setUser']),
+    ...Vuex.mapActions(['getPlanners']),
     async login() {
       const response = await signInWithEmailAndPassword(
         auth,
@@ -47,6 +48,7 @@ export default {
       if (response) {
         this.setUser(response.user);
         localStorage.setItem('user', JSON.stringify(response.user));
+        this.getPlanners;
       } else {
         console.error('login failed');
       }

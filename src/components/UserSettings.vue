@@ -1,7 +1,11 @@
 <template>
-  <div>
-    Hello {{ user.email }}
-    <button @click="logout" class="btn btn-primary">Logout</button>
+  <div class="page-container">
+    <div class="page-title">User Settings</div>
+    Hello, "{{ user.email }}"!
+    <div>My planner: {{ planner.name }}</div>
+    <div>
+      <button @click="logout" class="btn btn-primary">Logout</button>
+    </div>
   </div>
 </template>
 
@@ -12,7 +16,7 @@ import { signOut } from 'firebase/auth';
 
 export default {
   computed: {
-    ...Vuex.mapState(['user'])
+    ...Vuex.mapState(['user', 'planner'])
   },
   methods: {
     ...Vuex.mapMutations(['setUser']),
