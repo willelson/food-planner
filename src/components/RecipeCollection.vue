@@ -24,46 +24,29 @@
 import Vuex from 'vuex';
 import AddRecipe from './AddRecipe.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
-import { db } from '../firebase/config';
-import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export default {
   data() {
     return {
-      recipes: [],
       showAddRecipeForm: false
     };
   },
   methods: {
+    ...Vuex.mapActions(['getRecipes']),
     recipeFormClosed() {
       this.showAddRecipeForm = false;
-      this.recipes = this.getRecipes();
-    },
-    async getRecipes() {
-      const recipesRef = collection(db, 'recipes');
-      const planner = { ...this.planner };
-      const q = query(recipesRef, where('plannerId', '==', planner.id));
-      const querySnapshot = await getDocs(q);
-
-      const fetchedRecipes = [];
-
-      querySnapshot.forEach((doc) => {
-        const recipeData = doc.data();
-        fetchedRecipes.push({ id: doc.id, ...recipeData });
-      });
-
-      this.recipes = fetchedRecipes;
+      this.getRecipes();
     }
   },
   computed: {
-    ...Vuex.mapState(['planner'])
+    ...Vuex.mapState(['planner', 'recipes'])
   },
   components: {
     AddRecipe,
     RecipeImageBox
   },
   mounted() {
-    this.recipes = this.getRecipes();
+    this.getRecipes();
   }
 };
 </script>

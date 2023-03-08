@@ -61,7 +61,7 @@ export default {
       const currentPlanner = { ...this.planner };
       const currentUser = { ...this.user };
 
-      const docRef = await addDoc(collection(db, 'recipes'), {
+      await addDoc(collection(db, 'recipes'), {
         title,
         url,
         image,

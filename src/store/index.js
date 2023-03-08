@@ -8,7 +8,8 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 const store = createStore({
   state: {
     user: null,
-    planner: null
+    planner: null,
+    recipes: []
   },
   mutations: {
     setUser(state, payload) {
@@ -16,6 +17,9 @@ const store = createStore({
     },
     setPlanner(state, payload) {
       state.planner = payload;
+    },
+    setRecipes(state, payload) {
+      state.recipes = payload;
     }
   },
   actions: {
@@ -33,6 +37,23 @@ const store = createStore({
       const doc = querySnapshot.docs[0];
       const testPlanner = { ...doc.data(), id: doc.id };
       context.commit('setPlanner', testPlanner);
+    },
+    async getRecipes(context) {
+      const recipesRef = collection(db, 'recipes');
+      const q = query(
+        recipesRef,
+        where('plannerId', '==', context.state.planner.id)
+      );
+      const querySnapshot = await getDocs(q);
+
+      const fetchedRecipes = [];
+
+      querySnapshot.forEach((doc) => {
+        const recipeData = doc.data();
+        fetchedRecipes.push({ id: doc.id, ...recipeData });
+      });
+
+      context.commit('setRecipes', fetchedRecipes);
     }
   }
 });
