@@ -8,7 +8,7 @@
       <RecipeImageBox
         v-for="{ id } in column"
         :id="id"
-        :image-id="id"
+        :image="id"
         :key="id"
         :showTitle="false"
         :selected="id === selection"

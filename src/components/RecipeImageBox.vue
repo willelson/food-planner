@@ -3,7 +3,7 @@
     class="recipe-image-box"
     :class="{ 'show-title': showTitle, selected, faded }"
     :key="id"
-    :style="{ backgroundImage: 'url(' + getImageUrl(imageId) + ')' }"
+    :style="{ backgroundImage: 'url(' + image + ')' }"
     @click="$emit('click')"
   >
     <div v-if="showTitle" class="entry-title">{{ title }}</div>
@@ -24,7 +24,7 @@ export default {
       type: String,
       default: ''
     },
-    imageId: {
+    image: {
       type: String,
       default: ''
     },

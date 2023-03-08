@@ -30,7 +30,8 @@ const store = createStore({
       const q = query(plannersRef, where('creatorUID', '==', uid));
       const querySnapshot = await getDocs(q);
 
-      const testPlanner = querySnapshot.docs[0].data();
+      const doc = querySnapshot.docs[0];
+      const testPlanner = { ...doc.data(), id: doc.id };
       context.commit('setPlanner', testPlanner);
     }
   }

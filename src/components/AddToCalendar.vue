@@ -26,7 +26,7 @@
               v-for="{ title, image, id } in recipes"
               :title="title"
               :id="id"
-              :image-id="image"
+              :image="image"
               :key="id"
               :selected="selectedRecipes.includes(id)"
               :faded="

@@ -22,7 +22,7 @@
           v-for="recipe in day.recipes"
           :title="recipe?.title"
           :id="recipe?.id"
-          :image-id="recipe?.image"
+          :image="recipe?.image"
           :key="recipe?.id"
         />
       </div>

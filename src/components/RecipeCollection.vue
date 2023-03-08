@@ -12,7 +12,7 @@
         v-for="{ title, image, id } in recipes"
         :title="title"
         :id="id"
-        :image-id="image"
+        :image="image"
         :key="id"
       />
     </div>
@@ -21,9 +21,11 @@
 </template>
 
 <script>
-import { getAll, RECIPES } from '../database';
+import Vuex from 'vuex';
 import AddRecipe from './AddRecipe.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
+import { db } from '../firebase/config';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export default {
   data() {
@@ -35,15 +37,33 @@ export default {
   methods: {
     recipeFormClosed() {
       this.showAddRecipeForm = false;
-      this.recipes = getAll(RECIPES);
+      this.recipes = this.getRecipes();
+    },
+    async getRecipes() {
+      const recipesRef = collection(db, 'recipes');
+      const planner = { ...this.planner };
+      const q = query(recipesRef, where('plannerId', '==', planner.id));
+      const querySnapshot = await getDocs(q);
+
+      const fetchedRecipes = [];
+
+      querySnapshot.forEach((doc) => {
+        const recipeData = doc.data();
+        fetchedRecipes.push({ id: doc.id, ...recipeData });
+      });
+
+      this.recipes = fetchedRecipes;
     }
+  },
+  computed: {
+    ...Vuex.mapState(['planner'])
   },
   components: {
     AddRecipe,
     RecipeImageBox
   },
   mounted() {
-    this.recipes = getAll(RECIPES);
+    this.recipes = this.getRecipes();
   }
 };
 </script>
