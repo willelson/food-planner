@@ -29,10 +29,12 @@
 </template>
 
 <script>
+import Vuex from 'vuex';
+import { db } from '../firebase/config';
+import { addDoc, Timestamp, collection } from 'firebase/firestore';
+
 import Modal from './Modal.vue';
 import CarouselMenu from './CarouselMenu.vue';
-
-import { idGenerator, RECIPES, addItem } from '../database';
 
 export default {
   data() {
@@ -54,13 +56,25 @@ export default {
       this.$emit('close');
       this.clearFields();
     },
-    addRecipe() {
+    async addRecipe() {
       const { title, url, image } = this;
-      const newRecipe = { id: idGenerator(), title, url, image };
-      addItem(RECIPES, newRecipe);
+      const currentPlanner = { ...this.planner };
+      const currentUser = { ...this.user };
+
+      const docRef = await addDoc(collection(db, 'recipes'), {
+        title,
+        url,
+        image,
+        plannerId: currentPlanner.id,
+        createdAt: Timestamp.fromDate(new Date()),
+        addedBy: currentUser.uid
+      });
 
       this.close();
     }
+  },
+  computed: {
+    ...Vuex.mapState(['planner', 'user'])
   }
 };
 </script>

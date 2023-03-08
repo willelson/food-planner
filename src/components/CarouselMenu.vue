@@ -13,7 +13,7 @@
         :showTitle="false"
         :selected="image.id === selection"
         :faded="selection && image.id !== selection"
-        @click="$emit('update:selection', image.id)"
+        @click="$emit('update:selection', image.url)"
       />
     </li>
   </ul>
