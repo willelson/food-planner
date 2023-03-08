@@ -1,27 +1,28 @@
 <template>
   <ul class="scroll-container">
     <li
-      v-for="column in imageColumns"
-      v-bind:key="`col-${column[0].id}`"
+      v-for="(column, colIndex) in imageColumns"
+      v-bind:key="`col-${colIndex}`"
       class="scroll-item"
     >
       <RecipeImageBox
-        v-for="{ id } in column"
-        :id="id"
-        :image="id"
-        :key="id"
+        v-for="(image, index) in column"
+        :id="`carousell-image-${colIndex}-${index}`"
+        :image="image.url"
+        :key="image.id"
         :showTitle="false"
-        :selected="id === selection"
-        :faded="selection && id !== selection"
-        @click="$emit('update:selection', id)"
+        :selected="image.id === selection"
+        :faded="selection && image.id !== selection"
+        @click="$emit('update:selection', image.id)"
       />
     </li>
   </ul>
 </template>
 
 <script>
+import { db } from '../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
 import RecipeImageBox from './RecipeImageBox.vue';
-import { images } from '../database';
 
 export default {
   props: ['selection'],
@@ -34,6 +35,21 @@ export default {
       images: []
     };
   },
+  methods: {
+    async getImages() {
+      const imagesRef = collection(db, 'images');
+      const querySnapshot = await getDocs(imagesRef);
+
+      const fetchedImages = [];
+
+      querySnapshot.forEach((doc) => {
+        const imageData = doc.data();
+        fetchedImages.push({ id: doc.id, ...imageData });
+      });
+      console.log(fetchedImages);
+      this.images = fetchedImages;
+    }
+  },
   computed: {
     imageColumns() {
       const result = [];
@@ -44,7 +60,7 @@ export default {
     }
   },
   created() {
-    this.images = images;
+    this.getImages();
   }
 };
 </script>
