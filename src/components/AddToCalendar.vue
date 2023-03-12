@@ -101,12 +101,15 @@ export default {
       this.selectedDays.forEach((day) => {
         this.selectedRecipes.forEach(async (recipeId) => {
           const entriesRef = collection(db, 'calendar-entries');
+          const recipe = this.recipes.find((recipe) => recipe.id === recipeId);
+
           const entry = {
             recipeId,
             plannerId: currentPlanner.id,
             createdAt: Timestamp.fromDate(new Date()),
             date: Timestamp.fromDate(new Date(day)),
-            addedBy: currentUser.uid
+            addedBy: currentUser.uid,
+            recipe
           };
           await addDoc(entriesRef, entry);
         });

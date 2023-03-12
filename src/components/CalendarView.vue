@@ -44,9 +44,7 @@ import {
   collection,
   query,
   where,
-  doc,
   getDocs,
-  getDoc,
   Timestamp
 } from 'firebase/firestore';
 
@@ -108,19 +106,13 @@ export default {
         entries: []
       }));
 
-      // TODO: look into storing recipe data in entry doc and using fan out method to update
       entriesSnapshot.forEach(async (document) => {
         const entryData = document.data();
-        const recipeRef = doc(db, 'recipes', entryData.recipeId);
-        const recipe = await getDoc(recipeRef);
-        const recipeData = recipe.data();
-        entryData.recipe = { ...recipeData, id: entryData.recipeId };
 
         const dateIndex = this.weekDates.findIndex((day) => {
           const entryDate = new Date(entryData.date.seconds * 1000);
           const weekDate = new Date(day);
-          const isSameDay = sameDay(weekDate, entryDate);
-          return isSameDay;
+          return sameDay(weekDate, entryDate);
         });
 
         entries = [
