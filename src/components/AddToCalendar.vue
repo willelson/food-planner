@@ -9,13 +9,13 @@
           <div class="label">Day</div>
           <div class="week-container">
             <div
-              v-for="day in weekdays"
+              v-for="day in weekDates"
               class="week-day"
-              :class="{ selected: selectedDays.includes(day.dayIndex) }"
-              :key="day.dayIndex"
-              @click="handleDaySelection(day.dayIndex)"
+              :class="{ selected: isSelected(day) }"
+              :key="day"
+              @click="handleDaySelection(day)"
             >
-              {{ day.label }}
+              {{ getDayString(day) }}
             </div>
           </div>
         </div>
@@ -46,53 +46,26 @@
 </template>
 
 <script>
+import Vuex from 'vuex';
 import Modal from './Modal.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
-
-import { getAll, RECIPES } from '../database';
+import { sameDay } from '../database';
+import { db } from '../firebase/config';
+import { Timestamp, collection, addDoc } from 'firebase/firestore';
 
 export default {
   data() {
     return {
-      weekdays: [
-        {
-          label: 'Mon',
-          dayIndex: 1
-        },
-        {
-          label: 'Tue',
-          dayIndex: 2
-        },
-        {
-          label: 'Wed',
-          dayIndex: 3
-        },
-        {
-          label: 'Thu',
-          dayIndex: 4
-        },
-        {
-          label: 'Fri',
-          dayIndex: 5
-        },
-        {
-          label: 'Sat',
-          dayIndex: 6
-        },
-        {
-          label: 'Sun',
-          dayIndex: 0
-        }
-      ],
+      weekdays: [],
       selectedDays: [],
-      recipes: [],
       selectedRecipes: []
     };
   },
-  props: ['selectedDay'],
+  props: ['selectedDay', 'weekStart'],
   emits: ['addRecipe', 'close'],
   components: { Modal, RecipeImageBox },
   methods: {
+    ...Vuex.mapActions(['getRecipes']),
     close() {
       this.selectedDays = [];
       this.selectedRecipes = [];
@@ -122,20 +95,56 @@ export default {
         ];
       } else this.selectedRecipes.push(id);
     },
-    addRecipe() {
-      // Required otherwise days and recipes are Proxy objects...
-      const days = JSON.parse(JSON.stringify(this.selectedDays));
-      const recipes = JSON.parse(JSON.stringify(this.selectedRecipes));
-
-      this.selectedDays = [];
-      this.selectedRecipes = [];
-      this.$emit('entry-added', days, recipes);
+    async addRecipe() {
+      const currentPlanner = { ...this.planner };
+      const currentUser = { ...this.user };
+      this.selectedDays.forEach((day) => {
+        this.selectedRecipes.forEach(async (recipeId) => {
+          const entriesRef = collection(db, 'calendar-entries');
+          const entry = {
+            recipeId,
+            plannerId: currentPlanner.id,
+            createdAt: Timestamp.fromDate(new Date()),
+            date: Timestamp.fromDate(new Date(day)),
+            addedBy: currentUser.uid
+          };
+          await addDoc(entriesRef, entry);
+        });
+      });
+      this.$emit('entry-added');
       this.$emit('close');
+    },
+    getDayString(day) {
+      return new Date(day).toLocaleString('default', {
+        weekday: 'short'
+      });
+    },
+    isSelected(day) {
+      return this.selectedDays.some((d) => sameDay(d, day));
     }
   },
   computed: {
+    ...Vuex.mapState(['recipes', 'planner', 'user']),
     open() {
       return this.selectedDay !== null;
+    },
+    weekDates() {
+      const today = new Date();
+      const current = today;
+      const week = new Array();
+
+      // Set the current date to the previous monday
+      if (current.getDay() === 0) {
+        current.setDate(current.getDate() - 6);
+      } else {
+        current.setDate(current.getDate() - current.getDay() + 1);
+      }
+
+      for (var i = 0; i < 7; i++) {
+        week.push(new Date(current));
+        current.setDate(current.getDate() + 1);
+      }
+      return week;
     }
   },
   watch: {
@@ -144,7 +153,7 @@ export default {
     }
   },
   mounted() {
-    this.recipes = getAll(RECIPES);
+    this.getRecipes();
   }
 };
 </script>

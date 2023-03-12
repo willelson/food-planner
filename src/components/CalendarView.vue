@@ -4,7 +4,7 @@
     <div class="calendar-body">
       <div
         class="day-container"
-        v-for="(day, index) in weekDates"
+        v-for="(day, index) in calendarEntries"
         :key="`day-${index}`"
         :id="`day-${index}`"
         :class="dayContainerClass(day)"
@@ -19,33 +19,38 @@
           }}</span>
         </div>
         <RecipeImageBox
-          v-for="recipe in day.recipes"
-          :title="recipe?.title"
-          :id="recipe?.id"
-          :image="recipe?.image"
-          :key="recipe?.id"
+          v-for="entry in day.entries"
+          :title="entry.recipe?.title"
+          :id="entry.recipe?.id"
+          :image="entry.recipe?.image"
+          :key="entry.recipe?.id"
         />
       </div>
     </div>
     <AddToCalendar
       :selectedDay="selectedDay"
       @close="closeAddToCalendar"
-      @entry-added="addEntry"
+      @entry-added="handleNewEntries"
     />
   </div>
 </template>
 
 <script>
-import {
-  getAll,
-  updateItem,
-  getEntryByDate,
-  CALENDAR_ENTRIES,
-  RECIPES
-} from '../database';
+import { sameDay } from '../database';
 import AddToCalendar from './AddToCalendar.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
-import { isProxy, toRaw } from 'vue';
+
+import {
+  collection,
+  query,
+  where,
+  doc,
+  getDocs,
+  getDoc,
+  Timestamp
+} from 'firebase/firestore';
+
+import { db } from '../firebase/config';
 
 export default {
   components: {
@@ -56,8 +61,7 @@ export default {
     return {
       timeoutId: null,
       selectedDay: null,
-      // Probably move to VUex store eventually
-      recipes: []
+      calendarEntries: []
     };
   },
   methods: {
@@ -71,7 +75,6 @@ export default {
     },
     closeAddToCalendar() {
       this.selectedDay = null;
-      this.recipes = getAll(RECIPES);
     },
     onClick(day) {
       // Open modal upon double click
@@ -80,32 +83,55 @@ export default {
       } else {
         clearTimeout(this.timeoutId);
         this.timeoutId = null;
-        this.selectedDay = new Date(day.date).getDay();
+        this.selectedDay = day.date;
       }
     },
-    addEntry(selctedDays, selectedRecipes) {
-      let days, newRecipes;
+    handleNewEntries() {
+      this.getWeekEntries();
+    },
 
-      if (isProxy(selctedDays)) {
-        days = toRaw(selctedDays);
-      } else days = selctedDays;
+    async getWeekEntries() {
+      const entriesRef = collection(db, 'calendar-entries');
+      const startfulldate = Timestamp.fromDate(new Date(this.weekDates[0]));
+      const endfulldate = Timestamp.fromDate(new Date(this.weekDates[6]));
 
-      if (isProxy(selectedRecipes)) {
-        newRecipes = toRaw(selectedRecipes);
-      } else newRecipes = selectedRecipes;
+      const q = query(
+        entriesRef,
+        where('date', '>=', startfulldate),
+        where('date', '<=', endfulldate)
+      );
 
-      days.forEach((dayIndex) => {
-        // Corrected to handle week starting on Monday
-        let correctedIndex = dayIndex - 1;
-        if (dayIndex === 0) correctedIndex = 6;
+      const entriesSnapshot = await getDocs(q);
 
-        const date = this.weekDates[correctedIndex].date;
-        const day = getEntryByDate(date);
+      let entries = this.weekDates.map((date) => ({
+        date,
+        entries: []
+      }));
 
-        newRecipes.forEach((recipeId) => day.recipes.push(recipeId));
+      // TODO: look into storing recipe data in entry doc and using fan out method to update
+      entriesSnapshot.forEach(async (document) => {
+        const entryData = document.data();
+        const recipeRef = doc(db, 'recipes', entryData.recipeId);
+        const recipe = await getDoc(recipeRef);
+        const recipeData = recipe.data();
+        entryData.recipe = { ...recipeData, id: entryData.recipeId };
 
-        updateItem(CALENDAR_ENTRIES, day);
-        this.recipes = getAll(RECIPES);
+        const dateIndex = this.weekDates.findIndex((day) => {
+          const entryDate = new Date(entryData.date.seconds * 1000);
+          const weekDate = new Date(day);
+          const isSameDay = sameDay(weekDate, entryDate);
+          return isSameDay;
+        });
+
+        entries = [
+          ...entries.slice(0, dateIndex),
+          {
+            ...entries[dateIndex],
+            entries: [...entries[dateIndex]['entries'], entryData]
+          },
+          ...entries.slice(dateIndex + 1)
+        ];
+        this.calendarEntries = entries;
       });
     }
   },
@@ -115,7 +141,6 @@ export default {
       const current = today;
       const week = new Array();
 
-      // Starting Monday not Sunday
       // Set the current date to the previous monday
       if (current.getDay() === 0) {
         current.setDate(current.getDate() - 6);
@@ -124,16 +149,7 @@ export default {
       }
 
       for (var i = 0; i < 7; i++) {
-        const entry = getEntryByDate(current);
-
-        const dayRecipes = entry.recipes.map((id) =>
-          this.recipes.find((recipe) => recipe.id === id)
-        );
-
-        week.push({
-          date: new Date(current),
-          recipes: dayRecipes
-        });
+        week.push(new Date(current));
         current.setDate(current.getDate() + 1);
       }
       return week;
@@ -146,15 +162,18 @@ export default {
   mounted() {
     let now = new Date();
     let todayIndex = now.getDay() - 1;
-    this.recipes = getAll(RECIPES);
 
     // Set the Sunday index to 6 as we always want to start from Monday
     if (now.getDay() === 0) {
       todayIndex = 6;
     }
 
-    const todayElement = document.getElementById(`day-${todayIndex}`);
-    this.$nextTick(() => todayElement.scrollIntoView({ inline: 'start' }));
+    // TODO: look into why this is slow
+    setTimeout(() => {
+      const todayElement = document.getElementById(`day-${todayIndex}`);
+      todayElement.scrollIntoView({ inline: 'start' });
+    }, 500);
+    this.getWeekEntries();
   }
 };
 </script>

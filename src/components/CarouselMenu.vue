@@ -46,7 +46,6 @@ export default {
         const imageData = doc.data();
         fetchedImages.push({ id: doc.id, ...imageData });
       });
-      console.log(fetchedImages);
       this.images = fetchedImages;
     }
   },

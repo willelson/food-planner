@@ -37,8 +37,10 @@ const store = createStore({
       const doc = querySnapshot.docs[0];
       const testPlanner = { ...doc.data(), id: doc.id };
       context.commit('setPlanner', testPlanner);
+      context.dispatch('getRecipes');
     },
     async getRecipes(context) {
+      if (context.state.planner === null) return;
       const recipesRef = collection(db, 'recipes');
       const q = query(
         recipesRef,
