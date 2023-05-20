@@ -58,7 +58,7 @@ export default {
     return {
       weekdays: [],
       selectedDays: [],
-      selectedRecipes: []
+      selectedRecipes: [],
     };
   },
   props: ['selectedDay', 'weekStart'],
@@ -75,11 +75,13 @@ export default {
       this.close();
     },
     handleDaySelection(day) {
-      const selectionIndex = this.selectedDays.findIndex((d) => d === day);
+      const selectionIndex = this.selectedDays.findIndex((d) =>
+        sameDay(new Date(d), new Date(day))
+      );
       if (selectionIndex >= 0) {
         this.selectedDays = [
           ...this.selectedDays.splice(0, selectionIndex),
-          ...this.selectedDays.splice(selectionIndex + 1)
+          ...this.selectedDays.splice(selectionIndex + 1),
         ];
       } else {
         this.selectedDays.push(day);
@@ -91,7 +93,7 @@ export default {
       if (selectionIndex >= 0) {
         this.selectedRecipes = [
           ...this.selectedRecipes.splice(0, selectionIndex),
-          ...this.selectedRecipes.splice(selectionIndex + 1)
+          ...this.selectedRecipes.splice(selectionIndex + 1),
         ];
       } else this.selectedRecipes.push(id);
     },
@@ -109,7 +111,7 @@ export default {
             createdAt: Timestamp.fromDate(new Date()),
             date: Timestamp.fromDate(new Date(day)),
             addedBy: currentUser.uid,
-            recipe
+            recipe,
           };
           await addDoc(entriesRef, entry);
         });
@@ -119,12 +121,12 @@ export default {
     },
     getDayString(day) {
       return new Date(day).toLocaleString('default', {
-        weekday: 'short'
+        weekday: 'short',
       });
     },
     isSelected(day) {
-      return this.selectedDays.some((d) => sameDay(d, day));
-    }
+      return this.selectedDays.some((d) => sameDay(new Date(d), new Date(day)));
+    },
   },
   computed: {
     ...Vuex.mapState(['recipes', 'planner', 'user']),
@@ -148,16 +150,16 @@ export default {
         current.setDate(current.getDate() + 1);
       }
       return week;
-    }
+    },
   },
   watch: {
     selectedDay(newVal) {
       this.selectedDays = [newVal];
-    }
+    },
   },
   mounted() {
     this.getRecipes();
-  }
+  },
 };
 </script>
 

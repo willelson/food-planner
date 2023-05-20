@@ -45,7 +45,7 @@ import {
   query,
   where,
   getDocs,
-  Timestamp
+  Timestamp,
 } from 'firebase/firestore';
 
 import { db } from '../firebase/config';
@@ -53,19 +53,19 @@ import { db } from '../firebase/config';
 export default {
   components: {
     AddToCalendar,
-    RecipeImageBox
+    RecipeImageBox,
   },
   data() {
     return {
       timeoutId: null,
       selectedDay: null,
-      calendarEntries: []
+      calendarEntries: [],
     };
   },
   methods: {
     dayContainerClass(day) {
       const today = new Date();
-      if (day.date.getDay() === today.getDay()) {
+      if (new Date(day.date).getDay() === today.getDay()) {
         return 'highlight-today';
       }
 
@@ -103,7 +103,7 @@ export default {
 
       let entries = this.weekDates.map((date) => ({
         date,
-        entries: []
+        entries: [],
       }));
 
       entriesSnapshot.forEach(async (document) => {
@@ -119,13 +119,13 @@ export default {
           ...entries.slice(0, dateIndex),
           {
             ...entries[dateIndex],
-            entries: [...entries[dateIndex]['entries'], entryData]
+            entries: [...entries[dateIndex]['entries'], entryData],
           },
-          ...entries.slice(dateIndex + 1)
+          ...entries.slice(dateIndex + 1),
         ];
         this.calendarEntries = entries;
       });
-    }
+    },
   },
   computed: {
     weekDates() {
@@ -149,9 +149,9 @@ export default {
     currentMonth() {
       const today = new Date();
       return today.toLocaleString('default', { month: 'long' });
-    }
+    },
   },
-  mounted() {
+  async mounted() {
     let now = new Date();
     let todayIndex = now.getDay() - 1;
 
@@ -160,13 +160,10 @@ export default {
       todayIndex = 6;
     }
 
-    // TODO: look into why this is slow
-    setTimeout(() => {
-      const todayElement = document.getElementById(`day-${todayIndex}`);
-      todayElement.scrollIntoView({ inline: 'start' });
-    }, 500);
-    this.getWeekEntries();
-  }
+    await this.getWeekEntries();
+    const todayElement = document.getElementById(`day-${todayIndex}`);
+    todayElement.scrollIntoView({ inline: 'start' });
+  },
 };
 </script>
 
