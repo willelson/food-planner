@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import Vuex from 'vuex';
 import { sameDay } from '../database';
 import AddToCalendar from './AddToCalendar.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
@@ -93,18 +94,23 @@ export default {
       const startfulldate = Timestamp.fromDate(new Date(this.weekDates[0]));
       const endfulldate = Timestamp.fromDate(new Date(this.weekDates[6]));
 
+      let entries = this.weekDates.map((date) => ({
+        date,
+        entries: [],
+      }));
+
+      this.calendarEntries = entries;
+
+      const id = this.planner?.id;
+      if (!id) return;
       const q = query(
         entriesRef,
+        where('plannerId', '==', this.planner?.id),
         where('date', '>=', startfulldate),
         where('date', '<=', endfulldate)
       );
 
       const entriesSnapshot = await getDocs(q);
-
-      let entries = this.weekDates.map((date) => ({
-        date,
-        entries: [],
-      }));
 
       entriesSnapshot.forEach(async (document) => {
         const entryData = document.data();
@@ -128,6 +134,7 @@ export default {
     },
   },
   computed: {
+    ...Vuex.mapState(['planner']),
     weekDates() {
       const today = new Date();
       const current = today;

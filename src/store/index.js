@@ -3,13 +3,13 @@ import { createStore } from 'vuex';
 // Firebase imports
 import { auth, db } from '../firebase/config';
 import { signOut } from 'firebase/auth';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 
 const store = createStore({
   state: {
     user: null,
     planner: null,
-    recipes: []
+    recipes: [],
   },
   mutations: {
     setUser(state, payload) {
@@ -20,7 +20,7 @@ const store = createStore({
     },
     setRecipes(state, payload) {
       state.recipes = payload;
-    }
+    },
   },
   actions: {
     async logout(context) {
@@ -35,9 +35,18 @@ const store = createStore({
       const querySnapshot = await getDocs(q);
 
       const doc = querySnapshot.docs[0];
+      if (!doc) {
+        await context.dispatch('createPlanner');
+      }
       const testPlanner = { ...doc.data(), id: doc.id };
       context.commit('setPlanner', testPlanner);
       context.dispatch('getRecipes');
+    },
+    async createPlanner(context) {
+      await addDoc(collection(db, 'planners'), {
+        creatorUID: context.state.user.uid,
+        name: 'test',
+      });
     },
     async getRecipes(context) {
       if (context.state.planner === null) return;
@@ -56,8 +65,8 @@ const store = createStore({
       });
 
       context.commit('setRecipes', fetchedRecipes);
-    }
-  }
+    },
+  },
 });
 
 export default store;
