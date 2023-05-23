@@ -12,7 +12,7 @@
         :key="image.id"
         :showTitle="false"
         :selected="image.id === selection"
-        :faded="selection && image.id !== selection"
+        :faded="selection && image.url !== selection"
         @click="$emit('update:selection', image.url)"
       />
     </li>
@@ -28,11 +28,11 @@ export default {
   props: ['selection'],
   emits: ['update:selection'],
   components: {
-    RecipeImageBox
+    RecipeImageBox,
   },
   data() {
     return {
-      images: []
+      images: [],
     };
   },
   methods: {
@@ -47,7 +47,7 @@ export default {
         fetchedImages.push({ id: doc.id, ...imageData });
       });
       this.images = fetchedImages;
-    }
+    },
   },
   computed: {
     imageColumns() {
@@ -56,11 +56,11 @@ export default {
       for (let i = 0; i < this.images.length; i += columnSize)
         result.push(this.images.slice(i, i + columnSize));
       return result;
-    }
+    },
   },
   created() {
     this.getImages();
-  }
+  },
 };
 </script>
 
