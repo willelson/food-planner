@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
     };
   },
   emits: ['authModeChange'],
@@ -40,20 +40,22 @@ export default {
     ...Vuex.mapMutations(['setUser']),
     ...Vuex.mapActions(['getPlanners']),
     async login() {
-      const response = await signInWithEmailAndPassword(
-        auth,
-        this.email,
-        this.password
-      );
-      if (response) {
+      try {
+        const response = await signInWithEmailAndPassword(
+          auth,
+          this.email,
+          this.password
+        );
+
         this.setUser(response.user);
         localStorage.setItem('user', JSON.stringify(response.user));
         this.getPlanners;
-      } else {
-        console.error('login failed');
+      } catch (err) {
+        const msg = err?.code || 'Error logging in';
+        alert(msg);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

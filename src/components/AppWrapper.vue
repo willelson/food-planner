@@ -23,7 +23,7 @@ import UserSettings from './UserSettings.vue';
 export default {
   data() {
     return {
-      selectedPage: 'calendar'
+      selectedPage: 'calendar',
     };
   },
   components: {
@@ -32,17 +32,17 @@ export default {
     ShoppingList,
     FooterNav,
     LoginPage,
-    UserSettings
+    UserSettings,
   },
   methods: {
     ...Vuex.mapMutations(['setUser']),
     ...Vuex.mapActions(['fetchPlanners']),
     changePage(page) {
       this.selectedPage = page;
-    }
+    },
   },
   computed: {
-    ...Vuex.mapState(['user'])
+    ...Vuex.mapState(['user']),
   },
   mounted() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -50,7 +50,15 @@ export default {
       this.setUser(user);
       this.fetchPlanners();
     }
-  }
+  },
+  watch: {
+    user(newVal) {
+      if (newVal === null) {
+        // Switch back to calendar view after logout
+        this.selectedPage = 'calendar';
+      }
+    },
+  },
 };
 </script>
 

@@ -52,7 +52,7 @@ export default {
 <style scoped>
 .recipe-image-box {
   position: relative;
-  aspect-ratio: 1 / 1;
+  padding-top: 100%;
   border: 1px solid white;
   border-radius: 8px;
   margin-bottom: 8px;

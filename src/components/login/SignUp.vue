@@ -34,25 +34,28 @@ export default {
     return {
       name: '',
       email: '',
-      password: ''
+      password: '',
     };
   },
   methods: {
     ...Vuex.mapMutations(['setUser']),
     async signUpUser() {
       const { email, password } = this;
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      if (response) {
-        this.setUser(response.user);
-      } else {
-        console.error('signup failed');
+      try {
+        const response = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        if (response) {
+          this.setUser(response.user);
+        }
+      } catch (err) {
+        const msg = err?.code || 'Error signing up';
+        console.error(msg);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

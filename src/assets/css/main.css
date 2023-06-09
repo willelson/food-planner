@@ -50,6 +50,7 @@ body {
 
 .page-container {
   flex: 1;
+  min-height: 0;
   position: relative;
 }
 

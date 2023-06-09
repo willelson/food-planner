@@ -64,6 +64,7 @@ export default {
     };
   },
   methods: {
+    ...Vuex.mapActions(['fetchPlanners']),
     dayContainerClass(day) {
       const today = new Date();
       if (new Date(day.date).getDay() === today.getDay()) {
@@ -102,7 +103,9 @@ export default {
       this.calendarEntries = entries;
 
       const id = this.planner?.id;
-      if (!id) return;
+      if (!id) {
+        await this.fetchPlanners();
+      }
       const q = query(
         entriesRef,
         where('plannerId', '==', this.planner?.id),
