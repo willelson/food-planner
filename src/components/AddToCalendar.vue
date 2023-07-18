@@ -114,6 +114,7 @@ export default {
             recipe,
           };
           await addDoc(entriesRef, entry);
+          this.selectedDays = [];
         });
       });
       this.$emit('entry-added');
