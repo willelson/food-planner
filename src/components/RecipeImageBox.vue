@@ -4,7 +4,7 @@
     :class="{ 'show-title': showTitle, selected, faded }"
     :key="id"
     :style="{ backgroundImage: 'url(' + image + ')' }"
-    @click="$emit('click')"
+    @click="$emit('click', id)"
   >
     <div v-if="showTitle" class="entry-title">{{ title }}</div>
   </div>
@@ -18,34 +18,34 @@ export default {
   props: {
     title: {
       type: String,
-      default: ''
+      default: '',
     },
     id: {
       type: String,
-      default: ''
+      default: '',
     },
     image: {
       type: String,
-      default: ''
+      default: '',
     },
     selected: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showTitle: {
       type: Boolean,
-      default: true
+      default: true,
     },
     faded: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     getImageUrl(id) {
       return getImage(id);
-    }
-  }
+    },
+  },
 };
 </script>
 

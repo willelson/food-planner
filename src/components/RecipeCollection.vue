@@ -14,9 +14,15 @@
         :id="id"
         :image="image"
         :key="id"
+        @click="recipeBoxClicked"
       />
     </div>
     <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
+    <ViewEditRecipe
+      :open="showViewEditRecipeForm"
+      @close="recipeViewClosed"
+      :recipe="selectedRecipe"
+    />
   </div>
 </template>
 
@@ -24,11 +30,14 @@
 import Vuex from 'vuex';
 import AddRecipe from './AddRecipe.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
+import ViewEditRecipe from './ViewEditRecipe.vue';
 
 export default {
   data() {
     return {
-      showAddRecipeForm: false
+      showAddRecipeForm: false,
+      showViewEditRecipeForm: false,
+      selectedRecipe: null,
     };
   },
   methods: {
@@ -36,18 +45,31 @@ export default {
     recipeFormClosed() {
       this.showAddRecipeForm = false;
       this.getRecipes();
-    }
+    },
+    recipeViewClosed() {
+      this.showViewEditRecipeForm = false;
+      this.selectedRecipe = null;
+    },
+    recipeBoxClicked(id) {
+      console.log('recipe box clicked');
+      console.log(`id = ${id}`);
+      this.selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
+      console.log(this.selectedRecipe);
+      console.log(`selectedRecipe.id = ${this.selectedRecipe.id}`);
+      this.showViewEditRecipeForm = true;
+    },
   },
   computed: {
-    ...Vuex.mapState(['planner', 'recipes'])
+    ...Vuex.mapState(['planner', 'recipes']),
   },
   components: {
     AddRecipe,
-    RecipeImageBox
+    RecipeImageBox,
+    ViewEditRecipe,
   },
   mounted() {
     this.getRecipes();
-  }
+  },
 };
 </script>
 
