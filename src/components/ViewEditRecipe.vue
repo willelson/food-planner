@@ -30,15 +30,17 @@
       ></template>
       <template v-slot:footer>
         <button class="btn btn-default" @click="close">Cancel</button>
+        <button class="btn btn-primary" @click="submitUpdate">Update</button>
       </template>
     </modal>
   </div>
 </template>
 
 <script>
-// import Vuex from 'vuex';
-// import { db } from '../firebase/config';
+import Vuex from 'vuex';
+import { db } from '../firebase/config';
 // import { addDoc, Timestamp, collection } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 
 import Modal from './Modal.vue';
 // import LoadingSpinner from './utils/LoadingSpinner.vue';
@@ -55,6 +57,16 @@ export default {
   },
   components: { Modal },
   methods: {
+    ...Vuex.mapActions(['updateRecipe']),
+    async submitUpdate() {
+      const recipeRef = doc(db, 'recipes', this.recipe.id);
+      const { title, url, image, description } = this;
+      const updates = { title, url, image, description };
+      await updateDoc(recipeRef, updates);
+
+      this.updateRecipe({ ...this.recipe, title, url, image, description });
+      this.close();
+    },
     close() {
       this.$emit('close');
     },
