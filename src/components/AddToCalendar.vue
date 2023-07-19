@@ -61,7 +61,7 @@ export default {
       selectedRecipes: [],
     };
   },
-  props: ['selectedDay', 'weekStart'],
+  props: ['selectedDay', 'weekStart', 'open'],
   emits: ['addRecipe', 'close'],
   components: { Modal, RecipeImageBox },
   methods: {
@@ -114,6 +114,8 @@ export default {
             recipe,
           };
           await addDoc(entriesRef, entry);
+
+          this.selectedRecipes = [];
           this.selectedDays = [];
         });
       });
@@ -131,9 +133,6 @@ export default {
   },
   computed: {
     ...Vuex.mapState(['recipes', 'planner', 'user']),
-    open() {
-      return this.selectedDay !== null;
-    },
     weekDates() {
       const today = new Date();
       const current = today;

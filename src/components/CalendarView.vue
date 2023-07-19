@@ -1,6 +1,20 @@
 <template>
   <div class="calendar page-container">
-    <div class="page-title">{{ currentMonth }}</div>
+    <div
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
+      <div class="page-title">{{ currentMonth }}</div>
+      <i
+        class="fa fa-plus"
+        style="
+          color: var(--primary);
+          margin-right: var(--padding-sm);
+          font-size: 28px;
+        "
+        aria-hidden="true"
+        @click="showAddToCalendar = true"
+      ></i>
+    </div>
     <div class="calendar-body">
       <div
         class="day-container"
@@ -29,6 +43,7 @@
     </div>
     <AddToCalendar
       :selectedDay="selectedDay"
+      :open="showAddToCalendar"
       @close="closeAddToCalendar"
       @entry-added="handleNewEntries"
     />
@@ -61,6 +76,7 @@ export default {
       timeoutId: null,
       selectedDay: null,
       calendarEntries: [],
+      showAddToCalendar: false,
     };
   },
   methods: {
@@ -75,6 +91,7 @@ export default {
     },
     closeAddToCalendar() {
       this.selectedDay = null;
+      this.showAddToCalendar = false;
     },
     onClick(day) {
       // Open modal upon double click
@@ -84,6 +101,7 @@ export default {
         clearTimeout(this.timeoutId);
         this.timeoutId = null;
         this.selectedDay = day.date;
+        this.showAddToCalendar = true;
       }
     },
     handleNewEntries() {
