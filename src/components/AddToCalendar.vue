@@ -98,6 +98,15 @@ export default {
       } else this.selectedRecipes.push(id);
     },
     async addRecipe() {
+      if (this.selectedDays.length === 0) {
+        alert('no day selected');
+        return;
+      }
+      if (this.selectedRecipes.length === 0) {
+        alert('no recipe selected');
+        return;
+      }
+
       const currentPlanner = { ...this.planner };
       const currentUser = { ...this.user };
       this.selectedDays.forEach((day) => {
