@@ -111,8 +111,8 @@ export const removeItem = (key, itemToRemove, identifier = 'id') => {
   );
 
   const updatedItems = [
-    ...existingItems.splice(0, selectionIndex),
-    ...existingItems.splice(selectionIndex + 1)
+    ...existingItems.slice(0, selectionIndex),
+    ...existingItems.slice(selectionIndex + 1)
   ];
 
   localStorage.setItem(key, JSON.stringify(updatedItems));
