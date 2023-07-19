@@ -1,6 +1,15 @@
 <template>
   <div class="page-container">
-    <div class="page-title">Shopping List</div>
+    <div
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
+      <div class="page-title">Shopping List</div>
+      <span
+        @click="toggleEditing"
+        style="color: var(--primary); margin-right: var(--padding)"
+        >{{ editing ? 'done' : 'edit' }}</span
+      >
+    </div>
     <div class="list-container">
       <div class="list-item" v-for="item in items" :key="item.id">
         <div class="checkbox" @click="item.checked = !item.checked">
@@ -15,9 +24,17 @@
           type="text"
           @keyup.enter="(e) => updateItem(e, item.id)"
           @blur="(e) => updateItem(e, item.id)"
+          @focus="editing = false"
           :value="item.text"
           placeholder="New item..."
         />
+        <i
+          v-if="editing"
+          class="fa fa-times"
+          style="color: var(--secondary); cursor: pointer"
+          aria-hidden="true"
+          @click="removeEntry(item)"
+        ></i>
       </div>
       <div class="new-item">
         <i class="fa fa-circle-o" aria-hidden="true"></i>
@@ -25,6 +42,7 @@
           type="text"
           @keyup.enter="addItem"
           @blur="inputBlur"
+          @focus="editing = false"
           v-model="input"
           placeholder="New item..."
         />
@@ -39,14 +57,15 @@ import {
   addItem,
   removeItem,
   updateItem,
-  SHOPPING_LIST
+  SHOPPING_LIST,
 } from '../database';
 
 export default {
   data() {
     return {
       input: '',
-      items: []
+      items: [],
+      editing: false,
     };
   },
   methods: {
@@ -73,11 +92,18 @@ export default {
         removeItem(SHOPPING_LIST, itemToUpdate);
       }
       this.items = getAll(SHOPPING_LIST);
-    }
+    },
+    toggleEditing() {
+      this.editing = !this.editing;
+    },
+    removeEntry(item) {
+      removeItem(SHOPPING_LIST, item);
+      this.items = getAll(SHOPPING_LIST);
+    },
   },
   mounted() {
     this.items = getAll(SHOPPING_LIST);
-  }
+  },
 };
 </script>
 
