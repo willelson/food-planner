@@ -9,7 +9,10 @@
           <div class="form-group">
             <div class="label">URL</div>
             <input v-model="url" type="text" id="url" @paste="fetchContent" />
-            <div style="display: flex">
+            <div style="display: flex; justify-content: end">
+              <button class="btn btn-default fetch-button" @click="manualEntry = true">
+                enter manually
+              </button>
               <button class="btn btn-primary fetch-button" @click="fetchData">
                 fetch recipe
               </button>
@@ -23,7 +26,7 @@
             <loading-spinner></loading-spinner>
           </div>
 
-          <div v-if="contentLoaded">
+          <div v-if="showAllFormFields">
             <div class="form-group">
               <div class="label">Title</div>
               <textarea v-model="title" type="text" id="title"></textarea>
@@ -65,6 +68,7 @@ export default {
       fetchContentDisabled: false,
       contentLoading: false,
       contentLoaded: false,
+      manualEntry: false
     };
   },
   props: ['open'],
@@ -82,6 +86,7 @@ export default {
       this.fetchContentDisabled = false;
       this.contentLoading = false;
       this.contentLoaded = false;
+      this.manualEntry = false;
     },
     async addRecipe() {
       const { title, url, image, description } = this;
@@ -128,6 +133,9 @@ export default {
       } catch (err) {
         console.log(err);
         console.log('error fetching content');
+        this.contentLoading = false;
+        this.contentLoaded = false;
+        alert('Unable to load this content, please try again later');
       }
     },
   },
@@ -138,6 +146,9 @@ export default {
         return `background-image: url(${this.image})`;
       } else return '';
     },
+    showAllFormFields() {
+      return ((this.contentLoaded || this.manualEntry) && !this.contentLoading)
+    }
   },
 };
 </script>
@@ -154,7 +165,6 @@ export default {
 }
 
 .fetch-button {
-  margin-left: auto;
   margin-right: 0;
   margin-top: 8px;
 }
