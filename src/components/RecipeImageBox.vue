@@ -7,6 +7,9 @@
     @click="$emit('click', id)"
   >
     <div v-if="showTitle" class="entry-title">{{ title }}</div>
+    <div v-if="deleteMode" class="delete-btn" @click="deleteClicked">
+      <i class="fa fa-times" style="font-size: 20px"></i>
+    </div>
   </div>
 </template>
 
@@ -40,10 +43,17 @@ export default {
       type: Boolean,
       default: false,
     },
+    deleteMode: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     getImageUrl(id) {
       return getImage(id);
+    },
+    deleteClicked() {
+      this.$emit('delete');
     },
   },
 };
@@ -81,5 +91,17 @@ export default {
 
 .faded {
   opacity: 0.7;
+}
+
+.delete-btn {
+  position: absolute;
+  background-color: var(--danger);
+  padding: 0 var(--padding-xs);
+  border-top-right-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  z-index: 5;
 }
 </style>

@@ -4,16 +4,24 @@
       style="display: flex; justify-content: space-between; align-items: center"
     >
       <div class="page-title">{{ currentMonth }}</div>
-      <i
-        class="fa fa-plus"
-        style="
-          color: var(--primary);
-          margin-right: var(--padding-sm);
-          font-size: 28px;
-        "
-        aria-hidden="true"
-        @click="showAddToCalendar = true"
-      ></i>
+      <div style="display: flex; align-items: center">
+        <span
+          style="color: var(--primary); margin-right: var(--padding)"
+          @click="toggleEditMode"
+        >
+          {{ editMode ? 'done' : 'edit' }}</span
+        >
+        <i
+          class="fa fa-plus"
+          style="
+            color: var(--primary);
+            margin-right: var(--padding-sm);
+            font-size: 22px;
+          "
+          aria-hidden="true"
+          @click="showAddToCalendar = true"
+        ></i>
+      </div>
     </div>
     <div class="calendar-body">
       <div
@@ -38,6 +46,8 @@
           :id="entry.recipe?.id"
           :image="entry.recipe?.image"
           :key="entry.recipe?.id"
+          :deleteMode="editMode"
+          @delete="deleteEntry(entry, index)"
         />
       </div>
     </div>
@@ -60,7 +70,9 @@ import {
   collection,
   query,
   where,
+  doc,
   getDocs,
+  deleteDoc,
   Timestamp,
 } from 'firebase/firestore';
 
@@ -77,6 +89,7 @@ export default {
       selectedDay: null,
       calendarEntries: [],
       showAddToCalendar: false,
+      editMode: false,
     };
   },
   methods: {
@@ -102,6 +115,7 @@ export default {
         this.timeoutId = null;
         this.selectedDay = day.date;
         this.showAddToCalendar = true;
+        this.editMode = false;
       }
     },
     handleNewEntries() {
@@ -134,7 +148,7 @@ export default {
       const entriesSnapshot = await getDocs(q);
 
       entriesSnapshot.forEach(async (document) => {
-        const entryData = document.data();
+        const entryData = { ...document.data(), id: document.id };
 
         const dateIndex = this.weekDates.findIndex((day) => {
           const entryDate = new Date(entryData.date.seconds * 1000);
@@ -152,6 +166,20 @@ export default {
         ];
         this.calendarEntries = entries;
       });
+    },
+    async deleteEntry(entry, dayIndex) {
+      await deleteDoc(doc(db, 'calendar-entries', entry.id));
+
+      const dayEntries = this.calendarEntries[dayIndex];
+      const entryIndex = dayEntries.find((e) => e.id === entry.id);
+
+      this.calendarEntries[dayIndex] = [
+        ...entryIndex.slice(0, entryIndex),
+        ...dayEntries.slice(entryIndex + 1),
+      ];
+    },
+    toggleEditMode() {
+      this.editMode = !this.editMode;
     },
   },
   computed: {
@@ -248,6 +276,8 @@ export default {
   display: block;
   position: absolute;
   width: 100%;
+  max-height: 100%;
+  overflow: hidden;
   color: white;
   font-weight: bold;
   text-align: right;
