@@ -21,6 +21,7 @@
     <ViewEditRecipe
       :open="showViewEditRecipeForm"
       @close="recipeViewClosed"
+      @recipe-deleted="getRecipes"
       :recipe="selectedRecipe"
     />
   </div>
@@ -51,11 +52,7 @@ export default {
       this.selectedRecipe = null;
     },
     recipeBoxClicked(id) {
-      console.log('recipe box clicked');
-      console.log(`id = ${id}`);
       this.selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
-      console.log(this.selectedRecipe);
-      console.log(`selectedRecipe.id = ${this.selectedRecipe.id}`);
       this.showViewEditRecipeForm = true;
     },
   },

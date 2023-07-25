@@ -31,6 +31,7 @@
       <template v-slot:footer>
         <button class="btn btn-default" @click="close">Cancel</button>
         <button class="btn btn-primary" @click="submitUpdate">Update</button>
+        <button class="btn btn-danger" @click="deleteRecipe">Delete</button>
       </template>
     </modal>
   </div>
@@ -39,11 +40,8 @@
 <script>
 import Vuex from 'vuex';
 import { db } from '../firebase/config';
-// import { addDoc, Timestamp, collection } from 'firebase/firestore';
-import { doc, updateDoc } from 'firebase/firestore';
-
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import Modal from './Modal.vue';
-// import LoadingSpinner from './utils/LoadingSpinner.vue';
 
 export default {
   props: ['recipe', 'open'],
@@ -57,7 +55,7 @@ export default {
   },
   components: { Modal },
   methods: {
-    ...Vuex.mapActions(['updateRecipe']),
+    ...Vuex.mapActions(['updateRecipe', 'deleteRecipe']),
     async submitUpdate() {
       const recipeRef = doc(db, 'recipes', this.recipe.id);
       const { title, url, image, description } = this;
@@ -66,6 +64,11 @@ export default {
 
       this.updateRecipe({ ...this.recipe, title, url, image, description });
       this.close();
+    },
+    async deleteRecipe() {
+      await deleteDoc(doc(db, 'recipes', this.recipe.id));
+      this.close();
+      this.$emit('recipe-deleted');
     },
     close() {
       this.$emit('close');
