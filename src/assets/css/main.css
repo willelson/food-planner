@@ -5,6 +5,8 @@
   --white: #f4f4f4;
   --black: #1d1c1a;
   --border: #e5e5e5;
+  --danger: #ff6961;
+  --disabled: #d3d3d3;
   --footer-height: 65px;
   --padding: 16px;
   --padding-sm: 8px;
@@ -101,11 +103,17 @@ textarea {
   color: white;
 }
 
+.btn-danger {
+  background-color: var(--danger);
+  border: 2px solid var(--danger);
+  color: white;
+}
+
 .btn-default {
   color: var(--primary);
 }
 
 .btn-disabled {
-  border: 2px solid #D3D3D3;
-  background-color: #D3D3D3;
+  border: 2px solid var(--disabled);
+  background-color: var(--disabled);
 }
