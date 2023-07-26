@@ -21,6 +21,19 @@
     background-color: var(--border);
     aspect-ratio: 1/1;
   }
+
+  .add-button.recipe {
+    background-color: var(--tertiary);
+  }
+
+  .add-button.collection {
+    background-color: var(--tertiary);
+  }
+  
+  .add-button.all-recipes {
+    background-color: var(--primary);
+    color: white;
+  }
   
   .add-text {
     display: flex;

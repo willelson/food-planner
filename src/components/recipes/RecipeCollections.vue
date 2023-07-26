@@ -2,27 +2,30 @@
   <div class="page-container">
     <div class="page-title">Recipes</div>
     <div class="recipe-grid">
-      <div class="add-button">
+      <div class="add-button recipe">
         <div class="add-text" @click="showAddRecipeForm = true">
           <i class="fa fa-plus" style="font-size: 28px" aria-hidden="true"></i>
           <div>Recipe</div>
         </div>
       </div>
-      <div class="add-button">
+      <div class="add-button collection">
         <div class="add-text" @click="() => console.log('add new collection')">
           <i class="fa fa-plus" style="font-size: 28px" aria-hidden="true"></i>
           <div>Collection</div>
         </div>
       </div>
-      <div class="add-button">
+      <div class="add-button all-recipes">
         <div class="add-text" @click="() => console.log('show all recipes')">
           <i class="fa fa-book" style="font-size: 28px" aria-hidden="true"></i>
           <div>All recipes</div>
         </div>
       </div>
+    </div>
+    <div style="padding: 0 var(--padding)">Collections</div>
+    <div class="recipe-grid">
       <RecipeImageBox
-        v-for="{ title, image, id } in recipes"
-        :title="title"
+        v-for="{ name, id } in collections"
+        :title="name"
         :id="id"
         :key="id"
         @click="recipeBoxClicked"

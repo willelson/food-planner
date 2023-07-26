@@ -2,7 +2,7 @@
   <div style="height: 100%">
     <div class="app-wrapper" v-if="user">
       <CalendarView v-if="selectedPage === 'calendar'" />
-      <RecipeCollection v-if="selectedPage === 'recipes'" />
+      <RecipeCollections v-if="selectedPage === 'recipes'" />
       <ShoppingList v-if="selectedPage === 'shopping'" />
       <UserSettings v-if="selectedPage === 'user-settings'" />
       <FooterNav v-model:page="selectedPage" />
@@ -14,7 +14,7 @@
 <script>
 import Vuex from 'vuex';
 import CalendarView from './CalendarView.vue';
-import RecipeCollection from './recipes/RecipeCollection.vue';
+import RecipeCollections from './recipes/RecipeCollections.vue';
 import ShoppingList from './ShoppingList.vue';
 import FooterNav from './FooterNav.vue';
 import LoginPage from './LoginPage.vue';
@@ -28,7 +28,7 @@ export default {
   },
   components: {
     CalendarView,
-    RecipeCollection,
+    RecipeCollections,
     ShoppingList,
     FooterNav,
     LoginPage,

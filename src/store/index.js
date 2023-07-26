@@ -10,6 +10,7 @@ const store = createStore({
     user: null,
     planner: null,
     recipes: [],
+    collections: [],
   },
   mutations: {
     setUser(state, payload) {
@@ -20,6 +21,9 @@ const store = createStore({
     },
     setRecipes(state, payload) {
       state.recipes = payload;
+    },
+    setCollections(state, payload) {
+      state.collections = payload;
     },
   },
   actions: {
@@ -88,7 +92,26 @@ const store = createStore({
       ];
 
       context.commit('setRecipes', updatedRecipes);
-    }
+    },
+
+    async getCollections(context) {
+      if (context.state.planner === null) return;
+      const recipesRef = collection(db, 'collections');
+      const q = query(
+        recipesRef,
+        where('plannerId', '==', context.state.planner.id)
+      );
+      const querySnapshot = await getDocs(q);
+
+      const fetchedCollections = [];
+
+      querySnapshot.forEach((doc) => {
+        const recipeData = doc.data();
+        fetchedCollections.push({ id: doc.id, ...recipeData });
+      });
+
+      context.commit('setCollections', fetchedCollections);
+    },
   },
 });
 
