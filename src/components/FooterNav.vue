@@ -7,34 +7,31 @@
       <i
         class="fa fa-calendar-o"
         aria-hidden="true"
-        @click="pageSelected('calendar')"
+        @click="$router.push({ name: 'calendar' })"
       ></i>
     </div>
     <div
       class="footer-button centered"
-      :class="{ active: page === 'shopping' }"
+      :class="{ active: page === 'shoppingList' }"
     >
       <i
         class="fa fa-shopping-cart"
         aria-hidden="true"
-        @click="pageSelected('shopping')"
+        @click="$router.push({ name: 'shoppingList' })"
       ></i>
     </div>
     <div class="footer-button centered" :class="{ active: page === 'recipes' }">
       <i
         class="fa fa-bookmark"
         aria-hidden="true"
-        @click="pageSelected('recipes')"
+        @click="$router.push({ name: 'recipes' })"
       ></i>
     </div>
-    <div
-      class="footer-button centered"
-      :class="{ active: page === 'user-settings' }"
-    >
+    <div class="footer-button centered" :class="{ active: page === 'account' }">
       <i
         class="fa fa-user-circle"
         aria-hidden="true"
-        @click="pageSelected('user-settings')"
+        @click="$router.push({ name: 'account' })"
       ></i>
     </div>
   </div>
@@ -42,13 +39,11 @@
 
 <script>
 export default {
-  props: ['page'],
-  emits: ['update:page'],
-  methods: {
-    pageSelected(page) {
-      this.$emit('update:page', page);
-    }
-  }
+  computed: {
+    page() {
+      return this.$router.currentRoute.value.name;
+    },
+  },
 };
 </script>
 

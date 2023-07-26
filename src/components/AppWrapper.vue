@@ -1,24 +1,13 @@
 <template>
-  <div style="height: 100%">
-    <div class="app-wrapper" v-if="user">
-      <CalendarView v-if="selectedPage === 'calendar'" />
-      <RecipeCollections v-if="selectedPage === 'recipes'" />
-      <ShoppingList v-if="selectedPage === 'shopping'" />
-      <UserSettings v-if="selectedPage === 'user-settings'" />
-      <FooterNav v-model:page="selectedPage" />
-    </div>
-    <LoginPage v-else />
+  <div style="height: 100%; display: flex; flex-direction: column">
+    <router-view style="flex: 1" />
+    <FooterNav v-if="showFooter" v-model:page="selectedPage" />
   </div>
 </template>
 
 <script>
 import Vuex from 'vuex';
-import CalendarView from './CalendarView.vue';
-import RecipeCollections from './recipes/RecipeCollections.vue';
-import ShoppingList from './ShoppingList.vue';
 import FooterNav from './FooterNav.vue';
-import LoginPage from './LoginPage.vue';
-import UserSettings from './UserSettings.vue';
 
 export default {
   data() {
@@ -27,12 +16,7 @@ export default {
     };
   },
   components: {
-    CalendarView,
-    RecipeCollections,
-    ShoppingList,
     FooterNav,
-    LoginPage,
-    UserSettings,
   },
   methods: {
     ...Vuex.mapMutations(['setUser']),
@@ -43,6 +27,11 @@ export default {
   },
   computed: {
     ...Vuex.mapState(['user']),
+    showFooter() {
+      const route = this.$router.currentRoute.value.name;
+
+      return !['login', 'signup'].includes(route);
+    },
   },
   mounted() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -50,14 +39,6 @@ export default {
       this.setUser(user);
       this.fetchPlanners();
     }
-  },
-  watch: {
-    user(newVal) {
-      if (newVal === null) {
-        // Switch back to calendar view after logout
-        this.selectedPage = 'calendar';
-      }
-    },
   },
 };
 </script>
