@@ -172,6 +172,7 @@ export default {
 };
 </script>
 
+<style lang="css" scoped src="@/assets/css/recipes.css"></style>
 <style scoped>
 .week-container {
   display: flex;
@@ -192,13 +193,5 @@ export default {
   background-color: var(--primary);
   border-radius: var(--border-radius);
   font-weight: bold;
-}
-
-.recipe-grid {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--grid-gap);
-  padding: var(--padding);
 }
 </style>
