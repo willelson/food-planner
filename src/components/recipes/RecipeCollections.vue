@@ -5,14 +5,25 @@
       <div class="add-button">
         <div class="add-text" @click="showAddRecipeForm = true">
           <i class="fa fa-plus" style="font-size: 28px" aria-hidden="true"></i>
-          <div>Add new</div>
+          <div>Recipe</div>
+        </div>
+      </div>
+      <div class="add-button">
+        <div class="add-text" @click="() => console.log('add new collection')">
+          <i class="fa fa-plus" style="font-size: 28px" aria-hidden="true"></i>
+          <div>Collection</div>
+        </div>
+      </div>
+      <div class="add-button">
+        <div class="add-text" @click="() => console.log('show all recipes')">
+          <i class="fa fa-book" style="font-size: 28px" aria-hidden="true"></i>
+          <div>All recipes</div>
         </div>
       </div>
       <RecipeImageBox
         v-for="{ title, image, id } in recipes"
         :title="title"
         :id="id"
-        :image="image"
         :key="id"
         @click="recipeBoxClicked"
       />
@@ -30,7 +41,7 @@
 <script>
 import Vuex from 'vuex';
 import AddRecipe from './AddRecipe.vue';
-import RecipeImageBox from './RecipeImageBox.vue';
+import RecipeImageBox from './../RecipeImageBox.vue';
 import ViewEditRecipe from './ViewEditRecipe.vue';
 
 export default {
@@ -42,10 +53,10 @@ export default {
     };
   },
   methods: {
-    ...Vuex.mapActions(['getRecipes']),
+    ...Vuex.mapActions(['getCollections']),
     recipeFormClosed() {
       this.showAddRecipeForm = false;
-      this.getRecipes();
+      this.getCollections();
     },
     recipeViewClosed() {
       this.showViewEditRecipeForm = false;
@@ -57,7 +68,7 @@ export default {
     },
   },
   computed: {
-    ...Vuex.mapState(['planner', 'recipes']),
+    ...Vuex.mapState(['planner', 'collections']),
   },
   components: {
     AddRecipe,
@@ -65,39 +76,10 @@ export default {
     ViewEditRecipe,
   },
   mounted() {
-    this.getRecipes();
+    this.getCollections();
   },
 };
 </script>
 
-<style scoped>
-.recipe-grid {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--grid-gap);
-  padding: var(--padding);
-}
-
-.recipe-image-box {
-  margin-bottom: 0px;
-}
-
-.add-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--padding-sm) 0px;
-  border: 1px solid white;
-  border-radius: var(--border-radius);
-  width: 100%;
-  background-color: var(--border);
-  aspect-ratio: 1/1;
-}
-
-.add-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-</style>
+<style lang="css" scoped src="@/assets/css/recipes.css"></style>
+<style scoped></style>

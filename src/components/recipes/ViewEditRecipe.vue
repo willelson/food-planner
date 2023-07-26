@@ -39,9 +39,9 @@
 
 <script>
 import Vuex from 'vuex';
-import { db } from '../firebase/config';
+import { db } from '../../firebase/config';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import Modal from './Modal.vue';
+import Modal from '../Modal.vue';
 
 export default {
   props: ['recipe', 'open'],

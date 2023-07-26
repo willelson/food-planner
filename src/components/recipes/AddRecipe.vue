@@ -52,11 +52,11 @@
 
 <script>
 import Vuex from 'vuex';
-import { db } from '../firebase/config';
+import { db } from '../../firebase/config';
 import { addDoc, Timestamp, collection } from 'firebase/firestore';
 
-import Modal from './Modal.vue';
-import LoadingSpinner from './utils/LoadingSpinner.vue';
+import Modal from '../Modal.vue';
+import LoadingSpinner from '../utils/LoadingSpinner.vue';
 
 export default {
   data() {

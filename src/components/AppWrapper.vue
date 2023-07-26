@@ -14,7 +14,7 @@
 <script>
 import Vuex from 'vuex';
 import CalendarView from './CalendarView.vue';
-import RecipeCollection from './RecipeCollection.vue';
+import RecipeCollection from './recipes/RecipeCollection.vue';
 import ShoppingList from './ShoppingList.vue';
 import FooterNav from './FooterNav.vue';
 import LoginPage from './LoginPage.vue';
