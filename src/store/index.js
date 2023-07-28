@@ -45,6 +45,7 @@ const store = createStore({
       const testPlanner = { ...doc.data(), id: doc.id };
       context.commit('setPlanner', testPlanner);
       context.dispatch('getRecipes');
+      context.dispatch('getCollections');
     },
     async createPlanner(context) {
       await addDoc(collection(db, 'planners'), {
@@ -106,8 +107,8 @@ const store = createStore({
       const fetchedCollections = [];
 
       querySnapshot.forEach((doc) => {
-        const recipeData = doc.data();
-        fetchedCollections.push({ id: doc.id, ...recipeData });
+        const collectionData = doc.data();
+        fetchedCollections.push({ id: doc.id, ...collectionData });
       });
 
       context.commit('setCollections', fetchedCollections);

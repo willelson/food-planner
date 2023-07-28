@@ -8,13 +8,19 @@
         <div class="form-body">
           <div class="form-group">
             <div class="label">URL</div>
-            <input v-model="url" type="text" id="url" @paste="fetchContent" />
+            <input v-model="url" type="text" id="url" @paste="handleUrlPaste" />
             <div style="display: flex; justify-content: end">
-              <button class="btn btn-default fetch-button" @click="manualEntry = true">
-                enter manually
+              <button
+                class="btn btn-default fetch-button"
+                @click="manualEntry = true"
+              >
+                manual
               </button>
-              <button class="btn btn-primary fetch-button" @click="fetchData">
-                fetch recipe
+              <button
+                class="btn btn-primary fetch-button"
+                @click="fetchDataClick"
+              >
+                fetch
               </button>
             </div>
           </div>
@@ -34,6 +40,19 @@
             <div class="form-group">
               <div class="label">Image</div>
               <div class="image-box" :style="imageStyle"></div>
+              <input
+                v-model="image"
+                type="text"
+                id="image"
+                placeholder="Image url"
+              />
+            </div>
+            <div class="form-group">
+              <div class="label">Collection</div>
+              <collections-list
+                :selected="selectedCollections"
+                @update="(value) => (selectedCollections = value)"
+              ></collections-list>
             </div>
             <div class="form-group">
               <div class="label">Description</div>
@@ -53,10 +72,18 @@
 <script>
 import Vuex from 'vuex';
 import { db } from '../../firebase/config';
-import { addDoc, Timestamp, collection } from 'firebase/firestore';
+import {
+  addDoc,
+  updateDoc,
+  Timestamp,
+  collection,
+  doc,
+  getDoc,
+} from 'firebase/firestore';
 
 import Modal from '../Modal.vue';
 import LoadingSpinner from '../utils/LoadingSpinner.vue';
+import CollectionsList from './CollectionsList.vue';
 
 export default {
   data() {
@@ -65,20 +92,22 @@ export default {
       url: null,
       image: null,
       description: null,
+      selectedCollections: [],
       fetchContentDisabled: false,
       contentLoading: false,
       contentLoaded: false,
-      manualEntry: false
+      manualEntry: false,
     };
   },
   props: ['open'],
-  components: { Modal, LoadingSpinner },
+  components: { Modal, LoadingSpinner, CollectionsList },
   methods: {
     clearFields() {
       this.title = null;
       this.url = null;
       this.image = null;
       this.description = null;
+      this.collections = [];
     },
     close() {
       this.$emit('close');
@@ -93,20 +122,35 @@ export default {
       const currentPlanner = { ...this.planner };
       const currentUser = { ...this.user };
 
-      await addDoc(collection(db, 'recipes'), {
+      const recipeRef = await addDoc(collection(db, 'recipes'), {
         title,
         url,
         image,
         description,
+        collections: this.selectedCollections,
         plannerId: currentPlanner.id,
         createdAt: Timestamp.fromDate(new Date()),
         addedBy: currentUser.uid,
       });
 
+      for (let collectionId of this.selectedCollections) {
+        const collectionRef = doc(db, 'collections', collectionId);
+        const collection = await getDoc(collectionRef);
+        const data = collection.data();
+        const recipes = [...data.recipes, recipeRef.id];
+        await updateDoc(collectionRef, { recipes });
+      }
+
       this.close();
     },
-    async fetchContent(event) {
+    handleUrlPaste(event) {
       const url = event.clipboardData.getData('text');
+      this.fetchContent(url);
+    },
+    fetchDataClick() {
+      this.fetchContent(this.url);
+    },
+    async fetchContent(url) {
       this.contentLoading = true;
       try {
         const res = await fetch(
@@ -131,8 +175,6 @@ export default {
           this.image = data.images[0];
         }
       } catch (err) {
-        console.log(err);
-        console.log('error fetching content');
         this.contentLoading = false;
         this.contentLoaded = false;
         alert('Unable to load this content, please try again later');
@@ -140,15 +182,15 @@ export default {
     },
   },
   computed: {
-    ...Vuex.mapState(['planner', 'user']),
+    ...Vuex.mapState(['planner', 'user', 'collections']),
     imageStyle() {
       if (this.image) {
         return `background-image: url(${this.image})`;
       } else return '';
     },
     showAllFormFields() {
-      return ((this.contentLoaded || this.manualEntry) && !this.contentLoading)
-    }
+      return (this.contentLoaded || this.manualEntry) && !this.contentLoading;
+    },
   },
 };
 </script>
@@ -160,7 +202,7 @@ export default {
   border-radius: 8px;
   margin-bottom: 8px;
   aspect-ratio: 1 / 1;
-  width: 50%;
+  width: 40%;
   background-size: cover;
 }
 

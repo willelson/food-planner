@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import store from '@/store/index';
 
 import RecipeCollections from '@/components/recipes/RecipeCollections.vue';
+import RecipeCollection from '@/components/recipes/RecipeCollection.vue';
 import CalendarView from '@/components/CalendarView.vue';
 import ShoppingList from '@/components/ShoppingList.vue';
 import UserSettings from '@/components/UserSettings.vue';
@@ -15,6 +16,12 @@ const routes = [
   { path: '/account', component: UserSettings, name: 'account' },
   { path: '/login', component: Login, name: 'login' },
   { path: '/signup', component: SignUp, name: 'signup' },
+  {
+    path: '/recipes/collection/:id',
+    component: RecipeCollection,
+    name: 'collection',
+    props: true,
+  },
 ];
 
 const router = createRouter({
@@ -22,12 +29,14 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from) => {
-  console.log(store.state.user);
-  console.log(from);
-  if (!store.state.user && to.name !== 'Login') {
+router.beforeEach(async (to) => {
+  if (!store.state.user && !['login', 'signup'].includes(to.name)) {
     // redirect the user to the login page
-    return { name: 'Login' };
+    return { name: 'login' };
+  }
+
+  if (store.state.user && ['login', 'signup'].includes(to.name)) {
+    return { name: 'calendar' };
   }
 });
 

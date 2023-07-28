@@ -20,7 +20,10 @@
         @click="$router.push({ name: 'shoppingList' })"
       ></i>
     </div>
-    <div class="footer-button centered" :class="{ active: page === 'recipes' }">
+    <div
+      class="footer-button centered"
+      :class="{ active: ['recipes', 'collection'].includes(page) }"
+    >
       <i
         class="fa fa-bookmark"
         aria-hidden="true"

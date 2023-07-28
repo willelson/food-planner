@@ -32,12 +32,6 @@
       />
     </div>
     <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
-    <ViewEditRecipe
-      :open="showViewEditRecipeForm"
-      @close="recipeViewClosed"
-      @recipe-deleted="getRecipes"
-      :recipe="selectedRecipe"
-    />
   </div>
 </template>
 
@@ -45,7 +39,6 @@
 import Vuex from 'vuex';
 import AddRecipe from './AddRecipe.vue';
 import RecipeImageBox from './../RecipeImageBox.vue';
-import ViewEditRecipe from './ViewEditRecipe.vue';
 
 export default {
   data() {
@@ -67,7 +60,7 @@ export default {
     },
     recipeBoxClicked(id) {
       this.selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
-      this.showViewEditRecipeForm = true;
+      this.$router.push({ name: 'collection', params: { id } });
     },
   },
   computed: {
@@ -76,7 +69,6 @@ export default {
   components: {
     AddRecipe,
     RecipeImageBox,
-    ViewEditRecipe,
   },
   mounted() {
     this.getCollections();

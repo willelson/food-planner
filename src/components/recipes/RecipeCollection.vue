@@ -1,6 +1,19 @@
 <template>
   <div class="page-container">
-    <div class="page-title">Recipes</div>
+    <div class="page-title" style="display: flex; align-items: center">
+      <span
+        style="
+          margin-right: var(--padding-sm);
+          color: var(--black);
+          font-size: 20px;
+        "
+        ><i
+          class="fa fa-arrow-left"
+          @click="goBack"
+          aria-hidden="true"
+        ></i></span
+      >{{ name }}
+    </div>
     <div class="recipe-grid">
       <div class="add-button">
         <div class="add-text" @click="showAddRecipeForm = true">
@@ -21,7 +34,6 @@
     <ViewEditRecipe
       :open="showViewEditRecipeForm"
       @close="recipeViewClosed"
-      @recipe-deleted="getRecipes"
       :recipe="selectedRecipe"
     />
   </div>
@@ -33,19 +45,32 @@ import AddRecipe from './AddRecipe.vue';
 import RecipeImageBox from './../RecipeImageBox.vue';
 import ViewEditRecipe from './ViewEditRecipe.vue';
 
+import {
+  where,
+  getDoc,
+  getDocs,
+  doc,
+  collection,
+  query,
+} from 'firebase/firestore';
+import { db } from '@/firebase/config';
+
 export default {
+  props: ['id'],
   data() {
     return {
       showAddRecipeForm: false,
       showViewEditRecipeForm: false,
       selectedRecipe: null,
+      recipes: [],
+      name: '',
     };
   },
   methods: {
     ...Vuex.mapActions(['getRecipes']),
     recipeFormClosed() {
       this.showAddRecipeForm = false;
-      this.getRecipes();
+      this.getCollectionRecipes();
     },
     recipeViewClosed() {
       this.showViewEditRecipeForm = false;
@@ -54,6 +79,35 @@ export default {
     recipeBoxClicked(id) {
       this.selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
       this.showViewEditRecipeForm = true;
+    },
+    async getCollectionRecipes() {
+      const recipesRef = collection(db, 'recipes');
+      const collectionsRef = doc(db, 'collections', this.id);
+      const docSnap = await getDoc(collectionsRef);
+
+      const data = docSnap.data();
+
+      this.name = data.name;
+
+      // This may have to executed in batches of 10
+      const q = query(
+        recipesRef,
+        where('plannerId', '==', this.planner.id),
+        where('__name__', 'in', data.recipes)
+      );
+      const querySnapshot = await getDocs(q);
+
+      const fetchedRecipes = [];
+
+      querySnapshot.forEach((doc) => {
+        const recipeData = doc.data();
+        fetchedRecipes.push({ id: doc.id, ...recipeData });
+      });
+
+      this.recipes = fetchedRecipes;
+    },
+    goBack() {
+      this.$router.go(-1);
     },
   },
   computed: {
@@ -65,11 +119,10 @@ export default {
     ViewEditRecipe,
   },
   mounted() {
-    this.getRecipes();
+    this.getCollectionRecipes();
   },
 };
 </script>
 
 <style lang="css" scoped src="@/assets/css/recipes.css"></style>
-<style scoped>
-</style>
+<style scoped></style>
