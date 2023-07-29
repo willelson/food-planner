@@ -34,6 +34,8 @@
     <ViewEditRecipe
       :open="showViewEditRecipeForm"
       @close="recipeViewClosed"
+      @recipe-updated="getCollectionRecipes"
+      @recipe-deleted="getCollectionRecipes"
       :recipe="selectedRecipe"
     />
   </div>

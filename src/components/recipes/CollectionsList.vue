@@ -5,10 +5,18 @@
       v-for="collection in collections"
       :key="collection.id"
     >
-      <input
-        type="checkbox"
-        @input="(event) => updateCollectionList(event, collection.id)"
-      />
+      <i
+        v-if="isChecked(collection.id)"
+        class="fa fa-check-circle"
+        aria-hidden="true"
+        @click="removeFromSelected(collection.id)"
+      ></i>
+      <i
+        v-else
+        class="fa fa-circle-o"
+        aria-hidden="true"
+        @click="addToSelected(collection.id)"
+      ></i>
       <span>{{ collection.name }}</span>
     </div>
   </div>
@@ -24,23 +32,23 @@ export default {
       type: Array,
     },
   },
-  emits: ['update:selected'],
+  emits: ['update'],
   methods: {
-    updateCollectionList(event, id) {
-      let newSelections;
-      if (event.target.checked) {
-        newSelections = [...this.selected, id];
-      } else {
-        const index = this.selected.findIndex(
-          (collectionId) => collectionId === id
-        );
-        newSelections = [
-          ...this.selected.slice(0, index),
-          ...this.selected.slice(index + 1),
-        ];
-      }
-
+    addToSelected(id) {
+      this.$emit('update', [...this.selected, id]);
+    },
+    removeFromSelected(id) {
+      const index = this.selected.findIndex(
+        (collectionId) => collectionId === id
+      );
+      const newSelections = [
+        ...this.selected.slice(0, index),
+        ...this.selected.slice(index + 1),
+      ];
       this.$emit('update', newSelections);
+    },
+    isChecked(id) {
+      return this.selected.includes(id);
     },
   },
 

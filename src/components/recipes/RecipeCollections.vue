@@ -59,7 +59,6 @@ export default {
       this.selectedRecipe = null;
     },
     recipeBoxClicked(id) {
-      this.selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
       this.$router.push({ name: 'collection', params: { id } });
     },
   },
