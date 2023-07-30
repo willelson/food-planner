@@ -65,8 +65,8 @@ export default {
         '#ffd313',
         '#ff7300',
         '#e70038',
-        '442bd4',
-        'fb54ad',
+        '#442bd4',
+        '#fb54ad',
       ];
 
       const index = Math.floor(Math.random() * randomColours.length);
