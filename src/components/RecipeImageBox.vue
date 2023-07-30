@@ -3,7 +3,7 @@
     class="recipe-image-box"
     :class="{ 'show-title': showTitle, selected, faded }"
     :key="id"
-    :style="{ backgroundImage: 'url(' + image + ')' }"
+    :style="boxStyle"
     @click="$emit('click', id)"
   >
     <div v-if="showTitle" class="entry-title">{{ title }}</div>
@@ -54,6 +54,23 @@ export default {
     },
     deleteClicked() {
       this.$emit('delete');
+    },
+  },
+  computed: {
+    boxStyle() {
+      if (this.image) {
+        return { backgroundImage: 'url(' + this.image + ')' };
+      }
+      const randomColours = [
+        '#ffd313',
+        '#ff7300',
+        '#e70038',
+        '442bd4',
+        'fb54ad',
+      ];
+
+      const index = Math.floor(Math.random() * randomColours.length);
+      return { backgroundColor: randomColours[index] };
     },
   },
 };

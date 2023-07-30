@@ -61,6 +61,9 @@
                 @update="(value) => (selectedCollections = value)"
                 :listItems="'collections'"
               ></checkbox-list>
+              <div v-if="collections.length === 0" class="no-results">
+                No collections
+              </div>
             </div>
             <div class="form-group">
               <div class="label">Description</div>

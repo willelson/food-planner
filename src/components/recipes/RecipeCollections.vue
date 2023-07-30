@@ -35,8 +35,8 @@
           @click="openCollection"
         />
       </div>
-      <div v-if="collections.length === 0" class="grey-text no-results">
-        You havn't created any collections yet
+      <div v-if="collections.length === 0" class="no-results">
+        No collections
       </div>
     </div>
     <div v-show="selectedTab === 'all'">
@@ -50,9 +50,7 @@
           @click="openRecipe"
         />
       </div>
-      <div v-if="recipes.length === 0" class="grey-text no-results">
-        You don't have any saved recipes yet
-      </div>
+      <div v-if="recipes.length === 0" class="no-results">No recipes</div>
     </div>
     <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
     <AddCollection
@@ -90,7 +88,7 @@ export default {
     ...Vuex.mapActions(['getCollections']),
     recipeFormClosed() {
       this.showAddRecipeForm = false;
-      this.getCollections();
+      this.getRecipes();
     },
     collectionFormClosed() {
       this.showAddCollectionForm = false;
@@ -147,9 +145,6 @@ export default {
 }
 
 .no-results {
-  width: 100%;
-  padding: 100px 24px;
-  text-align: center;
-  color: var(--grey);
+  padding-top: 100px;
 }
 </style>
