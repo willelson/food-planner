@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import store from '@/store/index';
 
 import RecipeCollections from '@/components/recipes/RecipeCollections.vue';
@@ -11,7 +11,7 @@ import SignUp from '@/components/login/SignUp.vue';
 
 const routes = [
   { path: '/recipes', component: RecipeCollections, name: 'recipes' },
-  { path: '/calendar', component: CalendarView, name: 'calendar' },
+  { path: '/', component: CalendarView, name: 'calendar' },
   { path: '/shopping-list', component: ShoppingList, name: 'shoppingList' },
   { path: '/account', component: UserSettings, name: 'account' },
   { path: '/login', component: Login, name: 'login' },
@@ -25,7 +25,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 
