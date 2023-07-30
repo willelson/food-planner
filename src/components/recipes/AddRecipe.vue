@@ -35,7 +35,13 @@
           <div v-if="showAllFormFields">
             <div class="form-group">
               <div class="label">Title</div>
-              <textarea v-model="title" type="text" id="title"></textarea>
+              <custom-text-area
+                :value="title"
+                @input="(value) => (title = value)"
+                type="text"
+                id="title"
+                placeholder="title"
+              ></custom-text-area>
             </div>
             <div class="form-group">
               <div class="label">Image</div>
@@ -52,11 +58,17 @@
               <collections-list
                 :selected="selectedCollections"
                 @update="(value) => (selectedCollections = value)"
+                :listItems="'collections'"
               ></collections-list>
             </div>
             <div class="form-group">
               <div class="label">Description</div>
-              <textarea v-model="description" type="text" id="title"></textarea>
+              <custom-text-area
+                :value="description"
+                @input="(value) => (description = value)"
+                type="text"
+                id="title"
+              ></custom-text-area>
             </div>
           </div>
         </div>
@@ -84,6 +96,7 @@ import {
 import Modal from '../Modal.vue';
 import LoadingSpinner from '../utils/LoadingSpinner.vue';
 import CollectionsList from './CollectionsList.vue';
+import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
 export default {
   data() {
@@ -100,7 +113,7 @@ export default {
     };
   },
   props: ['open'],
-  components: { Modal, LoadingSpinner, CollectionsList },
+  components: { Modal, LoadingSpinner, CollectionsList, CustomTextArea },
   methods: {
     clearFields() {
       this.title = null;

@@ -91,6 +91,11 @@ export default {
 
       this.name = data.name;
 
+      if (data.recipes.length === 0) {
+        this.recipes = [];
+        return;
+      }
+
       // This may have to executed in batches of 10
       const q = query(
         recipesRef,

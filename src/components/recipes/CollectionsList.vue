@@ -1,23 +1,19 @@
 <template>
-  <div class="collections">
-    <div
-      class="collection"
-      v-for="collection in collections"
-      :key="collection.id"
-    >
+  <div>
+    <div class="option" v-for="option in options" :key="option.id">
       <i
-        v-if="isChecked(collection.id)"
-        class="fa fa-check-circle"
+        v-if="isChecked(option.id)"
+        class="fa fa-check-circle check-circle"
         aria-hidden="true"
-        @click="removeFromSelected(collection.id)"
+        @click="removeFromSelected(option.id)"
       ></i>
       <i
         v-else
-        class="fa fa-circle-o"
+        class="fa fa-circle-o check-circle"
         aria-hidden="true"
-        @click="addToSelected(collection.id)"
+        @click="addToSelected(option.id)"
       ></i>
-      <span>{{ collection.name }}</span>
+      <span>{{ optionText(option) }}</span>
     </div>
   </div>
 </template>
@@ -30,6 +26,10 @@ export default {
     selected: {
       default: () => [],
       type: Array,
+    },
+    listItems: {
+      default: '',
+      type: String,
     },
   },
   emits: ['update'],
@@ -50,21 +50,41 @@ export default {
     isChecked(id) {
       return this.selected.includes(id);
     },
+    optionText(option) {
+      switch (this.listItems) {
+        case 'collections':
+          return option.name;
+        case 'recipes':
+          return option.title;
+        default:
+          return '';
+      }
+    },
   },
 
   computed: {
-    ...Vuex.mapState(['collections']),
+    ...Vuex.mapState(['collections', 'recipes']),
+    options() {
+      switch (this.listItems) {
+        case 'collections':
+          return this.collections;
+        case 'recipes':
+          return this.recipes;
+        default:
+          return [];
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-.collection {
+.option {
   display: flex;
-  align-items: center;
+  gap: var(--padding-sm);
 }
 
-.collection input[type='checkbox'] {
-  width: auto;
+.option .check-circle {
+  padding-top: 2px;
 }
 </style>

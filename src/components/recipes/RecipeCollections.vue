@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="add-button collection">
-        <div class="add-text" @click="() => console.log('add new collection')">
+        <div class="add-text" @click="showAddCollectionForm = true">
           <i class="fa fa-plus" style="font-size: 28px" aria-hidden="true"></i>
           <div>Collection</div>
         </div>
@@ -32,6 +32,10 @@
       />
     </div>
     <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
+    <AddCollection
+      :open="showAddCollectionForm"
+      @close="collectionFormClosed"
+    />
   </div>
 </template>
 
@@ -39,12 +43,14 @@
 import Vuex from 'vuex';
 import AddRecipe from './AddRecipe.vue';
 import RecipeImageBox from './../RecipeImageBox.vue';
+import AddCollection from './AddCollection.vue';
 
 export default {
   data() {
     return {
       showAddRecipeForm: false,
       showViewEditRecipeForm: false,
+      showAddCollectionForm: false,
       selectedRecipe: null,
     };
   },
@@ -52,6 +58,10 @@ export default {
     ...Vuex.mapActions(['getCollections']),
     recipeFormClosed() {
       this.showAddRecipeForm = false;
+      this.getCollections();
+    },
+    collectionFormClosed() {
+      this.showAddCollectionForm = false;
       this.getCollections();
     },
     recipeViewClosed() {
@@ -67,6 +77,7 @@ export default {
   },
   components: {
     AddRecipe,
+    AddCollection,
     RecipeImageBox,
   },
   mounted() {

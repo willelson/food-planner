@@ -8,12 +8,13 @@
         <div class="form-body">
           <div class="form-group">
             <div class="label">Title</div>
-            <textarea
-              v-model="title"
+            <custom-text-area
+              :value="title"
+              @input="(value) => (title = value)"
               type="text"
               id="title"
               placeholder="title"
-            ></textarea>
+            ></custom-text-area>
           </div>
           <div class="form-group">
             <img :src="image" style="max-width: 80%; max-height: 160px" />
@@ -23,16 +24,18 @@
             <collections-list
               :selected="selectedCollections"
               @update="updateCollectionList"
+              :listItems="'collections'"
             ></collections-list>
           </div>
           <div class="form-group">
             <div class="label">Description</div>
-            <textarea
-              v-model="description"
+            <custom-text-area
+              :value="description"
+              @input="(value) => (description = value)"
               type="text"
               id="title"
               placeholder="description"
-            ></textarea>
+            ></custom-text-area>
           </div></div
       ></template>
       <template v-slot:footer>
@@ -50,6 +53,7 @@ import { db } from '../../firebase/config';
 import { doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
 import Modal from '../Modal.vue';
 import CollectionsList from './CollectionsList.vue';
+import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
 export default {
   props: ['recipe', 'open'],
@@ -63,7 +67,7 @@ export default {
       initialCollections: [],
     };
   },
-  components: { Modal, CollectionsList },
+  components: { Modal, CollectionsList, CustomTextArea },
   methods: {
     ...Vuex.mapActions(['updateRecipe', 'deleteRecipe']),
     async submitUpdate() {
