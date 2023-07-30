@@ -1,40 +1,70 @@
 <template>
   <div class="page-container">
     <div class="page-title">Recipes</div>
-    <div class="recipe-grid">
-      <div class="add-button recipe">
-        <div class="add-text" @click="showAddRecipeForm = true">
-          <i class="fa fa-plus" style="font-size: 28px" aria-hidden="true"></i>
-          <div>Recipe</div>
-        </div>
+    <div class="tab-pane">
+      <div
+        :class="['tab', { selected: selectedTab === 'collections' }]"
+        @click="selectedTab = 'collections'"
+      >
+        Collections
       </div>
-      <div class="add-button collection">
-        <div class="add-text" @click="showAddCollectionForm = true">
-          <i class="fa fa-plus" style="font-size: 28px" aria-hidden="true"></i>
-          <div>Collection</div>
-        </div>
+      <span>/</span>
+      <div
+        :class="['tab', { selected: selectedTab === 'all' }]"
+        @click="selectedTab = 'all'"
+      >
+        All
       </div>
-      <div class="add-button all-recipes">
-        <div class="add-text" @click="() => console.log('show all recipes')">
-          <i class="fa fa-book" style="font-size: 28px" aria-hidden="true"></i>
-          <div>All recipes</div>
-        </div>
+      <div style="margin-left: auto; padding: 2px 0">
+        <i
+          class="fa fa-plus"
+          style="font-size: 1.3em"
+          aria-hidden="true"
+          @click="addButtonClick"
+        ></i>
       </div>
     </div>
-    <div style="padding: 0 var(--padding)">Collections</div>
-    <div class="recipe-grid">
-      <RecipeImageBox
-        v-for="{ title, id } in collections"
-        :title="title"
-        :id="id"
-        :key="id"
-        @click="recipeBoxClicked"
-      />
+
+    <div v-show="selectedTab === 'collections'">
+      <div class="recipe-grid">
+        <RecipeImageBox
+          v-for="{ title, id } in collections"
+          :title="title"
+          :id="id"
+          :key="id"
+          @click="openCollection"
+        />
+      </div>
+      <div v-if="collections.length === 0" class="grey-text no-results">
+        You havn't created any collections yet
+      </div>
+    </div>
+    <div v-show="selectedTab === 'all'">
+      <div class="recipe-grid">
+        <RecipeImageBox
+          v-for="{ title, image, id } in recipes"
+          :title="title"
+          :id="id"
+          :image="image"
+          :key="id"
+          @click="openRecipe"
+        />
+      </div>
+      <div v-if="recipes.length === 0" class="grey-text no-results">
+        You don't have any saved recipes yet
+      </div>
     </div>
     <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
     <AddCollection
       :open="showAddCollectionForm"
       @close="collectionFormClosed"
+    />
+    <ViewEditRecipe
+      :open="showViewEditRecipeForm"
+      @close="recipeViewClosed"
+      @recipe-updated="getCollections"
+      @recipe-deleted="getCollections"
+      :recipe="selectedRecipe"
     />
   </div>
 </template>
@@ -44,6 +74,7 @@ import Vuex from 'vuex';
 import AddRecipe from './AddRecipe.vue';
 import RecipeImageBox from './../RecipeImageBox.vue';
 import AddCollection from './AddCollection.vue';
+import ViewEditRecipe from './ViewEditRecipe.vue';
 
 export default {
   data() {
@@ -52,6 +83,7 @@ export default {
       showViewEditRecipeForm: false,
       showAddCollectionForm: false,
       selectedRecipe: null,
+      selectedTab: 'collections',
     };
   },
   methods: {
@@ -64,21 +96,30 @@ export default {
       this.showAddCollectionForm = false;
       this.getCollections();
     },
+    openCollection(id) {
+      this.$router.push({ name: 'collection', params: { id } });
+    },
+    openRecipe(id) {
+      this.selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
+      this.showViewEditRecipeForm = true;
+    },
     recipeViewClosed() {
       this.showViewEditRecipeForm = false;
       this.selectedRecipe = null;
     },
-    recipeBoxClicked(id) {
-      this.$router.push({ name: 'collection', params: { id } });
+    addButtonClick() {
+      if (this.selectedTab === 'collections') this.showAddCollectionForm = true;
+      else if (this.selectedTab === 'all') this.showAddRecipeForm = true;
     },
   },
   computed: {
-    ...Vuex.mapState(['planner', 'collections']),
+    ...Vuex.mapState(['planner', 'collections', 'recipes']),
   },
   components: {
     AddRecipe,
     AddCollection,
     RecipeImageBox,
+    ViewEditRecipe,
   },
   mounted() {
     this.getCollections();
@@ -87,4 +128,28 @@ export default {
 </script>
 
 <style lang="css" scoped src="@/assets/css/recipes.css"></style>
-<style scoped></style>
+<style scoped>
+.tab-pane {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0 var(--padding);
+  width: 100%;
+}
+
+.tab {
+  padding: 2px 0;
+}
+
+.tab.selected {
+  color: var(--primary);
+  border-bottom: 1px solid var(--primary);
+}
+
+.no-results {
+  width: 100%;
+  padding: 100px 24px;
+  text-align: center;
+  color: var(--grey);
+}
+</style>

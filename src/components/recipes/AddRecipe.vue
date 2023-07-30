@@ -45,13 +45,14 @@
             </div>
             <div class="form-group">
               <div class="label">Image</div>
-              <div class="image-box" :style="imageStyle"></div>
               <input
+                v-if="manualEntry"
                 v-model="image"
                 type="text"
                 id="image"
                 placeholder="Image url"
               />
+              <div v-else class="image-box" :style="imageStyle"></div>
             </div>
             <div class="form-group">
               <div class="label">Collection</div>

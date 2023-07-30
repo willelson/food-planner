@@ -118,7 +118,7 @@ export default {
     },
   },
   computed: {
-    ...Vuex.mapState(['planner', 'recipes']),
+    ...Vuex.mapState(['planner']),
   },
   components: {
     AddRecipe,
