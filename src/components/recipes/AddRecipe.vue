@@ -55,11 +55,11 @@
             </div>
             <div class="form-group">
               <div class="label">Collection</div>
-              <collections-list
+              <checkbox-list
                 :selected="selectedCollections"
                 @update="(value) => (selectedCollections = value)"
                 :listItems="'collections'"
-              ></collections-list>
+              ></checkbox-list>
             </div>
             <div class="form-group">
               <div class="label">Description</div>
@@ -95,7 +95,7 @@ import {
 
 import Modal from '../Modal.vue';
 import LoadingSpinner from '../utils/LoadingSpinner.vue';
-import CollectionsList from './CollectionsList.vue';
+import CheckboxList from './CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
 export default {
@@ -113,7 +113,7 @@ export default {
     };
   },
   props: ['open'],
-  components: { Modal, LoadingSpinner, CollectionsList, CustomTextArea },
+  components: { Modal, LoadingSpinner, CheckboxList, CustomTextArea },
   methods: {
     clearFields() {
       this.title = null;

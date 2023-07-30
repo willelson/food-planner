@@ -21,11 +21,11 @@
           </div>
           <div class="form-group">
             <div class="label">Collection</div>
-            <collections-list
+            <checkbox-list
               :selected="selectedCollections"
               @update="updateCollectionList"
               :listItems="'collections'"
-            ></collections-list>
+            ></checkbox-list>
           </div>
           <div class="form-group">
             <div class="label">Description</div>
@@ -52,7 +52,7 @@ import Vuex from 'vuex';
 import { db } from '../../firebase/config';
 import { doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
 import Modal from '../Modal.vue';
-import CollectionsList from './CollectionsList.vue';
+import CheckboxList from './CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
 export default {
@@ -67,7 +67,7 @@ export default {
       initialCollections: [],
     };
   },
-  components: { Modal, CollectionsList, CustomTextArea },
+  components: { Modal, CheckboxList, CustomTextArea },
   methods: {
     ...Vuex.mapActions(['updateRecipe', 'deleteRecipe']),
     async submitUpdate() {

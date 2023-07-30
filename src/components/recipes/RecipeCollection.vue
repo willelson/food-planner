@@ -12,7 +12,7 @@
           @click="goBack"
           aria-hidden="true"
         ></i></span
-      >{{ name }}
+      >{{ title }}
     </div>
     <div class="recipe-grid">
       <div class="add-button">
@@ -65,7 +65,7 @@ export default {
       showViewEditRecipeForm: false,
       selectedRecipe: null,
       recipes: [],
-      name: '',
+      title: '',
     };
   },
   methods: {
@@ -89,7 +89,7 @@ export default {
 
       const data = docSnap.data();
 
-      this.name = data.name;
+      this.title = data.title;
 
       if (data.recipes.length === 0) {
         this.recipes = [];

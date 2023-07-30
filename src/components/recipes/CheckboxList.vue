@@ -13,7 +13,7 @@
         aria-hidden="true"
         @click="addToSelected(option.id)"
       ></i>
-      <span>{{ optionText(option) }}</span>
+      <span>{{ option.title }}</span>
     </div>
   </div>
 </template>
@@ -49,16 +49,6 @@ export default {
     },
     isChecked(id) {
       return this.selected.includes(id);
-    },
-    optionText(option) {
-      switch (this.listItems) {
-        case 'collections':
-          return option.name;
-        case 'recipes':
-          return option.title;
-        default:
-          return '';
-      }
     },
   },
 

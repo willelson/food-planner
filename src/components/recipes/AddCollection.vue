@@ -19,11 +19,11 @@
           </div>
           <div class="form-group">
             <div class="label">Recipes</div>
-            <collections-list
+            <checkbox-list
               :selected="collectionRecipes"
               @update="(value) => (collectionRecipes = value)"
               :listItems="'recipes'"
-            ></collections-list>
+            ></checkbox-list>
           </div>
         </div>
       </template>
@@ -42,7 +42,7 @@ import { db } from '../../firebase/config';
 import { addDoc, collection } from 'firebase/firestore';
 
 import Modal from '../Modal.vue';
-import CollectionsList from './CollectionsList.vue';
+import CheckboxList from './CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
 export default {
@@ -53,7 +53,7 @@ export default {
     };
   },
   props: ['open'],
-  components: { Modal, CollectionsList, CustomTextArea },
+  components: { Modal, CheckboxList, CustomTextArea },
   methods: {
     clearFields() {
       this.title = null;
@@ -66,6 +66,11 @@ export default {
     async addCollection() {
       const { title, collectionRecipes } = this;
       const currentPlanner = { ...this.planner };
+
+      if (!title) {
+        alert('Title must not be empty');
+        return;
+      }
 
       await addDoc(collection(db, 'collections'), {
         title,

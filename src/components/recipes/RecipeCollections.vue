@@ -24,8 +24,8 @@
     <div style="padding: 0 var(--padding)">Collections</div>
     <div class="recipe-grid">
       <RecipeImageBox
-        v-for="{ name, id } in collections"
-        :title="name"
+        v-for="{ title, id } in collections"
+        :title="title"
         :id="id"
         :key="id"
         @click="recipeBoxClicked"
