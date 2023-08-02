@@ -13,7 +13,7 @@
         aria-hidden="true"
         @click="addToSelected(option.id)"
       ></i>
-      <span>{{ option.title }}</span>
+      <span class="option-title">{{ option.title }}</span>
     </div>
   </div>
 </template>
@@ -76,5 +76,11 @@ export default {
 
 .option .check-circle {
   padding-top: 2px;
+}
+
+.option-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 </style>

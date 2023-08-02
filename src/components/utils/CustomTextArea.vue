@@ -28,12 +28,21 @@ export default {
   },
 
   methods: {
-    handleInput(event) {
+    resize() {
       const textArea = this.$refs['text-area'];
-      textArea.style.height = 'auto';
-      textArea.style.height = textArea.scrollHeight + 'px';
+      console.log(`textArea.scrollHeight = ${textArea.scrollHeight}`);
+      const height = parseInt(textArea.scrollHeight) + 2;
+      const heightString = String(height);
+      textArea.style.height = heightString + 'px';
+    },
+    handleInput(event) {
+      this.resize();
       this.$emit('input', event.target.value);
     },
+  },
+
+  mounted() {
+    this.resize();
   },
 };
 </script>
@@ -47,5 +56,6 @@ textarea {
   border-radius: var(--border-radius);
   width: 100%;
   resize: none;
+  overflow: hidden;
 }
 </style>

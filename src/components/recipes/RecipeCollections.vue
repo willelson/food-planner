@@ -85,7 +85,7 @@ export default {
     };
   },
   methods: {
-    ...Vuex.mapActions(['getCollections']),
+    ...Vuex.mapActions(['getCollections', 'getRecipes']),
     recipeFormClosed() {
       this.showAddRecipeForm = false;
       this.getRecipes();
