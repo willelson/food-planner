@@ -170,13 +170,18 @@ export default {
     async deleteEntry(entry, dayIndex) {
       await deleteDoc(doc(db, 'calendar-entries', entry.id));
 
-      const dayEntries = this.calendarEntries[dayIndex];
-      const entryIndex = dayEntries.find((e) => e.id === entry.id);
-
-      this.calendarEntries[dayIndex] = [
-        ...entryIndex.slice(0, entryIndex),
+      console.log(this.calendarEntries[dayIndex]);
+      const dayEntries = this.calendarEntries[dayIndex].entries;
+      const entryIndex = dayEntries.findIndex((e) => e.id === entry.id);
+      const updatedEntries = [
+        ...dayEntries.slice(0, entryIndex),
         ...dayEntries.slice(entryIndex + 1),
       ];
+
+      this.calendarEntries[dayIndex] = {
+        ...this.calendarEntries[dayIndex],
+        entries: updatedEntries,
+      };
     },
     toggleEditMode() {
       this.editMode = !this.editMode;
