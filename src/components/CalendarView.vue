@@ -40,15 +40,17 @@
             new Date(day.date).getDate()
           }}</span>
         </div>
-        <RecipeImageBox
-          v-for="entry in day.entries"
-          :title="entry.recipe?.title"
-          :id="entry.recipe?.id"
-          :image="entry.recipe?.image"
-          :key="entry.recipe?.id"
-          :deleteMode="editMode"
-          @delete="deleteEntry(entry, index)"
-        />
+        <div class="day-entries">
+          <RecipeImageBox
+            v-for="entry in day.entries"
+            :title="entry.recipe?.title"
+            :id="entry.recipe?.id"
+            :image="entry.recipe?.image"
+            :key="entry.recipe?.id"
+            :deleteMode="editMode"
+            @delete="deleteEntry(entry, index)"
+          />
+        </div>
       </div>
     </div>
     <AddToCalendar
@@ -246,6 +248,7 @@ export default {
   flex: 1;
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
+  position: relative;
 }
 
 .calendar-body .day-container {
@@ -290,5 +293,13 @@ export default {
   bottom: 0;
   padding: 6px;
   z-index: 2;
+}
+
+.day-entries {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
 }
 </style>
