@@ -52,6 +52,8 @@
       </div>
       <div v-if="recipes.length === 0" class="no-results">No recipes</div>
     </div>
+  </div>
+  <div>
     <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
     <AddCollection
       :open="showAddCollectionForm"

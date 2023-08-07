@@ -30,6 +30,8 @@
         @click="recipeBoxClicked"
       />
     </div>
+  </div>
+  <div>
     <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
     <ViewEditRecipe
       :open="showViewEditRecipeForm"
