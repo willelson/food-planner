@@ -7,6 +7,7 @@
   --border: #e5e5e5;
   --danger: #ff6961;
   --disabled: #d3d3d3;
+  --grey: #C0C0C0;
   --footer-height: 65px;
   --padding: 16px;
   --padding-sm: 8px;
@@ -106,4 +107,16 @@ input {
 .btn-disabled {
   border: 2px solid var(--disabled);
   background-color: var(--disabled);
+}
+
+.no-results {
+  width: 100%;
+  padding: 24px;
+  text-align: center;
+  color: var(--grey);
+}
+
+.hyperlink {
+  color: #2c75ff;
+  text-decoration: none;
 }

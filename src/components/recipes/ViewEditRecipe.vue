@@ -7,6 +7,13 @@
       <template v-slot:body>
         <div class="form-body">
           <div class="form-group">
+            <div style="text-align: right">
+              <a :href="url" target="_blank" class="hyperlink"
+                >Source <i class="fa fa-external-link" aria-hidden="true"></i
+              ></a>
+            </div>
+          </div>
+          <div class="form-group">
             <div class="label">Title</div>
             <custom-text-area
               :value="title"
