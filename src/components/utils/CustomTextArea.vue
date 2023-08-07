@@ -30,7 +30,6 @@ export default {
   methods: {
     resize() {
       const textArea = this.$refs['text-area'];
-      console.log(`textArea.scrollHeight = ${textArea.scrollHeight}`);
       const height = parseInt(textArea.scrollHeight) + 2;
       const heightString = String(height);
       textArea.style.height = heightString + 'px';
@@ -49,7 +48,8 @@ export default {
 
 <style scoped>
 textarea {
-  height: 36px;
+  height: 40px;
+  font-size: 16px;
   font-family: 'Noto Serif';
   padding: var(--padding-sm);
   border: 1px solid var(--border);

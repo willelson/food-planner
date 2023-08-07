@@ -23,7 +23,7 @@
               placeholder="title"
             ></custom-text-area>
           </div>
-          <div class="form-group">
+          <div class="form-group" style="dispaly: flex">
             <img :src="image" style="max-width: 80%; max-height: 160px" />
           </div>
           <div class="form-group">
