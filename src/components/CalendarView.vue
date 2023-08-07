@@ -49,6 +49,7 @@
             :key="entry.recipe?.id"
             :deleteMode="editMode"
             @delete="deleteEntry(entry, index)"
+            @click="recipeClicked"
           />
         </div>
       </div>
@@ -59,6 +60,13 @@
       @close="closeAddToCalendar"
       @entry-added="handleNewEntries"
     />
+    <ViewEditRecipe
+      :open="showViewEditRecipeForm"
+      @close="recipeViewClosed"
+      @recipe-updated="getCollectionRecipes"
+      @recipe-deleted="getCollectionRecipes"
+      :recipe="selectedRecipe"
+    />
   </div>
 </template>
 
@@ -67,6 +75,7 @@ import Vuex from 'vuex';
 import { sameDay } from '../database';
 import AddToCalendar from './AddToCalendar.vue';
 import RecipeImageBox from './RecipeImageBox.vue';
+import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
 
 import {
   collection,
@@ -84,6 +93,7 @@ export default {
   components: {
     AddToCalendar,
     RecipeImageBox,
+    ViewEditRecipe,
   },
   data() {
     return {
@@ -92,6 +102,8 @@ export default {
       calendarEntries: [],
       showAddToCalendar: false,
       editMode: false,
+      selectedRecipe: null,
+      showViewEditRecipeForm: false,
     };
   },
   methods: {
@@ -188,9 +200,17 @@ export default {
     toggleEditMode() {
       this.editMode = !this.editMode;
     },
+    recipeClicked(id) {
+      this.selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
+      this.showViewEditRecipeForm = true;
+    },
+    recipeViewClosed() {
+      this.showViewEditRecipeForm = false;
+      this.selectedRecipe = null;
+    },
   },
   computed: {
-    ...Vuex.mapState(['planner']),
+    ...Vuex.mapState(['planner', 'recipes']),
     weekDates() {
       const today = new Date();
       const current = today;
