@@ -103,6 +103,7 @@ export default {
 
 .modal-footer {
   padding: var(--padding);
+  padding-bottom: 32px;
   display: flex;
   justify-content: center;
 }

@@ -4,8 +4,10 @@
     :placeholder="placeholder"
     @keyup="resize"
     ref="text-area"
+    :class="{ shimmerBG: loading }"
     :value="value"
     @input="handleInput"
+    @paste="(e) => $emit('paste', e)"
   ></textarea>
 </template>
 
@@ -25,6 +27,16 @@ export default {
       default: '',
       type: String,
     },
+    initialHeight: {
+      default: null,
+      required: false,
+      type: Number,
+    },
+    loading: {
+      default: false,
+      required: false,
+      type: Boolean,
+    },
   },
 
   methods: {
@@ -39,13 +51,21 @@ export default {
       this.$emit('input', event.target.value);
     },
   },
-
+  watch: {
+    value() {
+      this.resize();
+    },
+  },
   mounted() {
-    this.resize();
+    if (this.initialHeight) {
+      const textArea = this.$refs['text-area'];
+      textArea.style.height = String(this.initialHeight) + 'px';
+    } else this.resize();
   },
 };
 </script>
 
+<style lang="css" scoped src="@/assets/css/animation.css"></style>
 <style scoped>
 textarea {
   height: 40px;

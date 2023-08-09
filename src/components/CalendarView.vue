@@ -278,6 +278,7 @@ export default {
   border-right: 1px var(--border) solid;
   scroll-snap-align: start;
   padding: 8px;
+  padding-bottom: 0px;
 }
 
 .calendar-body .day-container:last-child {

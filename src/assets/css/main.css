@@ -82,11 +82,10 @@ input {
 }
 
 .btn {
-  border: 2px solid var(--primary);
+  border: 1px solid var(--primary);
   border-radius: var(--border-radius);
   padding: var(--padding-sm) var(--padding);
   background: white;
-  font-weight: bold;
   margin: 0 8px;
 }
 
@@ -96,9 +95,8 @@ input {
 }
 
 .btn-danger {
-  background-color: var(--danger);
-  border: 2px solid var(--danger);
-  color: white;
+  border: 1px solid var(--danger);
+  color: var(--danger);
 }
 
 .btn-default {

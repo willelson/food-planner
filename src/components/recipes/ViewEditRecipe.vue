@@ -6,7 +6,7 @@
       </template>
       <template v-slot:body>
         <div class="form-body">
-          <div class="form-group">
+          <div class="form-group" style="padding: 0 var(--padding)">
             <div style="text-align: right">
               <a :href="url" target="_blank" class="hyperlink"
                 >Source <i class="fa fa-external-link" aria-hidden="true"></i
@@ -23,7 +23,7 @@
               placeholder="title"
             ></custom-text-area>
           </div>
-          <div class="form-group" style="dispaly: flex">
+          <div class="form-group" style="display: flex">
             <img :src="image" style="max-width: 80%; max-height: 160px" />
           </div>
           <div class="form-group">

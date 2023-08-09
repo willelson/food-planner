@@ -8,13 +8,12 @@
       <template v-slot:body>
         <div class="form-body">
           <div class="form-group">
-            <div class="label">Title</div>
             <custom-text-area
               :value="title"
               @input="(value) => (title = value)"
               type="text"
               id="title"
-              placeholder="title"
+              placeholder="Title"
             ></custom-text-area>
           </div>
           <div class="form-group">

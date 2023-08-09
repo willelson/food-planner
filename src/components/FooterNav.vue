@@ -56,8 +56,10 @@ export default {
   padding-bottom: 18px;
   margin-top: auto;
   display: flex;
-  background-color: var(--primary);
+  background-color: white;
+  border-top: 1px solid rgba(85, 117, 113, 0.7);
   z-index: 10;
+  box-shadow: 3px 3px 5px 2px rgba(85, 117, 113, 1);
 }
 
 .footer .footer-button {
@@ -66,10 +68,10 @@ export default {
 
 .footer-button i {
   font-size: 24px;
-  color: var(--black);
+  color: #b1b1b1;
 }
 
 .active i {
-  color: var(--white) !important;
+  color: var(--primary) !important;
 }
 </style>

@@ -6,53 +6,48 @@
       </template>
       <template v-slot:body>
         <div class="form-body">
-          <div class="form-group">
-            <div class="label">URL</div>
-            <input v-model="url" type="text" id="url" @paste="handleUrlPaste" />
-            <div style="display: flex; justify-content: end">
-              <button
-                class="btn btn-default fetch-button"
-                @click="manualEntry = true"
-              >
-                manual
-              </button>
-              <button
-                class="btn btn-primary fetch-button"
-                @click="fetchDataClick"
-              >
-                fetch
-              </button>
-            </div>
+          <div class="form-group" style="display: flex">
+            <input
+              v-model="url"
+              id="url"
+              placeholder="Paste recipe url to fetch"
+              @paste="handleUrlPaste"
+              class="form-input"
+            />
+            <button
+              class="btn btn-default fetch-button"
+              @click="fetchDataClick"
+            >
+              fetch
+            </button>
           </div>
 
-          <div
-            v-if="contentLoading"
-            style="display: flex; justify-content: center"
-          >
-            <loading-spinner></loading-spinner>
-          </div>
-
-          <div v-if="showAllFormFields">
+          <div>
             <div class="form-group">
-              <div class="label">Title</div>
               <custom-text-area
                 :value="title"
                 @input="(value) => (title = value)"
                 type="text"
                 id="title"
-                placeholder="title"
+                placeholder="Title"
+                :loading="contentLoading"
               ></custom-text-area>
             </div>
             <div class="form-group">
-              <div class="label">Image</div>
+              <div
+                class="image-box"
+                :class="{ shimmerBG: contentLoading }"
+                style="padding: var(--padding-xs) 0"
+                :style="imageStyle"
+              ></div>
               <input
-                v-if="manualEntry"
                 v-model="image"
-                type="text"
                 id="image"
-                placeholder="Image url"
+                :class="{ shimmerBG: contentLoading }"
+                placeholder="Image URL"
+                class="form-input"
+                :loading="contentLoading"
               />
-              <div v-else class="image-box" :style="imageStyle"></div>
             </div>
             <div class="form-group">
               <div class="label">Collection</div>
@@ -66,12 +61,12 @@
               </div>
             </div>
             <div class="form-group">
-              <div class="label">Description</div>
               <custom-text-area
                 :value="description"
                 @input="(value) => (description = value)"
-                type="text"
-                id="title"
+                id="description"
+                placeholder="Description"
+                :loading="contentLoading"
               ></custom-text-area>
             </div>
           </div>
@@ -96,9 +91,10 @@ import {
   doc,
   getDoc,
 } from 'firebase/firestore';
+import isUrl from 'is-url';
 
 import Modal from '../Modal.vue';
-import LoadingSpinner from '../utils/LoadingSpinner.vue';
+// import LoadingSpinner from '../utils/LoadingSpinner.vue';
 import CheckboxList from './CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
@@ -117,7 +113,7 @@ export default {
     };
   },
   props: ['open'],
-  components: { Modal, LoadingSpinner, CheckboxList, CustomTextArea },
+  components: { Modal, CheckboxList, CustomTextArea },
   methods: {
     clearFields() {
       this.title = null;
@@ -162,10 +158,16 @@ export default {
     },
     handleUrlPaste(event) {
       const url = event.clipboardData.getData('text');
-      this.fetchContent(url);
+      if (isUrl(url)) {
+        this.fetchContent(url);
+      }
     },
     fetchDataClick() {
-      this.fetchContent(this.url);
+      if (!isUrl(this.url)) {
+        alert('Entered URL is not valid');
+      } else {
+        this.fetchContent(this.url);
+      }
     },
     async fetchContent(url) {
       this.contentLoading = true;
@@ -201,9 +203,13 @@ export default {
   computed: {
     ...Vuex.mapState(['planner', 'user', 'collections']),
     imageStyle() {
-      if (this.image) {
+      if (isUrl(this.image)) {
         return `background-image: url(${this.image})`;
-      } else return '';
+      } else if (!this.contentLoading) {
+        return 'background: #f6f6f6';
+      }
+
+      return '';
     },
     showAllFormFields() {
       return (this.contentLoaded || this.manualEntry) && !this.contentLoading;
@@ -212,19 +218,29 @@ export default {
 };
 </script>
 
+<style lang="css" scoped src="@/assets/css/animation.css"></style>
 <style scoped>
 .image-box {
   position: relative;
-  border: 1px solid orange;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  aspect-ratio: 1 / 1;
-  width: 40%;
+  width: 100%;
+  height: 220px;
   background-size: cover;
+  margin-bottom: 8px;
+  margin-left: -16px;
+  width: calc(100% + 32px);
 }
 
 .fetch-button {
   margin-right: 0;
-  margin-top: 8px;
+}
+
+.form-input {
+  height: 40px;
+  font-size: 16px;
+  font-family: 'Noto Serif';
+  padding: var(--padding-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  width: 100%;
 }
 </style>
