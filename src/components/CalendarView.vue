@@ -65,8 +65,8 @@
     <ViewEditRecipe
       :open="showViewEditRecipeForm"
       @close="recipeViewClosed"
-      @recipe-updated="getCollectionRecipes"
-      @recipe-deleted="getCollectionRecipes"
+      @recipe-updated="getWeekEntries"
+      @recipe-deleted="getWeekEntries"
       :recipe="selectedRecipe"
     />
   </div>
@@ -253,13 +253,6 @@ export default {
 </script>
 
 <style>
-.page-title {
-  padding: var(--padding-sm) var(--padding);
-  font-size: 24px;
-  color: var(--primary);
-  font-weight: bold;
-}
-
 .calendar {
   display: flex;
   flex-direction: column;

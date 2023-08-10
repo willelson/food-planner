@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%; display: flex; flex-direction: column">
-    <router-view style="flex: 1" />
+    <router-view />
     <FooterNav v-if="showFooter" v-model:page="selectedPage" />
   </div>
 </template>
