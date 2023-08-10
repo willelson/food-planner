@@ -30,11 +30,12 @@
             </div>
           </div>
           <div class="form-group">
-            <div class="label">Collection</div>
             <checkbox-list
               :selected="selectedCollections"
               @update="updateCollectionList"
               :listItems="'collections'"
+              title="Collections"
+              placeholder="No collections selected..."
             ></checkbox-list>
           </div>
           <div class="form-group">

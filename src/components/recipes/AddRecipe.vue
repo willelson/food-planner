@@ -50,11 +50,12 @@
               />
             </div>
             <div class="form-group">
-              <div class="label">Collection</div>
               <checkbox-list
                 :selected="selectedCollections"
                 @update="(value) => (selectedCollections = value)"
                 :listItems="'collections'"
+                title="Select Collections"
+                placeholder="Select Collections..."
               ></checkbox-list>
               <div v-if="collections.length === 0" class="no-results">
                 No collections
@@ -67,6 +68,7 @@
                 id="description"
                 placeholder="Description"
                 :loading="contentLoading"
+                :initialHeight="'120'"
               ></custom-text-area>
             </div>
           </div>
@@ -120,7 +122,7 @@ export default {
       this.url = null;
       this.image = null;
       this.description = null;
-      this.collections = [];
+      this.selectedCollections = [];
     },
     close() {
       this.$emit('close');

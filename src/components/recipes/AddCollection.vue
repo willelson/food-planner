@@ -22,6 +22,8 @@
               :selected="collectionRecipes"
               @update="(value) => (collectionRecipes = value)"
               :listItems="'recipes'"
+              title="Select Recipes"
+              placeholder="Select Recipes..."
             ></checkbox-list>
             <div v-if="recipes.length === 0" class="no-results">No recipes</div>
           </div>

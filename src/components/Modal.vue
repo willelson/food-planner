@@ -1,11 +1,16 @@
 <template>
   <div>
     <transition name="fade">
-      <div class="mask" v-if="open" @click="$emit('close')"></div>
+      <div
+        class="mask"
+        :class="{ 'layered-mask': layered }"
+        v-if="open"
+        @click="$emit('close')"
+      ></div>
     </transition>
 
     <transition name="slide">
-      <div class="modal" v-if="open">
+      <div class="modal" v-if="open" :style="`height: ${this.height}`">
         <div class="modal-header">
           <slot name="header"></slot>
           <i
@@ -27,7 +32,20 @@
 
 <script>
 export default {
-  props: ['open'],
+  props: {
+    open: {
+      default: false,
+      type: Boolean,
+    },
+    height: {
+      default: '85%',
+      type: String,
+    },
+    layered: {
+      default: false,
+      type: Boolean,
+    },
+  },
 };
 </script>
 
@@ -39,7 +57,6 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 85%;
   z-index: 99;
   background-color: white;
   border-top-right-radius: 22px;
@@ -87,6 +104,11 @@ export default {
   z-index: 3;
   top: 0;
   left: 0;
+}
+
+.layered-mask {
+  border-top-right-radius: 22px;
+  border-top-left-radius: 22px;
 }
 
 .modal-header {
