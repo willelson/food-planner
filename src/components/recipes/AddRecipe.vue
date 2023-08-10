@@ -162,6 +162,7 @@ export default {
       const url = event.clipboardData.getData('text');
       if (isUrl(url)) {
         this.fetchContent(url);
+        setTimeout(() => event.target.blur(), 50);
       }
     },
     fetchDataClick() {

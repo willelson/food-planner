@@ -68,7 +68,7 @@ export default {
 <style lang="css" scoped src="@/assets/css/animation.css"></style>
 <style scoped>
 textarea {
-  height: 40px;
+  height: var(--default-input-height);
   font-size: 16px;
   font-family: 'Noto Serif';
   padding: var(--padding-sm);
