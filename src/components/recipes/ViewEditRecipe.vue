@@ -6,25 +6,28 @@
       </template>
       <template v-slot:body>
         <div class="form-body">
+          <div class="form-group">
+            <custom-text-area
+              :value="title"
+              @input="(value) => (title = value)"
+              type="text"
+              id="title"
+              placeholder="Title"
+            ></custom-text-area>
+          </div>
+          <div class="form-group">
+            <div
+              class="image-box"
+              style="padding: var(--padding-xs) 0"
+              :style="imageStyle"
+            ></div>
+          </div>
           <div class="form-group" style="padding: 0 var(--padding)">
             <div style="text-align: right">
               <a :href="url" target="_blank" class="hyperlink"
                 >Source <i class="fa fa-external-link" aria-hidden="true"></i
               ></a>
             </div>
-          </div>
-          <div class="form-group">
-            <div class="label">Title</div>
-            <custom-text-area
-              :value="title"
-              @input="(value) => (title = value)"
-              type="text"
-              id="title"
-              placeholder="title"
-            ></custom-text-area>
-          </div>
-          <div class="form-group" style="display: flex">
-            <img :src="image" style="max-width: 80%; max-height: 160px" />
           </div>
           <div class="form-group">
             <div class="label">Collection</div>
@@ -35,13 +38,12 @@
             ></checkbox-list>
           </div>
           <div class="form-group">
-            <div class="label">Description</div>
             <custom-text-area
               :value="description"
               @input="(value) => (description = value)"
               type="text"
               id="title"
-              placeholder="description"
+              placeholder="Description"
             ></custom-text-area>
           </div></div
       ></template>
@@ -58,6 +60,8 @@
 import Vuex from 'vuex';
 import { db } from '../../firebase/config';
 import { doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
+import isUrl from 'is-url';
+
 import Modal from '../Modal.vue';
 import CheckboxList from './CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
@@ -133,6 +137,17 @@ export default {
       this.$emit('close');
     },
   },
+  computed: {
+    imageStyle() {
+      if (isUrl(this.image)) {
+        return `background-image: url(${this.image})`;
+      } else if (!this.contentLoading) {
+        return 'background: #f6f6f6';
+      }
+
+      return '';
+    },
+  },
   watch: {
     recipe(newVal) {
       this.title = newVal?.title;
@@ -145,3 +160,14 @@ export default {
   },
 };
 </script>
+<style scoped>
+.image-box {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background-size: cover;
+  margin-bottom: 8px;
+  margin-left: -16px;
+  width: calc(100% + 32px);
+}
+</style>
