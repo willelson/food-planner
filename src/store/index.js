@@ -1,7 +1,7 @@
 import { createStore } from 'vuex';
 
 // Firebase imports
-import { auth, db } from '../firebase/config';
+import { auth, db } from '@/firebase/config';
 import { signOut } from 'firebase/auth';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 

@@ -71,10 +71,10 @@
 
 <script>
 import Vuex from 'vuex';
-import AddRecipe from './AddRecipe.vue';
-import RecipeImageBox from './../RecipeImageBox.vue';
-import AddCollection from './AddCollection.vue';
-import ViewEditRecipe from './ViewEditRecipe.vue';
+import AddRecipe from '@/components/recipes/AddRecipe.vue';
+import RecipeImageBox from '@/components/RecipeImageBox.vue';
+import AddCollection from '@/components/recipes/AddCollection.vue';
+import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
 
 export default {
   data() {

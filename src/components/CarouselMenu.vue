@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import { db } from '../firebase/config';
+import { db } from '@/firebase/config';
 import { collection, getDocs } from 'firebase/firestore';
-import RecipeImageBox from './RecipeImageBox.vue';
+import RecipeImageBox from '@/components/RecipeImageBox.vue';
 
 export default {
   props: ['selection'],

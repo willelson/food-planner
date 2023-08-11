@@ -7,7 +7,7 @@
 
 <script>
 import Vuex from 'vuex';
-import FooterNav from './FooterNav.vue';
+import FooterNav from '@/components/FooterNav.vue';
 
 export default {
   data() {

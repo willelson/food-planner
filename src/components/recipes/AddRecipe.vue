@@ -84,7 +84,7 @@
 
 <script>
 import Vuex from 'vuex';
-import { db } from '../../firebase/config';
+import { db } from '@/firebase/config';
 import {
   addDoc,
   updateDoc,
@@ -95,9 +95,8 @@ import {
 } from 'firebase/firestore';
 import isUrl from 'is-url';
 
-import Modal from '../Modal.vue';
-// import LoadingSpinner from '../utils/LoadingSpinner.vue';
-import CheckboxList from './CheckboxList.vue';
+import Modal from '@/components/Modal.vue';
+import CheckboxList from '@/components/recipes/CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
 export default {

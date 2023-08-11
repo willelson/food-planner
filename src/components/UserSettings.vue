@@ -11,7 +11,7 @@
 
 <script>
 import Vuex from 'vuex';
-import { auth } from '../firebase/config';
+import { auth } from '@/firebase/config';
 import { signOut } from 'firebase/auth';
 
 export default {

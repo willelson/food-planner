@@ -45,9 +45,9 @@
 
 <script>
 import Vuex from 'vuex';
-import AddRecipe from './AddRecipe.vue';
-import RecipeImageBox from './../RecipeImageBox.vue';
-import ViewEditRecipe from './ViewEditRecipe.vue';
+import AddRecipe from '@/components/recipes/AddRecipe.vue';
+import RecipeImageBox from '@/components/RecipeImageBox.vue';
+import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
 
 import {
   where,

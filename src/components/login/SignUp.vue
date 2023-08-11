@@ -30,7 +30,7 @@
 
 <script>
 import Vuex from 'vuex';
-import { auth } from '../../firebase/config';
+import { auth } from '@/firebase/config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 export default {

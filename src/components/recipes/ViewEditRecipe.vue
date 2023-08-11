@@ -59,11 +59,11 @@
 
 <script>
 import Vuex from 'vuex';
-import { db } from '../../firebase/config';
+import { db } from '@/firebase/config';
 import { doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
 import isUrl from 'is-url';
 
-import Modal from '../Modal.vue';
+import Modal from '@/components/Modal.vue';
 import CheckboxList from './CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 

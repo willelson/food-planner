@@ -75,8 +75,8 @@
 <script>
 import Vuex from 'vuex';
 import { sameDay } from '../database';
-import AddToCalendar from './AddToCalendar.vue';
-import RecipeImageBox from './RecipeImageBox.vue';
+import AddToCalendar from '@/components/AddToCalendar.vue';
+import RecipeImageBox from '@/components/RecipeImageBox.vue';
 import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
 
 import {

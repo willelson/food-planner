@@ -47,10 +47,10 @@
 
 <script>
 import Vuex from 'vuex';
-import Modal from './Modal.vue';
-import RecipeImageBox from './RecipeImageBox.vue';
+import Modal from '@/components/Modal.vue';
+import RecipeImageBox from '@/components/RecipeImageBox.vue';
 import { sameDay } from '../database';
-import { db } from '../firebase/config';
+import { db } from '@/firebase/config';
 import { Timestamp, collection, addDoc } from 'firebase/firestore';
 
 export default {
