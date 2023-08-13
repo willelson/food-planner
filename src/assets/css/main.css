@@ -8,6 +8,7 @@
   --danger: #ff6961;
   --disabled: #d3d3d3;
   --grey: #C0C0C0;
+  --placeholder: #999;
   --footer-height: 65px;
   --padding: 16px;
   --padding-sm: 8px;
@@ -15,6 +16,7 @@
   --default-padding: var(--padding-sm) var(--padding);
   --grid-gap: 16px;
   --border-radius: 8px;
+  --default-input-height: 40px;
 }
 
 html {
@@ -57,6 +59,13 @@ body {
   position: relative;
 }
 
+.page-title {
+  padding: var(--padding-sm) var(--padding);
+  font-size: 24px;
+  color: var(--primary);
+  font-weight: normal;
+}
+
 input {
   padding: var(--padding-sm);
   border: 1px solid var(--border);
@@ -87,6 +96,12 @@ input {
   padding: var(--padding-sm) var(--padding);
   background: white;
   margin: 0 8px;
+
+  -webkit-transition: color 0.2s linear, background-color 0.2s linear, border-color 0.2s linear;
+  -moz-transition: color 0.2s linear, background-color 0.2s linear, border-color 0.2s linear;
+  -o-transition: color 0.2s linear, background-color 0.2s linear, border-color 0.2s linear;
+  transition: color 0.2s linear, background-color 0.2s linear, border-color 0.2s linear;
+
 }
 
 .btn-primary {
@@ -104,8 +119,9 @@ input {
 }
 
 .btn-disabled {
-  border: 2px solid var(--disabled);
+  border: 1px solid var(--disabled);
   background-color: var(--disabled);
+  color: var(--white);
 }
 
 .no-results {
@@ -118,4 +134,9 @@ input {
 .hyperlink {
   color: #2c75ff;
   text-decoration: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--placeholder);
 }

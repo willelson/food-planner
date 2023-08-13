@@ -357,7 +357,7 @@ export default {
   border-radius: var(--border-radius);
   background-color: white;
   z-index: 30;
-  right: var(--padding-sm);
+  right: var(--padding);
   top: 20px;
   box-shadow: 0px 0px 28px var(--grey);
 }

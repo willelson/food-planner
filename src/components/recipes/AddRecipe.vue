@@ -12,10 +12,13 @@
               id="url"
               placeholder="Paste recipe url to fetch"
               @paste="handleUrlPaste"
+              @keyup="fetchDisabled = false"
               class="form-input"
             />
             <button
               class="btn btn-default fetch-button"
+              :class="{ 'btn-disabled': fetchDisabled }"
+              :disabled="fetchDisabled"
               @click="fetchDataClick"
             >
               fetch
@@ -69,7 +72,12 @@
             </div>
           </div>
         </div>
-        <modal @close="showImgUrl = false" :open="showImgUrl" height="35%">
+        <modal
+          @close="showImgUrl = false"
+          :open="showImgUrl"
+          height="35%"
+          :layered="true"
+        >
           <template v-slot:header>
             <div class="page-title">Image</div>
           </template>
@@ -131,6 +139,7 @@ export default {
       contentLoaded: false,
       manualEntry: false,
       showImgUrl: false,
+      fetchDisabled: false,
     };
   },
   props: ['open'],
@@ -193,6 +202,7 @@ export default {
     },
     async fetchContent(url) {
       this.contentLoading = true;
+      this.fetchDisabled = true;
       try {
         const res = await fetch(
           `https://url-preview-generator.onrender.com/preview?url=${url}`
