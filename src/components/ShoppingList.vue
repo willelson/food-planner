@@ -24,7 +24,7 @@
             class="fa fa-check-circle"
             aria-hidden="true"
           ></i>
-          <i v-else class="fa fa-circle-o" aria-hidden="true"></i>
+          <i v-else class="fa fa-circle-thin" aria-hidden="true"></i>
         </div>
         <input
           type="text"
@@ -45,7 +45,7 @@
         ></i>
       </div>
       <div class="new-item">
-        <i class="fa fa-circle-o" aria-hidden="true"></i>
+        <i class="fa fa-circle-thin" aria-hidden="true"></i>
         <input
           type="text"
           @keyup.enter="addItem"

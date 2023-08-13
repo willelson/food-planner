@@ -1,6 +1,42 @@
 <template>
   <div class="page-container">
-    <div class="page-title">Recipes</div>
+    <div
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
+      <div class="page-title">Recipes</div>
+      <div>
+        <i
+          class="fa fa-plus"
+          style="font-size: 24px; margin-right: var(--padding)"
+          aria-hidden="true"
+          @click="showAddDropdown = true"
+        ></i>
+        <context-menu :show="showAddDropdown" @close="showAddDropdown = false">
+          <template v-slot:body>
+            <div class="context-menu">
+              <div
+                class="context-item"
+                @click="
+                  showAddCollectionForm = true;
+                  showAddDropdown = false;
+                "
+              >
+                <i class="fa fa-list-alt" aria-hidden="true"></i>Collection
+              </div>
+              <div
+                class="context-item"
+                @click="
+                  showAddRecipeForm = true;
+                  showAddDropdown = false;
+                "
+              >
+                <i class="fa fa-cutlery" aria-hidden="true"></i>Recipe
+              </div>
+            </div>
+          </template>
+        </context-menu>
+      </div>
+    </div>
     <div class="tab-pane">
       <div
         :class="['tab', { selected: selectedTab === 'collections' }]"
@@ -14,14 +50,6 @@
         @click="selectedTab = 'all'"
       >
         All
-      </div>
-      <div style="margin-left: auto; padding: 2px 0">
-        <i
-          class="fa fa-plus"
-          style="font-size: 1.3em"
-          aria-hidden="true"
-          @click="addButtonClick"
-        ></i>
       </div>
     </div>
 
@@ -75,6 +103,7 @@ import AddRecipe from '@/components/recipes/AddRecipe.vue';
 import RecipeImageBox from '@/components/RecipeImageBox.vue';
 import AddCollection from '@/components/recipes/AddCollection.vue';
 import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
+import ContextMenu from '@/components/ContextMenu.vue';
 
 export default {
   data() {
@@ -84,6 +113,7 @@ export default {
       showAddCollectionForm: false,
       selectedRecipe: null,
       selectedTab: 'collections',
+      showAddDropdown: false,
     };
   },
   methods: {
@@ -120,6 +150,7 @@ export default {
     AddCollection,
     RecipeImageBox,
     ViewEditRecipe,
+    ContextMenu,
   },
   mounted() {
     this.getCollections();
@@ -148,5 +179,30 @@ export default {
 
 .no-results {
   padding-top: 100px;
+}
+
+.context-menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  background-color: white;
+  z-index: 30;
+  right: var(--padding);
+  top: 10px;
+  box-shadow: 0px 0px 28px var(--grey);
+}
+
+.context-menu .context-item {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding: var(--padding);
+}
+
+.context-menu .context-item:last-child {
+  border-bottom: none;
 }
 </style>

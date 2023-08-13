@@ -14,13 +14,37 @@
         <i
           class="fa fa-plus"
           style="
-            color: var(--primary);
-            margin-right: var(--padding-sm);
-            font-size: 22px;
+            color: var(--black);
+            margin-right: var(--padding);
+            font-size: 24px;
           "
           aria-hidden="true"
-          @click="showAddToCalendar = true"
+          @click="showAddDropdown = true"
         ></i>
+        <context-menu :show="showAddDropdown" @close="showAddDropdown = false">
+          <template v-slot:body>
+            <div class="context-menu">
+              <div
+                class="context-item"
+                @click="
+                  showAddToCalendar = true;
+                  showAddDropdown = false;
+                "
+              >
+                <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>Entry
+              </div>
+              <div
+                class="context-item"
+                @click="
+                  showAddRecipeForm = true;
+                  showAddDropdown = false;
+                "
+              >
+                <i class="fa fa-cutlery" aria-hidden="true"></i>Recipe
+              </div>
+            </div>
+          </template>
+        </context-menu>
       </div>
     </div>
     <div class="calendar-body">
@@ -69,6 +93,7 @@
       @recipe-deleted="getWeekEntries"
       :recipe="selectedRecipe"
     />
+    <AddRecipe :open="showAddRecipeForm" @close="showAddRecipeForm = false" />
   </div>
 </template>
 
@@ -76,8 +101,10 @@
 import Vuex from 'vuex';
 import { sameDay } from '../database';
 import AddToCalendar from '@/components/AddToCalendar.vue';
+import AddRecipe from '@/components/recipes/AddRecipe.vue';
 import RecipeImageBox from '@/components/RecipeImageBox.vue';
 import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
+import ContextMenu from '@/components/ContextMenu.vue';
 
 import {
   collection,
@@ -89,13 +116,15 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 
-import { db } from '../firebase/config';
+import { db } from '@/firebase/config';
 
 export default {
   components: {
     AddToCalendar,
     RecipeImageBox,
     ViewEditRecipe,
+    AddRecipe,
+    ContextMenu,
   },
   data() {
     return {
@@ -106,6 +135,8 @@ export default {
       editMode: false,
       selectedRecipe: null,
       showViewEditRecipeForm: false,
+      showAddRecipeForm: false,
+      showAddDropdown: false,
     };
   },
   methods: {
@@ -185,8 +216,6 @@ export default {
     },
     async deleteEntry(entry, dayIndex) {
       await deleteDoc(doc(db, 'calendar-entries', entry.id));
-
-      console.log(this.calendarEntries[dayIndex]);
       const dayEntries = this.calendarEntries[dayIndex].entries;
       const entryIndex = dayEntries.findIndex((e) => e.id === entry.id);
       const updatedEntries = [
@@ -317,5 +346,31 @@ export default {
   height: 100%;
   width: 100%;
   overflow-y: auto;
+}
+</style>
+<style scoped>
+.context-menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  background-color: white;
+  z-index: 30;
+  right: var(--padding-sm);
+  top: 20px;
+  box-shadow: 0px 0px 28px var(--grey);
+}
+
+.context-menu .context-item {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding: var(--padding);
+}
+
+.context-menu .context-item:last-child {
+  border-bottom: none;
 }
 </style>

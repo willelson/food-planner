@@ -22,18 +22,21 @@
       </template>
       <template v-slot:body>
         <div class="options">
-          <div class="option" v-for="option in options" :key="option.id">
+          <div
+            class="option"
+            v-for="option in options"
+            :key="option.id"
+            @click="clickHandler(option.id)"
+          >
             <i
               v-if="isChecked(option.id)"
               class="fa fa-check-circle check-circle"
               aria-hidden="true"
-              @click="removeFromSelected(option.id)"
             ></i>
             <i
               v-else
-              class="fa fa-circle-o check-circle"
+              class="fa fa-circle-thin check-circle"
               aria-hidden="true"
-              @click="addToSelected(option.id)"
             ></i>
             <span
               class="option-title"
@@ -100,6 +103,13 @@ export default {
     isChecked(id) {
       return this.selected.includes(id);
     },
+    clickHandler(id) {
+      if (this.isChecked(id)) {
+        this.removeFromSelected(id);
+      } else {
+        this.addToSelected(id);
+      }
+    },
   },
 
   computed: {
@@ -148,7 +158,7 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  color: var(--grey);
+  color: #8e8a81;
   transition: color 0.2s ease;
 }
 

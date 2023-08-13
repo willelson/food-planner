@@ -39,15 +39,11 @@
                 :class="{ shimmerBG: contentLoading }"
                 style="padding: var(--padding-xs) 0"
                 :style="imageStyle"
-              ></div>
-              <input
-                v-model="image"
-                id="image"
-                :class="{ shimmerBG: contentLoading }"
-                placeholder="Image URL"
-                class="form-input"
-                :loading="contentLoading"
-              />
+              >
+                <div class="img-controls" @click="showImgUrl = true">
+                  <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                </div>
+              </div>
             </div>
             <div class="form-group">
               <checkbox-list
@@ -68,11 +64,34 @@
                 id="description"
                 placeholder="Description"
                 :loading="contentLoading"
-                :initialHeight="'120'"
+                :initialHeight="120"
               ></custom-text-area>
             </div>
           </div>
         </div>
+        <modal @close="showImgUrl = false" :open="showImgUrl" height="35%">
+          <template v-slot:header>
+            <div class="page-title">Image</div>
+          </template>
+          <template v-slot:body>
+            <div class="form-group">
+              <custom-text-area
+                :value="image"
+                @input="(value) => (image = value)"
+                id="image"
+                :class="{ shimmerBG: contentLoading }"
+                placeholder="Image URL"
+                class="form-input"
+                :loading="contentLoading"
+              ></custom-text-area>
+            </div>
+          </template>
+          <template v-slot:footer>
+            <button class="btn btn-default" @click="showImgUrl = false">
+              Done
+            </button>
+          </template>
+        </modal>
       </template>
       <template v-slot:footer>
         <button class="btn btn-default" @click="close">Cancel</button>
@@ -111,6 +130,7 @@ export default {
       contentLoading: false,
       contentLoaded: false,
       manualEntry: false,
+      showImgUrl: false,
     };
   },
   props: ['open'],
@@ -244,5 +264,19 @@ export default {
   border: 1px solid var(--border);
   border-radius: var(--border-radius);
   width: 100%;
+}
+
+.img-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 var(--padding-sm);
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom-left-radius: var(--border-radius);
+}
+
+.img-controls i {
+  color: white;
+  font-size: 18px;
 }
 </style>
