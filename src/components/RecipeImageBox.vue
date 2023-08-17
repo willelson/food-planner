@@ -47,6 +47,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    color: {
+      type: String,
+      default: '',
+    },
   },
   methods: {
     getImageUrl(id) {
@@ -58,21 +62,14 @@ export default {
   },
   computed: {
     boxStyle() {
+      let style = {};
       if (this.image) {
-        return { backgroundImage: 'url(' + this.image + ')' };
+        style = { backgroundImage: 'url(' + this.image + ')' };
+      } else if (this.color) {
+        style = { backgroundColor: this.color };
       }
-      const randomColours = [
-        '#ffd313',
-        '#ff7300',
-        '#e70038',
-        '#442bd4',
-        '#fb54ad',
-        '#66ff00',
-        '#08e8de',
-      ];
 
-      const index = Math.floor(Math.random() * randomColours.length);
-      return { backgroundColor: randomColours[index] };
+      return style;
     },
   },
 };

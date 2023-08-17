@@ -56,10 +56,11 @@
     <div v-show="selectedTab === 'collections'">
       <div class="recipe-grid">
         <RecipeImageBox
-          v-for="{ title, id } in collections"
+          v-for="{ title, id, color } in collections"
           :title="title"
           :id="id"
           :key="id"
+          :color="color"
           @click="openCollection"
         />
       </div>
