@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div v-show="selectedTab === 'collections'">
+    <div v-show="selectedTab === 'collections'" style="flex: 1 1 0%">
       <div class="recipe-grid">
         <RecipeImageBox
           v-for="{ title, id, color } in collections"
@@ -68,7 +68,7 @@
         No collections
       </div>
     </div>
-    <div v-show="selectedTab === 'all'">
+    <div v-show="selectedTab === 'all'" style="flex: 1 1 0%">
       <div class="recipe-grid">
         <RecipeImageBox
           v-for="{ title, image, id } in recipes"

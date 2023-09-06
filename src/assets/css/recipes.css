@@ -4,10 +4,13 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: var(--grid-gap);
     padding: var(--padding);
+    height: calc(100% - 97px);
+    overflow-y: auto;
   }
   
   .recipe-image-box {
     margin-bottom: 0px;
+    aspect-ratio: 1/1;
   }
   
   .add-button {
