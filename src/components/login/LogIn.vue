@@ -50,7 +50,8 @@ export default {
 
         this.setUser(response.user);
         localStorage.setItem('user', JSON.stringify(response.user));
-        this.getPlanners;
+        this.getPlanners();
+        this.$router.push({ name: 'calendar' });
       } catch (err) {
         const msg = err?.code || 'Error logging in';
         alert(msg);

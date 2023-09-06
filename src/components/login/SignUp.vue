@@ -53,10 +53,12 @@ export default {
         );
         if (response) {
           this.setUser(response.user);
+          this.$router.push({ name: 'calendar' });
         }
       } catch (err) {
         const msg = err?.code || 'Error signing up';
         console.error(msg);
+        alert(msg);
       }
     },
   },
