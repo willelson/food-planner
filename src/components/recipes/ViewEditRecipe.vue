@@ -16,7 +16,14 @@
             ></custom-text-area>
           </div>
           <div class="form-group">
+            <img
+              v-if="imageData"
+              class="image-box"
+              :src="imageData"
+              style="object-fit: cover"
+            />
             <div
+              v-else
               class="image-box"
               style="padding: var(--padding-xs) 0"
               :style="imageStyle"
@@ -154,6 +161,7 @@ export default {
       this.title = newVal?.title;
       this.url = newVal?.url;
       this.image = newVal?.image;
+      this.imageData = newVal?.imageData;
       this.description = newVal?.description;
       this.selectedCollections = newVal?.collections;
       this.initialCollections = newVal?.collections;

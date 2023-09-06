@@ -37,7 +37,14 @@
               ></custom-text-area>
             </div>
             <div class="form-group">
+              <img
+                v-if="imageData"
+                class="image-box"
+                :src="imageData"
+                style="object-fit: cover"
+              />
               <div
+                v-else
                 class="image-box"
                 :class="{ shimmerBG: contentLoading }"
                 style="padding: var(--padding-xs) 0"
@@ -132,7 +139,9 @@ export default {
       title: null,
       url: null,
       image: null,
+      imageData: null,
       description: null,
+      sorce: null,
       selectedCollections: [],
       fetchContentDisabled: false,
       contentLoading: false,
@@ -149,8 +158,10 @@ export default {
       this.title = null;
       this.url = null;
       this.image = null;
+      this.imageData = null;
       this.description = null;
       this.selectedCollections = [];
+      this.source = null;
     },
     close() {
       this.$emit('close');
@@ -161,7 +172,7 @@ export default {
       this.manualEntry = false;
     },
     async addRecipe() {
-      const { title, url, image, description } = this;
+      const { title, url, image, imageData, description, source } = this;
       const currentPlanner = { ...this.planner };
       const currentUser = { ...this.user };
 
@@ -169,7 +180,9 @@ export default {
         title,
         url,
         image,
+        imageData,
         description,
+        source,
         collections: this.selectedCollections,
         plannerId: currentPlanner.id,
         createdAt: Timestamp.fromDate(new Date()),
@@ -214,17 +227,9 @@ export default {
 
         this.title = data.title;
         this.description = data.description;
-
-        if (data.images.length > 0) {
-          let filteredImages = data.images
-            .filter((img) => !img.includes('.svg'))
-            .filter((img) => !img.includes('_logo'));
-          if (filteredImages.length > 0) {
-            this.image = filteredImages[0];
-          }
-        } else {
-          this.image = data.images[0];
-        }
+        this.source = data.source;
+        this.image = data.image;
+        this.imageData = data?.imageData;
       } catch (err) {
         this.contentLoading = false;
         this.contentLoaded = false;
