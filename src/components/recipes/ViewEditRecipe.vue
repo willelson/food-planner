@@ -27,7 +27,11 @@
               class="image-box"
               style="padding: var(--padding-xs) 0"
               :style="imageStyle"
-            ></div>
+            >
+              <div class="img-controls" @click="showImgUrl = true">
+                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+              </div>
+            </div>
           </div>
           <div class="form-group" style="padding: 0 var(--padding)">
             <div style="text-align: right">
@@ -53,8 +57,35 @@
               id="title"
               placeholder="Description"
             ></custom-text-area>
-          </div></div
-      ></template>
+          </div>
+        </div>
+        <modal
+          @close="showImgUrl = false"
+          :open="showImgUrl"
+          height="35%"
+          :layered="true"
+        >
+          <template v-slot:header>
+            <div class="page-title">Image</div>
+          </template>
+          <template v-slot:body>
+            <div class="form-group">
+              <custom-text-area
+                :value="image"
+                @input="(value) => (image = value)"
+                id="image"
+                placeholder="Image URL"
+                class="form-input"
+              ></custom-text-area>
+            </div>
+          </template>
+          <template v-slot:footer>
+            <button class="btn btn-default" @click="showImgUrl = false">
+              Done
+            </button>
+          </template>
+        </modal>
+      </template>
       <template v-slot:footer>
         <button class="btn btn-default" @click="close">Cancel</button>
         <button class="btn btn-primary" @click="submitUpdate">Update</button>
@@ -84,6 +115,7 @@ export default {
       description: null,
       selectedCollections: [],
       initialCollections: [],
+      showImgUrl: false,
     };
   },
   components: { Modal, CheckboxList, CustomTextArea },
@@ -149,11 +181,9 @@ export default {
     imageStyle() {
       if (isUrl(this.image)) {
         return `background-image: url(${this.image})`;
-      } else if (!this.contentLoading) {
-        return 'background: #f6f6f6';
       }
 
-      return '';
+      return 'background: #f6f6f6';
     },
   },
   watch: {
@@ -169,14 +199,5 @@ export default {
   },
 };
 </script>
-<style scoped>
-.image-box {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  background-size: cover;
-  margin-bottom: 8px;
-  margin-left: -16px;
-  width: calc(100% + 32px);
-}
-</style>
+<style lang="css" scoped src="@/assets/css/recipes.css"></style>
+<style scoped></style>

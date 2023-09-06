@@ -256,17 +256,8 @@ export default {
 </script>
 
 <style lang="css" scoped src="@/assets/css/animation.css"></style>
+<style lang="css" scoped src="@/assets/css/recipes.css"></style>
 <style scoped>
-.image-box {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  background-size: cover;
-  margin-bottom: 8px;
-  margin-left: -16px;
-  width: calc(100% + 32px);
-}
-
 .fetch-button {
   margin-right: 0;
 }
@@ -279,19 +270,5 @@ export default {
   border: 1px solid var(--border);
   border-radius: var(--border-radius);
   width: 100%;
-}
-
-.img-controls {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0 var(--padding-sm);
-  background: rgba(0, 0, 0, 0.2);
-  border-bottom-left-radius: var(--border-radius);
-}
-
-.img-controls i {
-  color: white;
-  font-size: 18px;
 }
 </style>
