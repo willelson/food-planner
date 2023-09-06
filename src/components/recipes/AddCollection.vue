@@ -58,7 +58,7 @@
 <script>
 import Vuex from 'vuex';
 import { db } from '@/firebase/config';
-import { addDoc, collection } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, addDoc, collection } from 'firebase/firestore';
 
 import Modal from '@/components/Modal.vue';
 import CheckboxList from '@/components/recipes/CheckboxList.vue';
@@ -107,12 +107,21 @@ export default {
       let color = this.selectedColour;
       if (!color) color = Math.floor(Math.random() * colors.length);
 
-      await addDoc(collection(db, 'collections'), {
+      const collectionRef = await addDoc(collection(db, 'collections'), {
         title,
         color,
         recipes: collectionRecipes,
         plannerId: currentPlanner.id,
       });
+
+      // iterate through recipes and add collection
+      for (const recipeId of collectionRecipes) {
+        const recipeRef = doc(db, 'recipes', recipeId);
+        const recipe = await getDoc(recipeRef);
+        const data = recipe.data();
+        const collections = [...data.collections, collectionRef.id];
+        await updateDoc(recipeRef, { collections });
+      }
 
       this.$emit('collection-added');
       this.close();
