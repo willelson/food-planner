@@ -5,35 +5,37 @@
         <div class="page-title">New Entry</div>
       </template>
       <template v-slot:body>
-        <div class="form-group">
-          <div class="label">Day</div>
-          <div class="week-container">
-            <div
-              v-for="day in weekDates"
-              class="week-day"
-              :class="{ selected: isSelected(day) }"
-              :key="day"
-              @click="handleDaySelection(day)"
-            >
-              {{ getDayString(day) }}
+        <div style="flex-direction: column; display: flex">
+          <div class="form-group">
+            <div class="label">Day</div>
+            <div class="week-container">
+              <div
+                v-for="day in weekDates"
+                class="week-day"
+                :class="{ selected: isSelected(day) }"
+                :key="day"
+                @click="handleDaySelection(day)"
+              >
+                {{ getDayString(day) }}
+              </div>
             </div>
           </div>
-        </div>
-        <div class="form-group">
-          <div class="label">Recipe</div>
-          <div class="recipe-grid">
-            <RecipeImageBox
-              v-for="{ title, image, id } in recipes"
-              :title="title"
-              :id="id"
-              :image="image"
-              :key="id"
-              :selected="selectedRecipes.includes(id)"
-              :faded="
-                selectedRecipes.length > 0 && !selectedRecipes.includes(id)
-              "
-              @click="toggleRecipeSelection(id)"
-            />
+          <div class="form-group recipe-container">
+            <div class="label">Recipe</div>
+            <div class="recipe-grid">
+              <RecipeImageBox
+                v-for="{ title, image, id } in recipes"
+                :title="title"
+                :id="id"
+                :image="image"
+                :key="id"
+                :selected="selectedRecipes.includes(id)"
+                :faded="
+                  selectedRecipes.length > 0 && !selectedRecipes.includes(id)
+                "
+                @click="toggleRecipeSelection(id)"
+              />
+            </div>
           </div>
         </div>
       </template>
@@ -182,7 +184,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--padding);
+  padding: var(--padding-xs) var(--padding);
   width: 12%;
   color: var(--primary);
   margin: var(--padding-xs);
@@ -190,8 +192,18 @@ export default {
 
 .week-day.selected {
   color: white;
-  background-color: var(--primary);
+  background-color: rgba(85, 117, 113, 0.75);
+  border: 1px solid var(--primary);
   border-radius: var(--border-radius);
-  font-weight: bold;
+}
+
+.recipe-grid {
+  overflow-y: auto;
+  height: 100%;
+}
+
+.recipe-container {
+  overflow: hidden;
+  flex: 1;
 }
 </style>

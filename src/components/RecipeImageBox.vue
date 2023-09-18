@@ -14,8 +14,6 @@
 </template>
 
 <script>
-import { getImage } from '../database';
-
 export default {
   emits: ['click'],
   props: {
@@ -28,6 +26,10 @@ export default {
       default: '',
     },
     image: {
+      type: String,
+      default: '',
+    },
+    imageData: {
       type: String,
       default: '',
     },
@@ -53,9 +55,6 @@ export default {
     },
   },
   methods: {
-    getImageUrl(id) {
-      return getImage(id);
-    },
     deleteClicked() {
       this.$emit('delete');
     },

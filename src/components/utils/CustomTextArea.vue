@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { nextTick } from 'vue';
+
 export default {
   emits: ['input'],
   props: {
@@ -52,7 +54,8 @@ export default {
     },
   },
   watch: {
-    value() {
+    async value() {
+      await nextTick();
       this.resize();
     },
   },

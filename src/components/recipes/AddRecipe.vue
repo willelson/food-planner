@@ -196,7 +196,7 @@ export default {
         const recipes = [...data.recipes, recipeRef.id];
         await updateDoc(collectionRef, { recipes });
       }
-
+      this.$emit('recipe-added');
       this.close();
     },
     handleUrlPaste(event) {
@@ -216,10 +216,19 @@ export default {
     async fetchContent(url) {
       this.contentLoading = true;
       this.fetchDisabled = true;
+
+      const controller = new AbortController();
+      const id = setTimeout(() => {
+        controller.abort();
+        throw Error('API timeout');
+      }, 30000);
+
       try {
         const res = await fetch(
-          `https://url-preview-generator.onrender.com/preview?url=${url}`
+          `https://url-preview-generator.onrender.com/preview?url=${url}`,
+          { signal: controller.signal }
         );
+        clearTimeout(id);
         const data = await res.json();
 
         this.contentLoading = false;
@@ -240,8 +249,8 @@ export default {
   computed: {
     ...Vuex.mapState(['planner', 'user', 'collections']),
     imageStyle() {
-      if (isUrl(this.image)) {
-        return `background-image: url(${this.image})`;
+      if (isUrl(this.imageUrl)) {
+        return `background-image: url(${this.imageUrl})`;
       } else if (!this.contentLoading) {
         return 'background: #f6f6f6';
       }

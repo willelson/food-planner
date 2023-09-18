@@ -4,8 +4,9 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: var(--grid-gap);
     padding: var(--padding);
-    height: calc(100% - 97px);
+    height: calc(100% - 102px);
     overflow-y: auto;
+    padding-bottom: 24px
   }
   
   .recipe-image-box {

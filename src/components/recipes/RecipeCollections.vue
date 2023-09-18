@@ -71,10 +71,11 @@
     <div v-show="selectedTab === 'all'" style="flex: 1 1 0%">
       <div class="recipe-grid">
         <RecipeImageBox
-          v-for="{ title, image, id } in recipes"
+          v-for="{ title, image, id, imageData } in recipes"
           :title="title"
           :id="id"
           :image="image"
+          :imageData="imageData"
           :key="id"
           @click="openRecipe"
         />
@@ -83,7 +84,11 @@
     </div>
   </div>
   <div>
-    <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
+    <AddRecipe
+      :open="showAddRecipeForm"
+      @close="recipeFormClosed"
+      @recipe-added="getRecipes"
+    />
     <AddCollection
       :open="showAddCollectionForm"
       @close="collectionFormClosed"
@@ -91,8 +96,8 @@
     <ViewEditRecipe
       :open="showViewEditRecipeForm"
       @close="recipeViewClosed"
-      @recipe-updated="getCollections"
-      @recipe-deleted="getCollections"
+      @recipe-updated="refreshData"
+      @recipe-deleted="refreshData"
       :recipe="selectedRecipe"
     />
   </div>
@@ -137,6 +142,10 @@ export default {
     recipeViewClosed() {
       this.showViewEditRecipeForm = false;
       this.selectedRecipe = null;
+    },
+    async refreshData() {
+      await this.getRecipes();
+      await this.getCollections();
     },
     addButtonClick() {
       if (this.selectedTab === 'collections') this.showAddCollectionForm = true;
