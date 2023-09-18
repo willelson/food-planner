@@ -1,22 +1,25 @@
 <template>
-  <div style="height: 100%; display: flex; flex-direction: column">
+  <div v-if="notMobile" style="height: 100%">
+    <LandingPage />
+  </div>
+  <div v-else style="height: 100%; display: flex; flex-direction: column">
     <router-view />
-    <FooterNav v-if="showFooter" v-model:page="selectedPage" />
+    <FooterNav v-if="showFooter" />
   </div>
 </template>
 
 <script>
 import Vuex from 'vuex';
 import FooterNav from '@/components/FooterNav.vue';
+import LandingPage from '@/components/LandingPage.vue';
 
 export default {
   data() {
-    return {
-      selectedPage: 'calendar',
-    };
+    return {};
   },
   components: {
     FooterNav,
+    LandingPage,
   },
   methods: {
     ...Vuex.mapMutations(['setUser']),
@@ -31,6 +34,28 @@ export default {
       const route = this.$router.currentRoute.value.name;
 
       return !['login', 'signup'].includes(route);
+    },
+    notMobile() {
+      let hasTouchScreen = false;
+      if ('maxTouchPoints' in navigator) {
+        hasTouchScreen = navigator.maxTouchPoints > 0;
+      } else if ('msMaxTouchPoints' in navigator) {
+        hasTouchScreen = navigator.msMaxTouchPoints > 0;
+      } else {
+        const mQ = matchMedia?.('(pointer:coarse)');
+        if (mQ?.media === '(pointer:coarse)') {
+          hasTouchScreen = !!mQ.matches;
+        } else if ('orientation' in window) {
+          hasTouchScreen = true; // deprecated, but good fallback
+        } else {
+          // Only as a last resort, fall back to user agent sniffing
+          const UA = navigator.userAgent;
+          hasTouchScreen =
+            /\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
+            /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
+        }
+      }
+      return !hasTouchScreen;
     },
   },
   mounted() {
