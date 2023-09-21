@@ -41,6 +41,8 @@ export default {
       return !['login', 'signup'].includes(route);
     },
     notMobile() {
+      if (process.env.NODE_ENV === 'development') return false;
+
       let hasTouchScreen = false;
       if ('maxTouchPoints' in navigator) {
         hasTouchScreen = navigator.maxTouchPoints > 0;
@@ -60,7 +62,10 @@ export default {
             /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
         }
       }
+      return !hasTouchScreen;
+    },
     isInStandaloneMode() {
+      if (process.env.NODE_ENV === 'development') return true;
       return window.matchMedia('(display-mode: standalone)').matches;
     },
   },
