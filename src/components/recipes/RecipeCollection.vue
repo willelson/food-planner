@@ -22,11 +22,12 @@
         </div>
       </div>
       <RecipeImageBox
-        v-for="{ title, image, id } in recipes"
-        :title="title"
-        :id="id"
-        :image="image"
-        :key="id"
+        v-for="recipe in recipes"
+        :title="recipe.title"
+        :id="recipe.id"
+        :image="recipe?.image"
+        :imageData="recipe?.imageData"
+        :key="recipe.id"
         @click="recipeBoxClicked"
       />
     </div>

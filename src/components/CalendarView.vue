@@ -70,6 +70,7 @@
             :title="entry.recipe?.title"
             :id="entry.recipe?.id"
             :image="entry.recipe?.image"
+            :imageData="entry.recipe?.imageData"
             :key="entry.recipe?.id"
             :deleteMode="editMode"
             @delete="deleteEntry(entry, index)"

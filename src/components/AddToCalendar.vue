@@ -24,16 +24,17 @@
             <div class="label">Recipe</div>
             <div class="recipe-grid">
               <RecipeImageBox
-                v-for="{ title, image, id } in recipes"
-                :title="title"
-                :id="id"
-                :image="image"
-                :key="id"
-                :selected="selectedRecipes.includes(id)"
+                v-for="recipe in recipes"
+                :title="recipe.title"
+                :id="recipe.id"
+                :image="recipe?.image"
+                :imageData="recipe?.imageData"
+                :key="recipe.id"
+                :selected="selectedRecipes.includes(recipe.id)"
                 :faded="
-                  selectedRecipes.length > 0 && !selectedRecipes.includes(id)
+                  selectedRecipes.length > 0 && !selectedRecipes.includes(recipe.id)
                 "
-                @click="toggleRecipeSelection(id)"
+                @click="toggleRecipeSelection(recipe.id)"
               />
             </div>
           </div>
