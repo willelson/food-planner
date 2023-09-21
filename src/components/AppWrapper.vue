@@ -2,6 +2,9 @@
   <div v-if="notMobile" style="height: 100%">
     <LandingPage />
   </div>
+  <div v-else-if="!isInStandaloneMode" style="height: 100%">
+    <MobileDownloadInstructions />
+  </div>
   <div v-else style="height: 100%; display: flex; flex-direction: column">
     <router-view />
     <FooterNav v-if="showFooter" />
@@ -12,6 +15,7 @@
 import Vuex from 'vuex';
 import FooterNav from '@/components/FooterNav.vue';
 import LandingPage from '@/components/LandingPage.vue';
+import MobileDownloadInstructions from '@/components/MobileDownloadInstructions.vue';
 
 export default {
   data() {
@@ -20,6 +24,7 @@ export default {
   components: {
     FooterNav,
     LandingPage,
+    MobileDownloadInstructions,
   },
   methods: {
     ...Vuex.mapMutations(['setUser']),
@@ -55,7 +60,8 @@ export default {
             /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
         }
       }
-      return !hasTouchScreen;
+    isInStandaloneMode() {
+      return window.matchMedia('(display-mode: standalone)').matches;
     },
   },
   mounted() {
@@ -63,6 +69,12 @@ export default {
     if (user) {
       this.setUser(user);
       this.fetchPlanners();
+    }
+    // Using free service that will spin down due to inactivity
+    // Call this endpoint to wake it up when the app is opened
+    const wakeUpWebService = this.isInStandaloneMode && !this.notMobile;
+    if (wakeUpWebService) {
+      fetch('https://url-preview-generator.onrender.com/wake');
     }
   },
 };
