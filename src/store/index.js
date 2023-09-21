@@ -3,7 +3,14 @@ import { createStore } from 'vuex';
 // Firebase imports
 import { auth, db } from '@/firebase/config';
 import { signOut } from 'firebase/auth';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  orderBy,
+} from 'firebase/firestore';
 
 const store = createStore({
   state: {
@@ -58,7 +65,8 @@ const store = createStore({
       const recipesRef = collection(db, 'recipes');
       const q = query(
         recipesRef,
-        where('plannerId', '==', context.state.planner.id)
+        where('plannerId', '==', context.state.planner.id),
+        orderBy('createdAt', 'desc')
       );
       const querySnapshot = await getDocs(q);
 
