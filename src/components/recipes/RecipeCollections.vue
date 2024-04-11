@@ -118,7 +118,7 @@ export default {
       showViewEditRecipeForm: false,
       showAddCollectionForm: false,
       selectedRecipe: null,
-      selectedTab: 'collections',
+      selectedTab: 'all',
       showAddDropdown: false,
     };
   },

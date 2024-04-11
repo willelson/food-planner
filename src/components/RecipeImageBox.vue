@@ -7,7 +7,7 @@
   >
     <div v-if="usesColor" :style="colorStyle"></div>
     <img v-else :src="imageSrc" />
-    <div v-if="deleteMode" class="delete-btn" @click="deleteClicked">
+    <div v-if="deleteMode" class="delete-btn" @click.stop="deleteClicked">
       <i class="fa fa-times" style="font-size: 20px"></i>
     </div>
     <div class="title-box">

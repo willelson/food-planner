@@ -188,11 +188,11 @@ export default {
   },
   watch: {
     recipe(newVal) {
-      this.title = newVal?.title;
-      this.url = newVal?.url;
-      this.image = newVal?.image;
-      this.imageData = newVal?.imageData;
-      this.description = newVal?.description;
+      this.title = newVal?.title || '';
+      this.url = newVal?.url || '';
+      this.image = newVal?.image || '';
+      this.imageData = newVal?.imageData || '';
+      this.description = newVal?.description || '';
       this.selectedCollections = newVal?.collections;
       this.initialCollections = newVal?.collections;
     },

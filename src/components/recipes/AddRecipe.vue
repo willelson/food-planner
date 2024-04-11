@@ -50,6 +50,12 @@
                 style="padding: var(--padding-xs) 0"
                 :style="imageStyle"
               >
+                <img
+                v-if="image"
+                  class="image-box"
+                  :src="image"
+                  style="object-fit: cover"
+                />
                 <div class="img-controls" @click="showImgUrl = true">
                   <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                 </div>
@@ -141,7 +147,6 @@ export default {
       image: null,
       imageData: null,
       description: null,
-      sorce: null,
       selectedCollections: [],
       fetchContentDisabled: false,
       contentLoading: false,
