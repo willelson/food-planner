@@ -102,7 +102,7 @@ import { doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
 import isUrl from 'is-url';
 
 import Modal from '@/components/Modal.vue';
-import CheckboxList from './CheckboxList.vue';
+import CheckboxList from '@/components/utils/CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
 export default {

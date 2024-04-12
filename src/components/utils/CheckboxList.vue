@@ -115,6 +115,7 @@ export default {
   computed: {
     ...Vuex.mapState(['collections', 'recipes']),
     options() {
+      // pass in as a prop?
       switch (this.listItems) {
         case 'collections':
           return this.collections;

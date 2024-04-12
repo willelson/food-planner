@@ -61,7 +61,7 @@ import { db } from '@/firebase/config';
 import { doc, getDoc, updateDoc, addDoc, collection } from 'firebase/firestore';
 
 import Modal from '@/components/Modal.vue';
-import CheckboxList from '@/components/recipes/CheckboxList.vue';
+import CheckboxList from '@/components/utils/CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
 const colors = [
