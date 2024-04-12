@@ -239,11 +239,11 @@ export default {
         this.contentLoading = false;
         this.contentLoaded = true;
 
-        this.title = data.title;
-        this.description = data.description;
-        this.source = data.source;
-        this.image = data.image;
-        this.imageData = data?.imageData;
+        this.title = data.title || '';
+        this.description = data.description || '';
+        this.source = data.source || '';
+        this.image = data.image || '';
+        this.imageData = data?.imageData || '';
       } catch (err) {
         this.contentLoading = false;
         this.contentLoaded = false;
