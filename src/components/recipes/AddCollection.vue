@@ -120,7 +120,7 @@ export default {
         const recipe = await getDoc(recipeRef);
         const data = recipe.data();
         const collections = [...data.collections, collectionRef.id];
-        await updateDoc(recipeRef, { collections });
+        updateDoc(recipeRef, { collections });
       }
 
       this.$emit('collection-added');

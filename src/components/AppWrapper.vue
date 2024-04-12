@@ -7,6 +7,7 @@
   </div>
   <div v-else style="height: 100%; display: flex; flex-direction: column">
     <router-view />
+    <Modals />
     <FooterNav v-if="showFooter" />
   </div>
 </template>
@@ -17,6 +18,8 @@ import FooterNav from '@/components/FooterNav.vue';
 import LandingPage from '@/components/LandingPage.vue';
 import MobileDownloadInstructions from '@/components/MobileDownloadInstructions.vue';
 
+import Modals from '@/components/Modals.vue';
+
 export default {
   data() {
     return {};
@@ -25,6 +28,7 @@ export default {
     FooterNav,
     LandingPage,
     MobileDownloadInstructions,
+    Modals,
   },
   methods: {
     ...Vuex.mapMutations(['setUser']),

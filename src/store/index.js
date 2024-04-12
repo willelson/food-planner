@@ -12,7 +12,12 @@ import {
   orderBy,
 } from 'firebase/firestore';
 
+import modalsModule from '@/store/modals.module';
+
 const store = createStore({
+  modules: {
+    modals: modalsModule,
+  },
   state: {
     user: null,
     planner: null,

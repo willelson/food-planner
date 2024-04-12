@@ -36,7 +36,7 @@
               <div
                 class="context-item"
                 @click="
-                  showAddRecipeForm = true;
+                  setAddRecipeOpen(true);
                   showAddDropdown = false;
                 "
               >
@@ -94,15 +94,13 @@
       @recipe-deleted="getWeekEntries"
       :recipe="selectedRecipe"
     />
-    <AddRecipe :open="showAddRecipeForm" @close="showAddRecipeForm = false" />
   </div>
 </template>
 
 <script>
-import Vuex from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { sameDay } from '../database';
 import AddToCalendar from '@/components/AddToCalendar.vue';
-import AddRecipe from '@/components/recipes/AddRecipe.vue';
 import RecipeImageBox from '@/components/RecipeImageBox.vue';
 import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
 import ContextMenu from '@/components/ContextMenu.vue';
@@ -124,7 +122,6 @@ export default {
     AddToCalendar,
     RecipeImageBox,
     ViewEditRecipe,
-    AddRecipe,
     ContextMenu,
   },
   data() {
@@ -141,7 +138,8 @@ export default {
     };
   },
   methods: {
-    ...Vuex.mapActions(['fetchPlanners']),
+    ...mapActions(['fetchPlanners']),
+    ...mapActions('modals', ['setAddRecipeOpen']),
     dayContainerClass(day) {
       const today = new Date();
       if (new Date(day.date).getDay() === today.getDay()) {
@@ -242,7 +240,8 @@ export default {
     },
   },
   computed: {
-    ...Vuex.mapState(['planner', 'recipes']),
+    ...mapState(['planner', 'recipes']),
+    ...mapState('modals', ['addRecipeOpen']),
     weekDates() {
       const today = new Date();
       const current = today;

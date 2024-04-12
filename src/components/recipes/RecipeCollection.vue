@@ -16,7 +16,7 @@
     </div>
     <div class="recipe-grid">
       <div class="add-button">
-        <div class="add-text" @click="showAddRecipeForm = true">
+        <div class="add-text" @click="setAddRecipeOpen(true)">
           <i class="fa fa-plus" style="font-size: 28px" aria-hidden="true"></i>
           <div>Recipe</div>
         </div>
@@ -33,7 +33,6 @@
     </div>
   </div>
   <div>
-    <AddRecipe :open="showAddRecipeForm" @close="recipeFormClosed" />
     <ViewEditRecipe
       :open="showViewEditRecipeForm"
       @close="recipeViewClosed"
@@ -45,8 +44,7 @@
 </template>
 
 <script>
-import Vuex from 'vuex';
-import AddRecipe from '@/components/recipes/AddRecipe.vue';
+import { mapActions, mapState } from 'vuex';
 import RecipeImageBox from '@/components/RecipeImageBox.vue';
 import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
 
@@ -72,11 +70,8 @@ export default {
     };
   },
   methods: {
-    ...Vuex.mapActions(['getRecipes']),
-    recipeFormClosed() {
-      this.showAddRecipeForm = false;
-      this.getCollectionRecipes();
-    },
+    ...mapActions(['getRecipes']),
+    ...mapActions('modals', ['setAddRecipeOpen']),
     recipeViewClosed() {
       this.showViewEditRecipeForm = false;
       this.selectedRecipe = null;
@@ -121,10 +116,9 @@ export default {
     },
   },
   computed: {
-    ...Vuex.mapState(['planner']),
+    ...mapState(['planner']),
   },
   components: {
-    AddRecipe,
     RecipeImageBox,
     ViewEditRecipe,
   },

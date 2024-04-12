@@ -26,7 +26,7 @@
               <div
                 class="context-item"
                 @click="
-                  showAddRecipeForm = true;
+                  setAddRecipeOpen(true);
                   showAddDropdown = false;
                 "
               >
@@ -84,11 +84,6 @@
     </div>
   </div>
   <div>
-    <AddRecipe
-      :open="showAddRecipeForm"
-      @close="recipeFormClosed"
-      @recipe-added="getRecipes"
-    />
     <AddCollection
       :open="showAddCollectionForm"
       @close="collectionFormClosed"
@@ -104,8 +99,7 @@
 </template>
 
 <script>
-import Vuex from 'vuex';
-import AddRecipe from '@/components/recipes/AddRecipe.vue';
+import { mapState, mapActions } from 'vuex';
 import RecipeImageBox from '@/components/RecipeImageBox.vue';
 import AddCollection from '@/components/recipes/AddCollection.vue';
 import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
@@ -123,11 +117,8 @@ export default {
     };
   },
   methods: {
-    ...Vuex.mapActions(['getCollections', 'getRecipes']),
-    recipeFormClosed() {
-      this.showAddRecipeForm = false;
-      this.getRecipes();
-    },
+    ...mapActions(['getCollections', 'getRecipes']),
+    ...mapActions('modals', ['setAddRecipeOpen']),
     collectionFormClosed() {
       this.showAddCollectionForm = false;
       this.getCollections();
@@ -147,16 +138,11 @@ export default {
       await this.getRecipes();
       await this.getCollections();
     },
-    addButtonClick() {
-      if (this.selectedTab === 'collections') this.showAddCollectionForm = true;
-      else if (this.selectedTab === 'all') this.showAddRecipeForm = true;
-    },
   },
   computed: {
-    ...Vuex.mapState(['planner', 'collections', 'recipes']),
+    ...mapState(['planner', 'collections', 'recipes']),
   },
   components: {
-    AddRecipe,
     AddCollection,
     RecipeImageBox,
     ViewEditRecipe,
