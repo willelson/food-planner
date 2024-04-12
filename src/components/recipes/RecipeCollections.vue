@@ -77,7 +77,7 @@
           :image="image"
           :imageData="imageData"
           :key="id"
-          @click="openRecipe"
+          @click="openRecipe(id)"
         />
       </div>
       <div v-if="recipes.length === 0" class="no-results">No recipes</div>
@@ -88,13 +88,6 @@
       :open="showAddCollectionForm"
       @close="collectionFormClosed"
     />
-    <ViewEditRecipe
-      :open="showViewEditRecipeForm"
-      @close="recipeViewClosed"
-      @recipe-updated="refreshData"
-      @recipe-deleted="refreshData"
-      :recipe="selectedRecipe"
-    />
   </div>
 </template>
 
@@ -102,23 +95,23 @@
 import { mapState, mapActions } from 'vuex';
 import RecipeImageBox from '@/components/RecipeImageBox.vue';
 import AddCollection from '@/components/recipes/AddCollection.vue';
-import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
 import ContextMenu from '@/components/ContextMenu.vue';
 
 export default {
   data() {
     return {
-      showAddRecipeForm: false,
-      showViewEditRecipeForm: false,
       showAddCollectionForm: false,
-      selectedRecipe: null,
       selectedTab: 'all',
       showAddDropdown: false,
     };
   },
   methods: {
     ...mapActions(['getCollections', 'getRecipes']),
-    ...mapActions('modals', ['setAddRecipeOpen']),
+    ...mapActions('modals', [
+      'setAddRecipeOpen',
+      'setViewEditRecipeOpen',
+      'setSelectedRecipe',
+    ]),
     collectionFormClosed() {
       this.showAddCollectionForm = false;
       this.getCollections();
@@ -127,12 +120,9 @@ export default {
       this.$router.push({ name: 'collection', params: { id } });
     },
     openRecipe(id) {
-      this.selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
-      this.showViewEditRecipeForm = true;
-    },
-    recipeViewClosed() {
-      this.showViewEditRecipeForm = false;
-      this.selectedRecipe = null;
+      const selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
+      this.setSelectedRecipe(selectedRecipe);
+      this.setViewEditRecipeOpen(true);
     },
     async refreshData() {
       await this.getRecipes();
@@ -141,11 +131,11 @@ export default {
   },
   computed: {
     ...mapState(['planner', 'collections', 'recipes']),
+    ...mapState('modal', ['viewEditRecipeOpen']),
   },
   components: {
     AddCollection,
     RecipeImageBox,
-    ViewEditRecipe,
     ContextMenu,
   },
   mounted() {

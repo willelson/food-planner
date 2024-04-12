@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import Vuex from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { db } from '@/firebase/config';
 import { doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
 import isUrl from 'is-url';
@@ -106,12 +106,13 @@ import CheckboxList from '@/components/utils/CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
 export default {
-  props: ['recipe', 'open'],
+  props: ['open'],
   data() {
     return {
       title: null,
       url: null,
       image: null,
+      imageData: null,
       description: null,
       selectedCollections: [],
       initialCollections: [],
@@ -120,9 +121,10 @@ export default {
   },
   components: { Modal, CheckboxList, CustomTextArea },
   methods: {
-    ...Vuex.mapActions(['updateRecipe', 'deleteRecipe']),
+    ...mapActions(['updateRecipe', 'deleteRecipe']),
+    ...mapActions('modals', ['setSelectedRecipe']),
     async submitUpdate() {
-      const recipeRef = doc(db, 'recipes', this.recipe.id);
+      const recipeRef = doc(db, 'recipes', this.selectedRecipe.id);
       const { title, url, image, description } = this;
       const updates = {
         title,
@@ -133,13 +135,15 @@ export default {
       };
       await updateDoc(recipeRef, updates);
 
-      this.updateRecipe({ ...this.recipe, ...updates });
+      this.updateRecipe({ ...this.selectedRecipe, ...updates });
       this.removeRecipeFromCollections();
-      this.$emit('recipe-updated');
+
+      // todo handle recipe-updated
+
       this.close();
     },
     async deleteRecipe() {
-      await deleteDoc(doc(db, 'recipes', this.recipe.id));
+      await deleteDoc(doc(db, 'recipes', this.selectedRecipe.id));
       this.close();
       this.$emit('recipe-deleted');
     },
@@ -148,7 +152,7 @@ export default {
       const outdatedCollections = this.initialCollections.filter(
         (collection) => !this.selectedCollections.includes(collection)
       );
-      const currentRecipeId = this.recipe.id;
+      const currentRecipeId = this.selectedRecipe.id;
 
       for (let collectionId of outdatedCollections) {
         const collectionRef = doc(db, 'collections', collectionId);
@@ -175,9 +179,11 @@ export default {
     },
     close() {
       this.$emit('close');
+      this.setSelectedRecipe(null);
     },
   },
   computed: {
+    ...mapState('modals', ['selectedRecipe']),
     imageStyle() {
       if (isUrl(this.image)) {
         return `background-image: url(${this.image})`;
@@ -187,7 +193,7 @@ export default {
     },
   },
   watch: {
-    recipe(newVal) {
+    selectedRecipe(newVal) {
       this.title = newVal?.title || '';
       this.url = newVal?.url || '';
       this.image = newVal?.image || '';

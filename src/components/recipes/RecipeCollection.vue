@@ -28,25 +28,16 @@
         :image="recipe?.image"
         :imageData="recipe?.imageData"
         :key="recipe.id"
-        @click="recipeBoxClicked"
+        @click="openRecipe(recipe.id)"
       />
     </div>
   </div>
-  <div>
-    <ViewEditRecipe
-      :open="showViewEditRecipeForm"
-      @close="recipeViewClosed"
-      @recipe-updated="getCollectionRecipes"
-      @recipe-deleted="getCollectionRecipes"
-      :recipe="selectedRecipe"
-    />
-  </div>
+  <div></div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 import RecipeImageBox from '@/components/RecipeImageBox.vue';
-import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
 
 import {
   where,
@@ -63,7 +54,6 @@ export default {
   data() {
     return {
       showAddRecipeForm: false,
-      showViewEditRecipeForm: false,
       selectedRecipe: null,
       recipes: [],
       title: '',
@@ -71,14 +61,15 @@ export default {
   },
   methods: {
     ...mapActions(['getRecipes']),
-    ...mapActions('modals', ['setAddRecipeOpen']),
-    recipeViewClosed() {
-      this.showViewEditRecipeForm = false;
-      this.selectedRecipe = null;
-    },
-    recipeBoxClicked(id) {
-      this.selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
-      this.showViewEditRecipeForm = true;
+    ...mapActions('modals', [
+      'setAddRecipeOpen',
+      'setViewEditRecipeOpen',
+      'setSelectedRecipe',
+    ]),
+    openRecipe(id) {
+      const selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
+      this.setSelectedRecipe(selectedRecipe);
+      this.setViewEditRecipeOpen(true);
     },
     async getCollectionRecipes() {
       const recipesRef = collection(db, 'recipes');
@@ -120,7 +111,6 @@ export default {
   },
   components: {
     RecipeImageBox,
-    ViewEditRecipe,
   },
   mounted() {
     this.getCollectionRecipes();

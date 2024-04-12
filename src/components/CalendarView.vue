@@ -74,7 +74,7 @@
             :key="entry.recipe?.id"
             :deleteMode="editMode"
             @delete="deleteEntry(entry, index)"
-            @click="recipeClicked"
+            @click="openRecipe(entry.recipe?.id)"
           />
         </div>
       </div>
@@ -87,13 +87,6 @@
       @close="closeAddToCalendar"
       @entry-added="handleNewEntries"
     />
-    <ViewEditRecipe
-      :open="showViewEditRecipeForm"
-      @close="recipeViewClosed"
-      @recipe-updated="getWeekEntries"
-      @recipe-deleted="getWeekEntries"
-      :recipe="selectedRecipe"
-    />
   </div>
 </template>
 
@@ -102,7 +95,6 @@ import { mapActions, mapState } from 'vuex';
 import { sameDay } from '../database';
 import AddToCalendar from '@/components/AddToCalendar.vue';
 import RecipeImageBox from '@/components/RecipeImageBox.vue';
-import ViewEditRecipe from '@/components/recipes/ViewEditRecipe.vue';
 import ContextMenu from '@/components/ContextMenu.vue';
 
 import {
@@ -121,7 +113,6 @@ export default {
   components: {
     AddToCalendar,
     RecipeImageBox,
-    ViewEditRecipe,
     ContextMenu,
   },
   data() {
@@ -131,15 +122,16 @@ export default {
       calendarEntries: [],
       showAddToCalendar: false,
       editMode: false,
-      selectedRecipe: null,
-      showViewEditRecipeForm: false,
-      showAddRecipeForm: false,
       showAddDropdown: false,
     };
   },
   methods: {
     ...mapActions(['fetchPlanners']),
-    ...mapActions('modals', ['setAddRecipeOpen']),
+    ...mapActions('modals', [
+      'setAddRecipeOpen',
+      'setViewEditRecipeOpen',
+      'setSelectedRecipe',
+    ]),
     dayContainerClass(day) {
       const today = new Date();
       if (new Date(day.date).getDay() === today.getDay()) {
@@ -230,9 +222,11 @@ export default {
     toggleEditMode() {
       this.editMode = !this.editMode;
     },
-    recipeClicked(id) {
-      this.selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
-      this.showViewEditRecipeForm = true;
+    openRecipe(id) {
+      // this should not be loaded from recipes - use calendar entries instead?
+      const selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
+      this.setSelectedRecipe(selectedRecipe);
+      this.setViewEditRecipeOpen(true);
     },
     recipeViewClosed() {
       this.showViewEditRecipeForm = false;
@@ -241,7 +235,7 @@ export default {
   },
   computed: {
     ...mapState(['planner', 'recipes']),
-    ...mapState('modals', ['addRecipeOpen']),
+    ...mapState('modals', ['addRecipeOpen', 'viewEditRecipeOpen']),
     weekDates() {
       const today = new Date();
       const current = today;

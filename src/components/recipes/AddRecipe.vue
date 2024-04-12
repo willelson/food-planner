@@ -123,7 +123,7 @@
 </template>
 
 <script>
-import Vuex from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { db } from '@/firebase/config';
 import {
   addDoc,
@@ -159,6 +159,7 @@ export default {
   props: ['open'],
   components: { Modal, CheckboxList, CustomTextArea },
   methods: {
+    ...mapActions(['getRecipes']),
     clearFields() {
       this.title = null;
       this.url = null;
@@ -201,7 +202,7 @@ export default {
         const recipes = [...data.recipes, recipeRef.id];
         await updateDoc(collectionRef, { recipes });
       }
-      this.$emit('recipe-added');
+      this.getRecipes();
       this.close();
     },
     handleUrlPaste(event) {
@@ -252,7 +253,7 @@ export default {
     },
   },
   computed: {
-    ...Vuex.mapState(['planner', 'user', 'collections']),
+    ...mapState(['planner', 'user', 'collections']),
     imageStyle() {
       if (isUrl(this.imageUrl)) {
         return `background-image: url(${this.imageUrl})`;
