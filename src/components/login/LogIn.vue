@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     ...Vuex.mapMutations(['setUser']),
-    ...Vuex.mapActions(['getPlanners']),
+    ...Vuex.mapActions(['fetchPlanners']),
     async login() {
       try {
         const response = await signInWithEmailAndPassword(
@@ -50,7 +50,7 @@ export default {
 
         this.setUser(response.user);
         localStorage.setItem('user', JSON.stringify(response.user));
-        this.getPlanners();
+        this.fetchPlanners();
         this.$router.push({ name: 'calendar' });
       } catch (err) {
         const msg = err?.code || 'Error logging in';

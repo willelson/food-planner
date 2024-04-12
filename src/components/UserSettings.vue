@@ -19,13 +19,16 @@ export default {
     ...Vuex.mapState(['user', 'planner']),
   },
   methods: {
-    ...Vuex.mapMutations(['setUser', 'setPlanner']),
+    ...Vuex.mapMutations(['setUser', 'setPlanner', 'setRecipes', 'setCollections']),
     async logout() {
       await signOut(auth);
 
       this.setUser(null);
       this.setPlanner(null);
+      this.setRecipes(null);
+      this.setCollections(null);
       localStorage.setItem('user', null);
+      this.$router.push({ name: 'login' });
     },
   },
 };
