@@ -26,7 +26,7 @@
                 @click="colorSelection(color)"
                 :style="[
                   `background: ${color}`,
-                  selectedColour && selectedColour !== color
+                  selectedColor && selectedColor !== color
                     ? 'opacity: 0.5'
                     : '',
                 ]"
@@ -49,7 +49,9 @@
 
       <template v-slot:footer>
         <button class="btn btn-default" @click="close">Cancel</button>
-        <button class="btn btn-primary" @click="addCollection">Add</button>
+        <button class="btn btn-primary" @click="addCollectionHandler">
+          Add
+        </button>
       </template>
     </modal>
   </div>
@@ -57,22 +59,12 @@
 
 <script>
 import Vuex from 'vuex';
-import { db } from '@/firebase/config';
-import { doc, getDoc, updateDoc, addDoc, collection } from 'firebase/firestore';
+import { colors } from '@/components/recipes/constants';
+import { addCollection } from '@/components/recipes/helpers.js';
 
 import Modal from '@/components/Modal.vue';
 import CheckboxList from '@/components/utils/CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
-
-const colors = [
-  '#ffd313',
-  '#ff7300',
-  '#e70038',
-  '#fb54ad',
-  '#442bd4',
-  '#08e8de',
-  '#66ff00',
-];
 
 export default {
   data() {
@@ -80,7 +72,7 @@ export default {
       title: null,
       collectionRecipes: [],
       colors,
-      selectedColour: null,
+      selectedColor: null,
     };
   },
   props: ['open'],
@@ -95,40 +87,23 @@ export default {
       this.$emit('close');
       this.clearFields();
     },
-    async addCollection() {
-      const { title, collectionRecipes } = this;
+    async addCollectionHandler() {
+      const { title, collectionRecipes, selectedColor } = this;
       const currentPlanner = { ...this.planner };
 
-      if (!title) {
-        alert('Title must not be empty');
-        return;
-      }
-
-      let color = this.selectedColour;
-      if (!color) color = Math.floor(Math.random() * colors.length);
-
-      const collectionRef = await addDoc(collection(db, 'collections'), {
+      const newCollection = {
         title,
-        color,
         recipes: collectionRecipes,
         plannerId: currentPlanner.id,
-      });
+        color: selectedColor,
+      };
 
-      // iterate through recipes and add collection
-      for (const recipeId of collectionRecipes) {
-        const recipeRef = doc(db, 'recipes', recipeId);
-        const recipe = await getDoc(recipeRef);
-        const data = recipe.data();
-        const collections = [...data.collections, collectionRef.id];
-        updateDoc(recipeRef, { collections });
-      }
-
-      this.$emit('collection-added');
+      addCollection(newCollection);
       this.close();
     },
     colorSelection(colour) {
-      if (colour === this.selectedColour) this.selectedColour = null;
-      else this.selectedColour = colour;
+      if (colour === this.selectedColor) this.selectedColor = null;
+      else this.selectedColor = colour;
     },
   },
   computed: {

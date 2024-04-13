@@ -40,25 +40,21 @@ export const addRecipe = async (
   }
 };
 
-export const addCollection = async (collection, currentPlanner) => {
-  const { title, collectionRecipes } = collection;
-
-  // this shuold be in the component?
-  if (!title) {
+export const addCollection = async (newCollection) => {
+  if (!newCollection.title) {
     alert('Title must not be empty');
     return;
   }
 
-  let color = collection?.color;
-  if (!color) color = Math.floor(Math.random() * colors.length);
+  if (!newCollection?.color) {
+    newCollection.color = colors[Math.floor(Math.random() * colors.length)];
+  }
 
   const collectionRef = await addDoc(collection(db, 'collections'), {
-    title,
-    color,
-    recipes: collectionRecipes,
-    plannerId: currentPlanner.id,
+    ...newCollection,
   });
 
+  const collectionRecipes = newCollection?.recipes || [];
   // iterate through recipes and add collection
   for (const recipeId of collectionRecipes) {
     const recipeRef = doc(db, 'recipes', recipeId);
