@@ -9,6 +9,13 @@ import {
 import { db } from '@/firebase/config';
 import { colors } from '@/components/recipes/constants';
 
+/*
+ * Add new recipe
+ * @param {object} recipe - newly added recipe data
+ * @param {object} currentUser - authenticated user
+ * @param {object} currentPlanner - planner data
+ * @param {array} collections - list of collection ids assigned to the newly created recipe
+ */
 export const addRecipe = (recipe, currentUser, currentPlanner, collections) => {
   addDoc(collection(db, 'recipes'), {
     ...recipe,
@@ -24,20 +31,10 @@ export const updateRecipe = async (recipeId, updatedRecipe) => {
   await updateDoc(recipeRef, updatedRecipe);
 };
 
-  // Add recipe to all collections selected by the user
-  for (let collectionId of collections) {
-    const collectionRef = doc(db, 'collections', collectionId);
-    const collection = await getDoc(collectionRef);
-    const data = collection.data();
-    const recipes = [...data.recipes, recipeRef.id];
-    await updateDoc(collectionRef, { recipes });
-  }
-};
-
-export const addCollection = async (newCollection) => {
-
 /*
  * Add new collection
+ * @param {object} newCollection - newly added collection data
+ * @param {array} collectionRecipes - list of recipe ids assigned to the newly created collection
  */
 export const addCollection = async (newCollection, collectionRecipes) => {
   if (!newCollection.title) {
@@ -57,7 +54,10 @@ export const addCollection = async (newCollection, collectionRecipes) => {
 };
 
 /*
- * Iterate through recipes added to the new collection and add the new collection id to thier recipes list
+ * When a user creates a new collection they can select recipes to be included in that collection.
+ * Iterate through selected recipes and add the new collection id to the collections array of each recipe.
+ * @param {array} recipeIds - list of recipe ids assigned to the newly created collection
+ * @param {string} collectionId - Id of the newly created collection
  */
 const addCollectionToRecipes = async (recipeIds, collectionId) => {
   for (const recipeId of recipeIds) {
