@@ -9,26 +9,20 @@ import {
 import { db } from '@/firebase/config';
 import { colors } from '@/components/recipes/constants';
 
-export const addRecipe = async (
-  recipe,
-  currentUser,
-  currentPlanner,
-  collections
-) => {
-  const { title, url, image, imageData, description, source } = recipe;
-
-  const recipeRef = await addDoc(collection(db, 'recipes'), {
-    title,
-    url,
-    image,
-    imageData,
-    description,
-    source,
+export const addRecipe = (recipe, currentUser, currentPlanner, collections) => {
+  addDoc(collection(db, 'recipes'), {
+    ...recipe,
     collections,
     plannerId: currentPlanner.id,
     createdAt: Timestamp.fromDate(new Date()),
     addedBy: currentUser.uid,
   });
+};
+
+export const updateRecipe = async (recipeId, updatedRecipe) => {
+  const recipeRef = doc(db, 'recipes', recipeId);
+  await updateDoc(recipeRef, updatedRecipe);
+};
 
   // Add recipe to all collections selected by the user
   for (let collectionId of collections) {
@@ -41,6 +35,11 @@ export const addRecipe = async (
 };
 
 export const addCollection = async (newCollection) => {
+
+/*
+ * Add new collection
+ */
+export const addCollection = async (newCollection, collectionRecipes) => {
   if (!newCollection.title) {
     alert('Title must not be empty');
     return;
@@ -54,13 +53,18 @@ export const addCollection = async (newCollection) => {
     ...newCollection,
   });
 
-  const collectionRecipes = newCollection?.recipes || [];
-  // iterate through recipes and add collection
-  for (const recipeId of collectionRecipes) {
+  addCollectionToRecipes(collectionRecipes, collectionRef.id);
+};
+
+/*
+ * Iterate through recipes added to the new collection and add the new collection id to thier recipes list
+ */
+const addCollectionToRecipes = async (recipeIds, collectionId) => {
+  for (const recipeId of recipeIds) {
     const recipeRef = doc(db, 'recipes', recipeId);
     const recipe = await getDoc(recipeRef);
     const data = recipe.data();
-    const collections = [...data.collections, collectionRef.id];
+    const collections = [...data.collections, collectionId];
     updateDoc(recipeRef, { collections });
   }
 };

@@ -93,12 +93,11 @@ export default {
 
       const newCollection = {
         title,
-        recipes: collectionRecipes,
         plannerId: currentPlanner.id,
         color: selectedColor,
       };
 
-      addCollection(newCollection);
+      addCollection(newCollection, collectionRecipes);
       this.close();
     },
     colorSelection(colour) {

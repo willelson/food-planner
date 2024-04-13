@@ -84,17 +84,6 @@ const store = createStore({
 
       context.commit('setRecipes', fetchedRecipes);
     },
-    updateRecipe(context, recipe) {
-      const { recipes } = context.state;
-      const recipeIndex = recipes.findIndex((r) => r.id === recipe.id);
-      const updatedRecipes = [
-        ...recipes.slice(0, recipeIndex),
-        recipe,
-        ...recipes.slice(recipeIndex + 1),
-      ];
-
-      context.commit('setRecipes', updatedRecipes);
-    },
     deleteRecipe(context, recipe) {
       const { recipes } = context.state;
       const recipeIndex = recipes.findIndex((r) => r.id === recipe.id);

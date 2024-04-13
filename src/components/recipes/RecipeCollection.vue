@@ -89,7 +89,7 @@ export default {
       const q = query(
         recipesRef,
         where('plannerId', '==', this.planner.id),
-        where('__name__', 'in', data.recipes)
+        where('collections', 'array-contains', this.id)
       );
       const querySnapshot = await getDocs(q);
 

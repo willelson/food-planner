@@ -98,8 +98,9 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import { db } from '@/firebase/config';
-import { doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
+import { doc, deleteDoc } from 'firebase/firestore';
 import isUrl from 'is-url';
+import { updateRecipe } from '@/components/recipes/helpers.js';
 
 import Modal from '@/components/Modal.vue';
 import CheckboxList from '@/components/utils/CheckboxList.vue';
@@ -121,58 +122,22 @@ export default {
   },
   components: { Modal, CheckboxList, CustomTextArea },
   methods: {
-    ...mapActions(['updateRecipe', 'deleteRecipe']),
+    ...mapActions(['deleteRecipe', 'getRecipes']),
     ...mapActions('modals', ['setSelectedRecipe']),
     async submitUpdate() {
-      const recipeRef = doc(db, 'recipes', this.selectedRecipe.id);
       const { title, url, image, description } = this;
-      const updates = {
-        title,
-        url,
-        image,
-        description,
-        collections: this.selectedCollections,
-      };
-      await updateDoc(recipeRef, updates);
+      const updates = { title, url, image, description };
+      updates.collections = this.selectedCollections;
+      const { id } = this.selectedRecipe;
+      updateRecipe(id, updates);
 
-      this.updateRecipe({ ...this.selectedRecipe, ...updates });
-      this.removeRecipeFromCollections();
-
-      // todo handle recipe-updated
-
+      this.getRecipes();
       this.close();
     },
     async deleteRecipe() {
       await deleteDoc(doc(db, 'recipes', this.selectedRecipe.id));
       this.close();
-      this.$emit('recipe-deleted');
-    },
-    async removeRecipeFromCollections() {
-      // collections recipe has been removed from
-      const outdatedCollections = this.initialCollections.filter(
-        (collection) => !this.selectedCollections.includes(collection)
-      );
-      const currentRecipeId = this.selectedRecipe.id;
-
-      for (let collectionId of outdatedCollections) {
-        const collectionRef = doc(db, 'collections', collectionId);
-        const collection = await getDoc(collectionRef);
-        const data = collection.data();
-
-        const index = data.recipes.findIndex(
-          (recipeId) => recipeId === currentRecipeId
-        );
-
-        const recipes = [
-          ...data.recipes.slice(0, index),
-          ...data.recipes.slice(index + 1),
-        ];
-        await updateDoc(collectionRef, { recipes });
-      }
-
-      if (outdatedCollections.length > 0) {
-        this.$emit('recipe-deleted');
-      }
+      this.getRecipes();
     },
     updateCollectionList(selections) {
       this.selectedCollections = selections;
