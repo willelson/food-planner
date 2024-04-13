@@ -124,16 +124,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import { db } from '@/firebase/config';
-import {
-  addDoc,
-  updateDoc,
-  Timestamp,
-  collection,
-  doc,
-  getDoc,
-} from 'firebase/firestore';
 import isUrl from 'is-url';
+import { addRecipe } from '@/components/recipes/helpers.js';
 
 import Modal from '@/components/Modal.vue';
 import CheckboxList from '@/components/utils/CheckboxList.vue';
@@ -177,31 +169,19 @@ export default {
       this.contentLoaded = false;
       this.manualEntry = false;
     },
-    async addRecipe() {
+    async addRecipeHandler() {
       const { title, url, image, imageData, description, source } = this;
+      const newRecipe = { title, url, image, imageData, description, source };
       const currentPlanner = { ...this.planner };
       const currentUser = { ...this.user };
 
-      const recipeRef = await addDoc(collection(db, 'recipes'), {
-        title,
-        url,
-        image,
-        imageData,
-        description,
-        source,
-        collections: this.selectedCollections,
-        plannerId: currentPlanner.id,
-        createdAt: Timestamp.fromDate(new Date()),
-        addedBy: currentUser.uid,
-      });
+      addRecipe(
+        newRecipe,
+        currentUser,
+        currentPlanner,
+        this.selectedCollections
+      );
 
-      for (let collectionId of this.selectedCollections) {
-        const collectionRef = doc(db, 'collections', collectionId);
-        const collection = await getDoc(collectionRef);
-        const data = collection.data();
-        const recipes = [...data.recipes, recipeRef.id];
-        await updateDoc(collectionRef, { recipes });
-      }
       this.getRecipes();
       this.close();
     },
