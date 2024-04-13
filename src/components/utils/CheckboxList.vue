@@ -56,7 +56,7 @@
 <script>
 import Vuex from 'vuex';
 
-import Modal from '@/components/Modal.vue';
+import Modal from '@/components/layout/Modal.vue';
 
 export default {
   data() {

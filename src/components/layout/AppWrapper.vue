@@ -14,11 +14,10 @@
 
 <script>
 import Vuex from 'vuex';
-import FooterNav from '@/components/FooterNav.vue';
-import LandingPage from '@/components/LandingPage.vue';
-import MobileDownloadInstructions from '@/components/MobileDownloadInstructions.vue';
-
-import Modals from '@/components/Modals.vue';
+import FooterNav from '@/components/layout/FooterNav.vue';
+import LandingPage from '@/components/layout/LandingPage.vue';
+import MobileDownloadInstructions from '@/components/layout/MobileDownloadInstructions.vue';
+import Modals from '@/components/recipes/Modals.vue';
 
 export default {
   data() {

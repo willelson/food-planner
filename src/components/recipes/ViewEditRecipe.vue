@@ -102,7 +102,7 @@ import { doc, deleteDoc } from 'firebase/firestore';
 import isUrl from 'is-url';
 import { updateRecipe } from '@/components/recipes/helpers.js';
 
-import Modal from '@/components/Modal.vue';
+import Modal from '@/components/layout/Modal.vue';
 import CheckboxList from '@/components/utils/CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 

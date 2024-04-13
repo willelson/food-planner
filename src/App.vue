@@ -3,16 +3,14 @@
 </template>
 
 <script>
-import AppWrapper from './components/AppWrapper.vue'
+import AppWrapper from './components/layout/AppWrapper.vue';
 
 export default {
   name: 'App',
   components: {
-    AppWrapper
-  }
-}
+    AppWrapper,
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

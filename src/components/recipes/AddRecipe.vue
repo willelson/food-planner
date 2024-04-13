@@ -83,7 +83,7 @@
           @close="showImgUrl = false"
           :open="showImgUrl"
           :image="image"
-                @input="(value) => (image = value)"
+          @input="(value) => (image = value)"
         ></image-url-modal>
       </template>
       <template v-slot:footer>
@@ -99,7 +99,7 @@ import { mapState, mapActions } from 'vuex';
 import isUrl from 'is-url';
 import { addRecipe } from '@/components/recipes/helpers.js';
 
-import Modal from '@/components/Modal.vue';
+import Modal from '@/components/layout/Modal.vue';
 import CheckboxList from '@/components/utils/CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 import ImageUrlModal from '@/components/recipes/ImageUrlModal.vue';

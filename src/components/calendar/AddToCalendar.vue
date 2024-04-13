@@ -51,9 +51,9 @@
 
 <script>
 import Vuex from 'vuex';
-import Modal from '@/components/Modal.vue';
-import RecipeImageBox from '@/components/RecipeImageBox.vue';
-import { sameDay } from '../database';
+import Modal from '@/components/layout/Modal.vue';
+import RecipeImageBox from '@/components/utils/RecipeImageBox.vue';
+import { sameDay } from '@/database';
 import { db } from '@/firebase/config';
 import { Timestamp, collection, addDoc } from 'firebase/firestore';
 
@@ -66,7 +66,7 @@ export default {
     };
   },
   props: ['selectedDay', 'weekStart', 'open'],
-  emits: ['addRecipe', 'close'],
+  emits: ['close'],
   components: { Modal, RecipeImageBox },
   methods: {
     ...Vuex.mapActions(['getRecipes']),
@@ -116,8 +116,10 @@ export default {
       this.selectedDays.forEach((day) => {
         this.selectedRecipes.forEach(async (recipeId) => {
           const entriesRef = collection(db, 'calendar-entries');
+          // TODO get recipe from calendar entries
           const recipe = this.recipes.find((recipe) => recipe.id === recipeId);
 
+          // TODO use add recipe from helper function
           const entry = {
             recipeId,
             plannerId: currentPlanner.id,

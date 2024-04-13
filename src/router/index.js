@@ -3,7 +3,7 @@ import store from '@/store/index';
 
 import RecipeCollections from '@/components/recipes/RecipeCollections.vue';
 import RecipeCollection from '@/components/recipes/RecipeCollection.vue';
-import CalendarView from '@/components/CalendarView.vue';
+import CalendarView from '@/components/calendar/CalendarView.vue';
 import ShoppingList from '@/components/ShoppingList.vue';
 import UserSettings from '@/components/UserSettings.vue';
 import Login from '@/components/login/LogIn.vue';

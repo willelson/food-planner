@@ -92,9 +92,9 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import RecipeImageBox from '@/components/RecipeImageBox.vue';
+import RecipeImageBox from '@/components/utils/RecipeImageBox.vue';
 import AddCollection from '@/components/recipes/AddCollection.vue';
-import ContextMenu from '@/components/ContextMenu.vue';
+import ContextMenu from '@/components/utils/ContextMenu.vue';
 
 export default {
   data() {

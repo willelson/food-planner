@@ -37,7 +37,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import RecipeImageBox from '@/components/RecipeImageBox.vue';
+import RecipeImageBox from '@/components/utils/RecipeImageBox.vue';
 
 import {
   where,

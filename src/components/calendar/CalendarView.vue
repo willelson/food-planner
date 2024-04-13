@@ -64,7 +64,7 @@
             :key="entry.recipe?.id"
             :deleteMode="editMode"
             @delete="deleteEntry(entry, index)"
-            @click="openRecipe(entry.recipe?.id)"
+            @click="openRecipe(entry)"
           />
         </div>
       </div>
@@ -82,10 +82,10 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { sameDay } from '../database';
-import AddToCalendar from '@/components/AddToCalendar.vue';
-import RecipeImageBox from '@/components/RecipeImageBox.vue';
-import ContextMenu from '@/components/ContextMenu.vue';
+import { sameDay } from '@/database';
+import AddToCalendar from '@/components/calendar/AddToCalendar.vue';
+import RecipeImageBox from '@/components/utils/RecipeImageBox.vue';
+import ContextMenu from '@/components/utils/ContextMenu.vue';
 
 import {
   collection,
@@ -155,6 +155,9 @@ export default {
       const startfulldate = Timestamp.fromDate(new Date(this.weekDates[0]));
       const endfulldate = Timestamp.fromDate(new Date(this.weekDates[6]));
 
+      console.log(startfulldate);
+      console.log(endfulldate);
+
       let entries = this.weekDates.map((date) => ({
         date,
         entries: [],
@@ -212,10 +215,8 @@ export default {
     toggleEditMode() {
       this.editMode = !this.editMode;
     },
-    openRecipe(id) {
-      // this should not be loaded from recipes - use calendar entries instead?
-      const selectedRecipe = { ...this.recipes.find((r) => r.id === id) };
-      this.setSelectedRecipe(selectedRecipe);
+    openRecipe(entry) {
+      this.setSelectedRecipe(entry.recipe);
       this.setViewEditRecipeOpen(true);
     },
     recipeViewClosed() {
@@ -242,6 +243,12 @@ export default {
         week.push(new Date(current));
         current.setDate(current.getDate() + 1);
       }
+
+      console.log(week[0]);
+
+      week[0].setHours(0, 0, 0, 0);
+      week[6].setHours(23, 59, 59);
+
       return week;
     },
     currentMonth() {

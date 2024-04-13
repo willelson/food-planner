@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Modal from '@/components/Modal.vue';
+import Modal from '@/components/layout/Modal.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
 
 export default {
