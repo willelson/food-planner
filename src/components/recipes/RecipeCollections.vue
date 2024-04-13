@@ -6,8 +6,7 @@
       <div class="page-title">Recipes</div>
       <div>
         <i
-          class="fa fa-plus"
-          style="font-size: 24px; margin-right: var(--padding)"
+          class="fa fa-plus add-content-button"
           aria-hidden="true"
           @click="showAddDropdown = true"
         ></i>

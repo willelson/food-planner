@@ -5,7 +5,7 @@
         <div class="page-title">New Entry</div>
       </template>
       <template v-slot:body>
-        <div style="flex-direction: column; display: flex">
+        <div class="add-to-calendar-form">
           <div class="form-group">
             <div class="label">Day</div>
             <div class="week-container">
@@ -32,7 +32,8 @@
                 :key="recipe.id"
                 :selected="selectedRecipes.includes(recipe.id)"
                 :faded="
-                  selectedRecipes.length > 0 && !selectedRecipes.includes(recipe.id)
+                  selectedRecipes.length > 0 &&
+                  !selectedRecipes.includes(recipe.id)
                 "
                 @click="toggleRecipeSelection(recipe.id)"
               />
@@ -206,5 +207,10 @@ export default {
 .recipe-container {
   overflow: hidden;
   flex: 1;
+}
+
+.add-to-calendar-form {
+  flex-direction: column;
+  display: flex;
 }
 </style>

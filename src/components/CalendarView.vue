@@ -1,23 +1,13 @@
 <template>
   <div class="calendar page-container">
-    <div
-      style="display: flex; justify-content: space-between; align-items: center"
-    >
+    <div class="calendar-header">
       <div class="page-title">{{ currentMonth }}</div>
-      <div style="display: flex; align-items: center">
-        <span
-          style="color: var(--primary); margin-right: var(--padding)"
-          @click="toggleEditMode"
-        >
+      <div class="header-controls">
+        <span class="edit-mode-toggle" @click="toggleEditMode">
           {{ editMode ? 'done' : 'edit' }}</span
         >
         <i
-          class="fa fa-plus"
-          style="
-            color: var(--black);
-            margin-right: var(--padding);
-            font-size: 24px;
-          "
+          class="fa fa-plus add-content-button"
           aria-hidden="true"
           @click="showAddDropdown = true"
         ></i>
@@ -281,6 +271,17 @@ export default {
   flex-direction: column;
 }
 
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-header .header-controls {
+  display: flex;
+  align-items: center;
+}
+
 .calendar-body {
   display: flex;
   flex: 1;
@@ -340,6 +341,11 @@ export default {
   height: 100%;
   width: 100%;
   overflow-y: auto;
+}
+
+.edit-mode-toggle {
+  color: var(--primary);
+  margin-right: var(--padding);
 }
 </style>
 <style scoped>

@@ -7,7 +7,7 @@
   --border: #e5e5e5;
   --danger: #ff6961;
   --disabled: #d3d3d3;
-  --grey: #C0C0C0;
+  --grey: #c0c0c0;
   --placeholder: #999;
   --footer-height: 65px;
   --padding: 16px;
@@ -58,7 +58,7 @@ body {
   min-height: 0;
   position: relative;
   display: flex;
-  flex-direction: column
+  flex-direction: column;
 }
 
 .page-title {
@@ -99,11 +99,14 @@ input {
   background: white;
   margin: 0 8px;
 
-  -webkit-transition: color 0.2s linear, background-color 0.2s linear, border-color 0.2s linear;
-  -moz-transition: color 0.2s linear, background-color 0.2s linear, border-color 0.2s linear;
-  -o-transition: color 0.2s linear, background-color 0.2s linear, border-color 0.2s linear;
-  transition: color 0.2s linear, background-color 0.2s linear, border-color 0.2s linear;
-
+  -webkit-transition: color 0.2s linear, background-color 0.2s linear,
+    border-color 0.2s linear;
+  -moz-transition: color 0.2s linear, background-color 0.2s linear,
+    border-color 0.2s linear;
+  -o-transition: color 0.2s linear, background-color 0.2s linear,
+    border-color 0.2s linear;
+  transition: color 0.2s linear, background-color 0.2s linear,
+    border-color 0.2s linear;
 }
 
 .btn-primary {
@@ -141,4 +144,9 @@ input {
 input::placeholder,
 textarea::placeholder {
   color: var(--placeholder);
+}
+
+.add-content-button {
+  font-size: 24px;
+  margin-right: var(--padding);
 }
