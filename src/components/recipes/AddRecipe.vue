@@ -79,34 +79,12 @@
             </div>
           </div>
         </div>
-        <modal
+        <image-url-modal
           @close="showImgUrl = false"
           :open="showImgUrl"
-          height="35%"
-          :layered="true"
-        >
-          <template v-slot:header>
-            <div class="page-title">Image</div>
-          </template>
-          <template v-slot:body>
-            <div class="form-group">
-              <custom-text-area
-                :value="image"
+          :image="image"
                 @input="(value) => (image = value)"
-                id="image"
-                :class="{ shimmerBG: contentLoading }"
-                placeholder="Image URL"
-                class="form-input"
-                :loading="contentLoading"
-              ></custom-text-area>
-            </div>
-          </template>
-          <template v-slot:footer>
-            <button class="btn btn-default" @click="showImgUrl = false">
-              Done
-            </button>
-          </template>
-        </modal>
+        ></image-url-modal>
       </template>
       <template v-slot:footer>
         <button class="btn btn-default" @click="close">Cancel</button>
@@ -124,6 +102,7 @@ import { addRecipe } from '@/components/recipes/helpers.js';
 import Modal from '@/components/Modal.vue';
 import CheckboxList from '@/components/utils/CheckboxList.vue';
 import CustomTextArea from '@/components/utils/CustomTextArea.vue';
+import ImageUrlModal from '@/components/recipes/ImageUrlModal.vue';
 
 export default {
   data() {
@@ -143,7 +122,12 @@ export default {
     };
   },
   props: ['open'],
-  components: { Modal, CheckboxList, CustomTextArea },
+  components: {
+    Modal,
+    CheckboxList,
+    CustomTextArea,
+    ImageUrlModal,
+  },
   methods: {
     ...mapActions(['getRecipes']),
     clearFields() {
