@@ -50,12 +50,6 @@
                 style="padding: var(--padding-xs) 0"
                 :style="imageStyle"
               >
-                <img
-                v-if="image"
-                  class="image-box"
-                  :src="image"
-                  style="object-fit: cover"
-                />
                 <div class="img-controls" @click="showImgUrl = true">
                   <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                 </div>
@@ -116,7 +110,7 @@
       </template>
       <template v-slot:footer>
         <button class="btn btn-default" @click="close">Cancel</button>
-        <button class="btn btn-primary" @click="addRecipe">Add</button>
+        <button class="btn btn-primary" @click="addRecipeHandler">Add</button>
       </template>
     </modal>
   </div>
@@ -235,8 +229,8 @@ export default {
   computed: {
     ...mapState(['planner', 'user', 'collections']),
     imageStyle() {
-      if (isUrl(this.imageUrl)) {
-        return `background-image: url(${this.imageUrl})`;
+      if (isUrl(this.image)) {
+        return `background-image: url(${this.image})`;
       } else if (!this.contentLoading) {
         return 'background: #f6f6f6';
       }
