@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  emits: ['click'],
+  emits: ['click', 'delete'],
   props: {
     title: {
       type: String,

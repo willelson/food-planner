@@ -60,7 +60,7 @@
 <script>
 import Vuex from 'vuex';
 import { colors } from '@/components/recipes/constants';
-import { addCollection } from '@/components/recipes/helpers.js';
+import { addCollection } from '@/components/recipes/firebaseHelpers.js';
 
 import Modal from '@/components/layout/Modal.vue';
 import CheckboxList from '@/components/utils/CheckboxList.vue';

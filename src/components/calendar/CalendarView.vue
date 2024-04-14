@@ -87,16 +87,9 @@ import RecipeImageBox from '@/components/utils/RecipeImageBox.vue';
 import ContextMenu from '@/components/utils/ContextMenu.vue';
 
 import {
-  collection,
-  query,
-  where,
-  doc,
-  getDocs,
-  deleteDoc,
-  Timestamp,
-} from 'firebase/firestore';
-
-import { db } from '@/firebase/config';
+  getWeeklyEntries,
+  deleteEntry,
+} from '@/components/calendar/firebaseHelpers';
 
 export default {
   components: {
@@ -150,34 +143,26 @@ export default {
     },
 
     async getWeekEntries() {
-      const entriesRef = collection(db, 'calendar-entries');
-      const startFullDate = Timestamp.fromDate(new Date(this.weekDays[0].date));
-      const endFullDate = Timestamp.fromDate(new Date(this.weekDays[6].date));
-
-      const id = this.planner?.id;
-      if (!id) {
+      if (!this.planner?.id) {
         await this.fetchPlanners();
       }
-      const q = query(
-        entriesRef,
-        where('plannerId', '==', id),
-        where('date', '>=', startFullDate),
-        where('date', '<=', endFullDate)
-      );
 
-      const entriesSnapshot = await getDocs(q);
-      entriesSnapshot.forEach((document) => {
+      const entries = await getWeeklyEntries(this.weekDays, this.planner.id);
+      console.log(entries);
+
+      entries.forEach((document) => {
         const entryData = { ...document.data(), id: document.id };
         // Find index in weekDays array to insert calendar entry by calculating the difference
         // in days between the calendar entry and the first day of the week
         const firstDayOfWeek = this.weekDays[0].date;
         const timeDifference = entryData.date.seconds * 1000 - firstDayOfWeek;
         let dayIndex = Math.round(timeDifference / (1000 * 3600 * 24)) - 1;
+
         this.weekDays[dayIndex].entries.push(entryData);
       });
     },
     async deleteEntry(entry, dayIndex) {
-      await deleteDoc(doc(db, 'calendar-entries', entry.id));
+      await deleteEntry(entry.id);
       const dayEntries = this.weekDays[dayIndex].entries;
       const entryIndex = dayEntries.findIndex((e) => e.id === entry.id);
       const updatedEntries = [

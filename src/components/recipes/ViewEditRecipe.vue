@@ -100,7 +100,7 @@ import { mapState, mapActions } from 'vuex';
 import { db } from '@/firebase/config';
 import { doc, deleteDoc } from 'firebase/firestore';
 import isUrl from 'is-url';
-import { updateRecipe } from '@/components/recipes/helpers.js';
+import { updateRecipe } from '@/components/recipes/firebaseHelpers.js';
 
 import Modal from '@/components/layout/Modal.vue';
 import CheckboxList from '@/components/utils/CheckboxList.vue';

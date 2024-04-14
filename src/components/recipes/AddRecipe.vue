@@ -97,7 +97,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import isUrl from 'is-url';
-import { addRecipe } from '@/components/recipes/helpers.js';
+import { addRecipe } from '@/components/recipes/firebaseHelpers.js';
 
 import Modal from '@/components/layout/Modal.vue';
 import CheckboxList from '@/components/utils/CheckboxList.vue';
