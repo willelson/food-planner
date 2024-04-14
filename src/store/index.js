@@ -1,6 +1,5 @@
 import { createStore } from 'vuex';
 
-// Firebase imports
 import { auth, db } from '@/firebase/config';
 import { signOut } from 'firebase/auth';
 import {
@@ -25,16 +24,16 @@ const store = createStore({
     collections: [],
   },
   mutations: {
-    setUser(state, payload) {
+    SET_USER(state, payload) {
       state.user = payload;
     },
-    setPlanner(state, payload) {
+    SET_PLANNER(state, payload) {
       state.planner = payload;
     },
-    setRecipes(state, payload) {
+    SET_RECIPES(state, payload) {
       state.recipes = payload;
     },
-    setCollections(state, payload) {
+    SET_COLLECTIONS(state, payload) {
       state.collections = payload;
     },
   },
@@ -42,7 +41,7 @@ const store = createStore({
     async logout(context) {
       await signOut(auth);
 
-      context.commit('setUser', null);
+      context.commit('SET_USER', null);
     },
     async fetchPlanners(context) {
       const plannersRef = collection(db, 'planners');
@@ -55,7 +54,7 @@ const store = createStore({
         await context.dispatch('createPlanner');
       }
       const testPlanner = { ...doc.data(), id: doc.id };
-      context.commit('setPlanner', testPlanner);
+      context.commit('SET_PLANNER', testPlanner);
       context.dispatch('getRecipes');
       context.dispatch('getCollections');
     },
@@ -82,7 +81,7 @@ const store = createStore({
         fetchedRecipes.push({ id: doc.id, ...recipeData });
       });
 
-      context.commit('setRecipes', fetchedRecipes);
+      context.commit('SET_RECIPES', fetchedRecipes);
     },
     deleteRecipe(context, recipe) {
       const { recipes } = context.state;
@@ -94,7 +93,7 @@ const store = createStore({
         ...recipes.slice(recipeIndex + 1),
       ];
 
-      context.commit('setRecipes', updatedRecipes);
+      context.commit('SET_RECIPES', updatedRecipes);
     },
 
     async getCollections(context) {
@@ -113,7 +112,19 @@ const store = createStore({
         fetchedCollections.push({ id: doc.id, ...collectionData });
       });
 
-      context.commit('setCollections', fetchedCollections);
+      context.commit('SET_COLLECTIONS', fetchedCollections);
+    },
+    setUser({ commit }, user) {
+      commit('SET_USER', user);
+    },
+    setPlanner({ commit }, planner) {
+      commit('SET_PLANNER', planner);
+    },
+    setRecipes({ commit }, recipes) {
+      commit('SET_RECIPES', recipes);
+    },
+    setCollections({ commit }, collections) {
+      commit('SET_COLLECTIONS', collections);
     },
   },
 });

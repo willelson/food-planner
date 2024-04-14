@@ -63,7 +63,7 @@
           @click="openCollection"
         />
       </div>
-      <div v-if="collections.length === 0" class="no-results">
+      <div v-if="collections?.length === 0" class="no-results">
         No collections
       </div>
     </div>
@@ -79,7 +79,7 @@
           @click="openRecipe(id)"
         />
       </div>
-      <div v-if="recipes.length === 0" class="no-results">No recipes</div>
+      <div v-if="recipes?.length === 0" class="no-results">No recipes</div>
     </div>
   </div>
   <div>
@@ -138,6 +138,7 @@ export default {
     ContextMenu,
   },
   mounted() {
+    this.getRecipes();
     this.getCollections();
   },
 };

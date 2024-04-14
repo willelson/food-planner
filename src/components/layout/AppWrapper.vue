@@ -30,8 +30,7 @@ export default {
     Modals,
   },
   methods: {
-    ...Vuex.mapMutations(['setUser']),
-    ...Vuex.mapActions(['fetchPlanners']),
+    ...Vuex.mapActions(['fetchPlanners', 'setUser']),
     changePage(page) {
       this.selectedPage = page;
     },

@@ -42,7 +42,7 @@ export default {
     };
   },
   methods: {
-    ...Vuex.mapMutations(['setUser']),
+    ...Vuex.mapActions(['setUser', 'createPlanner']),
     async signUpUser() {
       const { email, password } = this;
       try {
@@ -53,6 +53,7 @@ export default {
         );
         if (response) {
           this.setUser(response.user);
+          await this.createPlanner();
           this.$router.push({ name: 'calendar' });
         }
       } catch (err) {

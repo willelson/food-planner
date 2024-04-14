@@ -66,7 +66,7 @@ export default {
     };
   },
   props: ['selectedDay', 'weekStart', 'open'],
-  emits: ['close'],
+  emits: ['close', 'entry-added'],
   components: { Modal, RecipeImageBox },
   methods: {
     ...Vuex.mapActions(['getRecipes']),

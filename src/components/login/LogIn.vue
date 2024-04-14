@@ -38,8 +38,7 @@ export default {
     };
   },
   methods: {
-    ...Vuex.mapMutations(['setUser']),
-    ...Vuex.mapActions(['fetchPlanners']),
+    ...Vuex.mapActions(['fetchPlanners', 'setUser']),
     async login() {
       try {
         const response = await signInWithEmailAndPassword(

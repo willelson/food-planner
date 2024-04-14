@@ -19,7 +19,12 @@ export default {
     ...Vuex.mapState(['user', 'planner']),
   },
   methods: {
-    ...Vuex.mapMutations(['setUser', 'setPlanner', 'setRecipes', 'setCollections']),
+    ...Vuex.mapActions([
+      'setUser',
+      'setPlanner',
+      'setRecipes',
+      'setCollections',
+    ]),
     async logout() {
       await signOut(auth);
 
