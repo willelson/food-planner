@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="page-title">User Settings</div>
-    Hello, "{{ user.email }}"!
+    Hello, "{{ user?.email }}"!
     <div>My planner: {{ planner?.name }}</div>
     <div>
       <button @click="logout" class="btn btn-primary">Logout</button>
@@ -13,6 +13,7 @@
 import Vuex from 'vuex';
 import { auth } from '@/firebase/config';
 import { signOut } from 'firebase/auth';
+import { SHOPPING_LIST } from '../database';
 
 export default {
   computed: {
@@ -33,6 +34,7 @@ export default {
       this.setRecipes(null);
       this.setCollections(null);
       localStorage.setItem('user', null);
+      localStorage.setItem(SHOPPING_LIST, null);
       this.$router.push({ name: 'login' });
     },
   },
