@@ -156,9 +156,15 @@ export default {
         // in days between the calendar entry and the first day of the week
         const firstDayOfWeek = this.weekDays[0].date;
         const timeDifference = entryData.date.seconds * 1000 - firstDayOfWeek;
-        let dayIndex = Math.round(timeDifference / (1000 * 3600 * 24)) - 1;
+        let dayIndex = Math.round(timeDifference / (1000 * 3600 * 24));
 
-        this.weekDays[dayIndex].entries.push(entryData);
+        const { entries } = this.weekDays[dayIndex];
+        const entryExistsInEntries = entries.find(
+          (entry) => entry.id === entryData.id
+        );
+        if (!entryExistsInEntries) {
+          entries.push(entryData);
+        }
       });
     },
     async deleteEntry(entry, dayIndex) {
