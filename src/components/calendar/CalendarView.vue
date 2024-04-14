@@ -148,7 +148,6 @@ export default {
       }
 
       const entries = await getWeeklyEntries(this.weekDays, this.planner.id);
-      console.log(entries);
 
       entries.forEach((document) => {
         const entryData = { ...document.data(), id: document.id };
