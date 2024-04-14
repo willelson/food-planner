@@ -40,7 +40,7 @@
     <div class="calendar-body">
       <div
         class="day-container"
-        v-for="(day, index) in calendarEntries"
+        v-for="(day, index) in weekDays"
         :key="`day-${index}`"
         :id="`day-${index}`"
         :class="dayContainerClass(day)"
@@ -82,7 +82,6 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { sameDay } from '@/database';
 import AddToCalendar from '@/components/calendar/AddToCalendar.vue';
 import RecipeImageBox from '@/components/utils/RecipeImageBox.vue';
 import ContextMenu from '@/components/utils/ContextMenu.vue';
@@ -109,10 +108,10 @@ export default {
     return {
       timeoutId: null,
       selectedDay: null,
-      calendarEntries: [],
       showAddToCalendar: false,
       editMode: false,
       showAddDropdown: false,
+      weekDays: [],
     };
   },
   methods: {
@@ -152,18 +151,8 @@ export default {
 
     async getWeekEntries() {
       const entriesRef = collection(db, 'calendar-entries');
-      const startfulldate = Timestamp.fromDate(new Date(this.weekDates[0]));
-      const endfulldate = Timestamp.fromDate(new Date(this.weekDates[6]));
-
-      console.log(startfulldate);
-      console.log(endfulldate);
-
-      let entries = this.weekDates.map((date) => ({
-        date,
-        entries: [],
-      }));
-
-      this.calendarEntries = entries;
+      const startFullDate = Timestamp.fromDate(new Date(this.weekDays[0].date));
+      const endFullDate = Timestamp.fromDate(new Date(this.weekDays[6].date));
 
       const id = this.planner?.id;
       if (!id) {
@@ -171,44 +160,33 @@ export default {
       }
       const q = query(
         entriesRef,
-        where('plannerId', '==', this.planner?.id),
-        where('date', '>=', startfulldate),
-        where('date', '<=', endfulldate)
+        where('plannerId', '==', id),
+        where('date', '>=', startFullDate),
+        where('date', '<=', endFullDate)
       );
 
       const entriesSnapshot = await getDocs(q);
-
-      entriesSnapshot.forEach(async (document) => {
+      entriesSnapshot.forEach((document) => {
         const entryData = { ...document.data(), id: document.id };
-
-        const dateIndex = this.weekDates.findIndex((day) => {
-          const entryDate = new Date(entryData.date.seconds * 1000);
-          const weekDate = new Date(day);
-          return sameDay(weekDate, entryDate);
-        });
-
-        entries = [
-          ...entries.slice(0, dateIndex),
-          {
-            ...entries[dateIndex],
-            entries: [...entries[dateIndex]['entries'], entryData],
-          },
-          ...entries.slice(dateIndex + 1),
-        ];
-        this.calendarEntries = entries;
+        // Find index in weekDays array to insert calendar entry by calculating the difference
+        // in days between the calendar entry and the first day of the week
+        const firstDayOfWeek = this.weekDays[0].date;
+        const timeDifference = entryData.date.seconds * 1000 - firstDayOfWeek;
+        let dayIndex = Math.round(timeDifference / (1000 * 3600 * 24)) - 1;
+        this.weekDays[dayIndex].entries.push(entryData);
       });
     },
     async deleteEntry(entry, dayIndex) {
       await deleteDoc(doc(db, 'calendar-entries', entry.id));
-      const dayEntries = this.calendarEntries[dayIndex].entries;
+      const dayEntries = this.weekDays[dayIndex].entries;
       const entryIndex = dayEntries.findIndex((e) => e.id === entry.id);
       const updatedEntries = [
         ...dayEntries.slice(0, entryIndex),
         ...dayEntries.slice(entryIndex + 1),
       ];
 
-      this.calendarEntries[dayIndex] = {
-        ...this.calendarEntries[dayIndex],
+      this.weekDays[dayIndex] = {
+        ...this.weekDays[dayIndex],
         entries: updatedEntries,
       };
     },
@@ -223,14 +201,9 @@ export default {
       this.showViewEditRecipeForm = false;
       this.selectedRecipe = null;
     },
-  },
-  computed: {
-    ...mapState(['planner', 'recipes']),
-    ...mapState('modals', ['addRecipeOpen', 'viewEditRecipeOpen']),
-    weekDates() {
+    setWeekDays() {
       const today = new Date();
       const current = today;
-      const week = new Array();
 
       // Set the current date to the previous monday
       if (current.getDay() === 0) {
@@ -240,34 +213,46 @@ export default {
       }
 
       for (var i = 0; i < 7; i++) {
-        week.push(new Date(current));
+        this.weekDays.push({
+          date: new Date(current),
+          entries: [],
+        });
         current.setDate(current.getDate() + 1);
       }
 
-      console.log(week[0]);
-
-      week[0].setHours(0, 0, 0, 0);
-      week[6].setHours(23, 59, 59);
-
-      return week;
+      // Set the time for the first and last date as they are used for the query
+      this.weekDays[0].date.setHours(0, 0, 0, 0);
+      this.weekDays[6].date.setHours(23, 59, 59);
     },
+  },
+  computed: {
+    ...mapState(['planner']),
+    ...mapState('modals', ['addRecipeOpen', 'viewEditRecipeOpen']),
     currentMonth() {
       const today = new Date();
       return today.toLocaleString('default', { month: 'long' });
     },
   },
-  async mounted() {
-    let now = new Date();
-    let todayIndex = now.getDay() - 1;
+  mounted() {
+    this.setWeekDays();
+    this.$nextTick(() => {
+      const todayElement = document.getElementById(`day-${todayIndex}`);
+      todayElement.scrollIntoView({ inline: 'start' });
+    });
 
+    const now = new Date();
+    let todayIndex = now.getDay() - 1;
     // Set the Sunday index to 6 as we always want to start from Monday
     if (now.getDay() === 0) {
       todayIndex = 6;
     }
 
-    await this.getWeekEntries();
-    const todayElement = document.getElementById(`day-${todayIndex}`);
-    todayElement.scrollIntoView({ inline: 'start' });
+    this.$nextTick(() => {
+      const todayElement = document.getElementById(`day-${todayIndex}`);
+      todayElement.scrollIntoView({ inline: 'start' });
+    });
+
+    this.getWeekEntries();
   },
 };
 </script>
