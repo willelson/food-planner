@@ -75,17 +75,9 @@ export default {
       const recipesRef = collection(db, 'recipes');
       const collectionsRef = doc(db, 'collections', this.id);
       const docSnap = await getDoc(collectionsRef);
-
       const data = docSnap.data();
 
       this.title = data.title;
-
-      if (data.recipes.length === 0) {
-        this.recipes = [];
-        return;
-      }
-
-      // This may have to executed in batches of 10
       const q = query(
         recipesRef,
         where('plannerId', '==', this.planner.id),

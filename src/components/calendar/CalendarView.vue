@@ -155,7 +155,7 @@ export default {
         // in days between the calendar entry and the first day of the week
         const firstDayOfWeek = this.weekDays[0].date;
         const timeDifference = entryData.date.seconds * 1000 - firstDayOfWeek;
-        let dayIndex = Math.round(timeDifference / (1000 * 3600 * 24));
+        let dayIndex = Math.floor(timeDifference / (1000 * 3600 * 24));
 
         const { entries } = this.weekDays[dayIndex];
         const entryExistsInEntries = entries.find(

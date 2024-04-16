@@ -138,6 +138,11 @@ export default {
     ContextMenu,
   },
   mounted() {
+    // Show collections tab if user just returned from a collection page
+    const forwardRoute = this.$router.options.history.state.forward;
+    if (forwardRoute && forwardRoute.includes('recipes/collection')) {
+      this.selectedTab = 'collections';
+    }
     this.getRecipes();
     this.getCollections();
   },
